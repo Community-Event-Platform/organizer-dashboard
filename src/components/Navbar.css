@@ -1,0 +1,64 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: var(--bg-light);
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.navbar-links {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  font-weight: 600;
+  color: #888888;
+}
+
+.navbar-links a {
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+
+.navbar-links a.active {
+  background-color: var(--btn-purple);
+  color: var(--text-light);
+}
+
+.navbar-links a:hover:not(.active) {
+  color: var(--text-dark);
+}
+
+.navbar-actions {
+  display: flex;
+  gap: 15px;
+}
+
+.btn-login, .btn-register {
+  padding: 10px 24px;
+  font-weight: 600;
+  border-radius: 4px;
+}
+
+.btn-login {
+  background-color: var(--btn-light-grey);
+  color: var(--btn-red-text);
+}
+
+.btn-register {
+  background-color: #D3D3D3; /* Slightly darker grey for register as seen in screenshot */
+  color: var(--btn-red-text);
+}
+
+.btn-login:hover, .btn-register:hover {
+  filter: brightness(0.95);
+  transform: translateY(-1px);
+}
