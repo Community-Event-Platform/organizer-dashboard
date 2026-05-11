@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Dashboard from './components/Dashboard'
+import Guests from './components/Guests'
 import Footer from './components/Footer'
 import AuthModal from './components/AuthModal'
 import './css/App.css'
@@ -43,7 +44,7 @@ function App() {
         onLogout={handleLogout}
       />
       {user ? (
-        activeTab === 'dashboard' ? <Dashboard /> : <div className="container py-5"><h2>Guest Management (Coming Soon)</h2></div>
+        activeTab === 'dashboard' ? <Dashboard /> : <Guests />
       ) : <Hero />}
       <Footer />
       
