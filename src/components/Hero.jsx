@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './Hero.css';
+import '../css/Hero.css';
 
 const Hero = () => {
   const [events, setEvents] = useState([]);

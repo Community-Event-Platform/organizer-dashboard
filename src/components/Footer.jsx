@@ -1,5 +1,5 @@
-import React from 'react';
-import './Footer.css';
+import React from 'react'; 
+import '../css/Footer.css';
 
 const Footer = () => {
   return (
@@ -9,10 +9,10 @@ const Footer = () => {
           <h4>About the website</h4>
           <p>An event management and networking platform for a community. Experience the thrill of exciting events and connect with like-minded people near you. Explore our <a href="#">About</a> page to learn more about us.</p>
           <div className="social-icons">
-            <span className="social-icon">f</span>
-            <span className="social-icon">t</span>
-            <span className="social-icon">in</span>
-            <span className="social-icon">yt</span>
+            <span className="social-icon"></span>
+            <span className="social-icon"></span>
+            <span className="social-icon"></span>
+            <span className="social-icon"></span>
           </div>
         </div>
 

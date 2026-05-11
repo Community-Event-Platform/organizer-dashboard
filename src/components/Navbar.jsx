@@ -1,7 +1,7 @@
 import React from 'react';
-import './Navbar.css';
+import '../css/Navbar.css';
 
-const Navbar = () => {
+const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout }) => {
   return (
     <nav className="navbar container">
       <div className="navbar-logo">
@@ -19,8 +19,17 @@ const Navbar = () => {
       </ul>
       
       <div className="navbar-actions">
-        <button className="btn-login">Login</button>
-        <button className="btn-register">Register</button>
+        {user ? (
+          <div className="user-profile">
+            <span className="user-name">Hi, {user.name}</span>
+            <button className="btn-logout" onClick={onLogout}>Logout</button>
+          </div>
+        ) : (
+          <>
+            <button className="btn-login" onClick={onLoginClick}>Login</button>
+            <button className="btn-register" onClick={onRegisterClick}>Register</button>
+          </>
+        )}
       </div>
     </nav>
   );

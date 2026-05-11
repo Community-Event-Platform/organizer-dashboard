@@ -62,3 +62,27 @@
   filter: brightness(0.95);
   transform: translateY(-1px);
 }
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.user-name {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.btn-logout {
+  padding: 8px 16px;
+  background-color: var(--btn-light-grey);
+  color: var(--btn-red-text);
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.btn-logout:hover {
+  background-color: #fca5a5;
+  color: #7f1d1d;
+}
