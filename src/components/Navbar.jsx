@@ -1,7 +1,7 @@
 import React from 'react';
 import '../css/Navbar.css';
 
-const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout }) => {
+const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, activeTab, onTabChange }) => {
   return (
     <nav className="navbar container">
       <div className="navbar-logo">
@@ -12,10 +12,26 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout }) => {
       </div>
       
       <ul className="navbar-links">
-        <li><a href="#" className="active">Home</a></li>
+        <li>
+          <a 
+            href="#" 
+            className={!user || activeTab === 'dashboard' ? 'active' : ''} 
+            onClick={(e) => { e.preventDefault(); onTabChange('dashboard'); }}
+          >
+            Dashboard
+          </a>
+        </li>
         <li><a href="#">About</a></li>
         <li><a href="#">Events</a></li>
-        <li><a href="#">Participants</a></li>
+        <li>
+          <a 
+            href="#" 
+            className={activeTab === 'guests' ? 'active' : ''} 
+            onClick={(e) => { e.preventDefault(); onTabChange('guests'); }}
+          >
+            Guests
+          </a>
+        </li>
       </ul>
       
       <div className="navbar-actions">

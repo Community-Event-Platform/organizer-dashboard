@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import '../css/AuthModal.css';
 
+const API_BASE_URL = 'http://localhost:8000';
+
 const AuthModal = ({ isOpen, onClose, initialMode = 'login', onAuthSuccess }) => {
   const [mode, setMode] = useState(initialMode); // 'login' or 'register'
   const [showPassword, setShowPassword] = useState(false);
@@ -41,7 +43,7 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login', onAuthSuccess }) =>
         };
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000${endpoint}`, {
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -99,28 +101,31 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login', onAuthSuccess }) =>
 
   return (
     <div className="auth-modal-overlay" onClick={onClose}>
-      <div className="auth-modal" onClick={(e) => e.stopPropagation()}>
-        <button className="close-modal" onClick={onClose}>&times;</button>
+      <div className="auth-modal p-4" onClick={(e) => e.stopPropagation()}>
+        <button className="btn-close close-modal" onClick={onClose} aria-label="Close"></button>
         
-        <div className="auth-modal-header">
-          <h2>{mode === 'login' ? 'Đăng nhập' : 'Đăng ký tài khoản mới'}</h2>
-          <p>
+        <div className="auth-modal-header text-center mb-4">
+          <h2 className="fw-bold">{mode === 'login' ? 'Đăng nhập' : 'Đăng ký tài khoản mới'}</h2>
+          <p className="text-muted small">
             {mode === 'login' 
               ? 'Chào mừng bạn quay trở lại! Vui lòng đăng nhập để tiếp tục quản lý sự kiện của bạn.'
               : 'Hãy tham gia cộng đồng của chúng tôi và bắt đầu tạo ra những sự kiện tuyệt vời cho cộng đồng của bạn.'}
           </p>
         </div>
 
-        {error && <div style={{ color: 'red', marginBottom: '15px', textAlign: 'center', fontSize: '14px' }}>{error}</div>}
+        {error && <div className="alert alert-danger py-2 text-center small">{error}</div>}
 
         <form onSubmit={handleSubmit}>
           {mode === 'register' && (
-            <div className="auth-form-group">
-              <label>Full name:</label>
-              <div className="input-container">
-                <span className="input-icon"><UserIcon /></span>
+            <div className="mb-3">
+              <label className="form-label fw-semibold small">Full name:</label>
+              <div className="input-group">
+                <span className="input-group-text bg-white border-end-0">
+                  <i className="bi bi-person text-secondary"></i>
+                </span>
                 <input 
                   type="text" 
+                  className="form-control border-start-0" 
                   name="name"
                   placeholder="Enter your name" 
                   value={formData.name}
@@ -131,12 +136,15 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login', onAuthSuccess }) =>
             </div>
           )}
 
-          <div className="auth-form-group">
-            <label>Email:</label>
-            <div className="input-container">
-              <span className="input-icon"><EmailIcon /></span>
+          <div className="mb-3">
+            <label className="form-label fw-semibold small">Email:</label>
+            <div className="input-group">
+              <span className="input-group-text bg-white border-end-0">
+                <i className="bi bi-envelope text-secondary"></i>
+              </span>
               <input 
                 type="email" 
+                className="form-control border-start-0" 
                 name="email"
                 placeholder="Enter your email" 
                 value={formData.email}
@@ -146,31 +154,37 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login', onAuthSuccess }) =>
             </div>
           </div>
 
-          <div className="auth-form-group">
-            <label>Password:</label>
-            <div className="input-container">
-              <span className="input-icon"><LockIcon /></span>
+          <div className="mb-3">
+            <label className="form-label fw-semibold small">Password:</label>
+            <div className="input-group">
+              <span className="input-group-text bg-white border-end-0">
+                <i className="bi bi-lock text-secondary"></i>
+              </span>
               <input 
                 type={showPassword ? "text" : "password"} 
+                className="form-control border-start-0 border-end-0" 
                 name="password"
                 placeholder="Enter your password" 
                 value={formData.password}
                 onChange={handleChange}
                 required 
               />
-              <span className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
-                <EyeIcon />
+              <span className="input-group-text bg-white border-start-0" style={{ cursor: 'pointer' }} onClick={() => setShowPassword(!showPassword)}>
+                <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'} text-secondary`}></i>
               </span>
             </div>
           </div>
 
           {mode === 'register' && (
-            <div className="auth-form-group">
-              <label>Confirm password:</label>
-              <div className="input-container">
-                <span className="input-icon"><LockIcon /></span>
+            <div className="mb-3">
+              <label className="form-label fw-semibold small">Confirm password:</label>
+              <div className="input-group">
+                <span className="input-group-text bg-white border-end-0">
+                  <i className="bi bi-lock text-secondary"></i>
+                </span>
                 <input 
                   type={showPassword ? "text" : "password"} 
+                  className="form-control border-start-0" 
                   name="password_confirmation"
                   placeholder="Confirm enter your password" 
                   value={formData.password_confirmation}
@@ -182,31 +196,38 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login', onAuthSuccess }) =>
           )}
 
           {mode === 'register' && (
-            <div className="auth-checkbox-group">
+            <div className="form-check mb-4 small">
               <input 
+                className="form-check-input" 
                 type="checkbox" 
                 name="agree"
                 checked={formData.agree}
                 onChange={handleChange}
+                id="agreeCheck"
                 required 
               />
-              <span>Tôi đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của EventHub.</span>
+              <label className="form-check-label" htmlFor="agreeCheck">
+                Tôi đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của EventHub.
+              </label>
             </div>
           )}
 
           <button 
             type="submit" 
-            className={`auth-btn ${mode === 'login' ? 'btn-login-submit' : 'btn-register-submit'}`}
+            className={`btn w-100 py-2 fw-bold mb-3 ${mode === 'login' ? 'btn-success btn-login-submit' : 'btn-warning btn-register-submit'}`}
             disabled={loading}
           >
+            {loading ? (
+              <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            ) : null}
             {loading ? 'Đang xử lý...' : (mode === 'login' ? 'Đăng nhập' : 'Đăng ký')}
           </button>
 
-          <div className="auth-switch-text">
+          <div className="text-center small">
             {mode === 'login' ? (
-              <>Bạn chưa có tài khoản? <span className="auth-switch-link" onClick={() => setMode('register')}>Đăng ký ngay</span></>
+              <>Bạn chưa có tài khoản? <span className="text-primary fw-bold cursor-pointer" style={{ cursor: 'pointer' }} onClick={() => setMode('register')}>Đăng ký ngay</span></>
             ) : (
-              <>Bạn đã có tài khoản? <span className="auth-switch-link" onClick={() => setMode('login')}>Đăng nhập ngay</span></>
+              <>Bạn đã có tài khoản? <span className="text-primary fw-bold cursor-pointer" style={{ cursor: 'pointer' }} onClick={() => setMode('login')}>Đăng nhập ngay</span></>
             )}
           </div>
         </form>

@@ -7,7 +7,7 @@ const Hero = () => {
 
   useEffect(() => {
     // Fetch events from backend
-    fetch('http://127.0.0.1:8000/api/events')
+    fetch('http://localhost:8000/api/events')
       .then((res) => res.json())
       .then((data) => {
         if (data && data.data) {

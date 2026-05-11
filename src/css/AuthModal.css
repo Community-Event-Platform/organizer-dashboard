@@ -47,118 +47,36 @@
   margin-bottom: 20px;
 }
 
-.auth-form-group label {
-  display: block;
+.auth-modal .form-control {
+  padding: 10px 12px;
   font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: #1a1a1a;
+  color: #212529 !important; /* Force dark text */
+  background-color: #fff !important;
 }
 
-.input-container {
-  position: relative;
-  display: flex;
-  align-items: center;
+.auth-modal .input-group-text {
+  color: #6c757d;
 }
 
-.input-container input {
-  width: 100%;
-  padding: 12px 12px 12px 45px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 14px;
-  background: #fff;
-  transition: border-color 0.3s;
+.auth-modal .form-control::placeholder {
+  color: #adb5bd;
 }
 
-.input-container input:focus {
-  outline: none;
-  border-color: var(--secondary-orange);
+.auth-modal .btn-login-submit {
+  background-color: #198754; /* Bootstrap success */
+  border: none;
 }
 
-.input-icon {
-  position: absolute;
-  left: 15px;
-  color: #666;
-  display: flex;
-  align-items: center;
-}
-
-.password-toggle {
-  position: absolute;
-  right: 15px;
-  cursor: pointer;
-  color: #999;
-  display: flex;
-  align-items: center;
-}
-
-.auth-checkbox-group {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  margin-bottom: 25px;
-  font-size: 13px;
-  line-height: 1.4;
-  color: #333;
-}
-
-.auth-checkbox-group input {
-  margin-top: 3px;
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-}
-
-.auth-btn {
-  width: 100%;
-  padding: 14px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #fff;
-  text-align: center;
-  margin-bottom: 15px;
-}
-
-.btn-register-submit {
+.auth-modal .btn-register-submit {
   background-color: var(--secondary-orange);
-}
-
-.btn-register-submit:hover {
-  background-color: #e67c00;
-}
-
-.btn-login-submit {
-  background-color: #10b981; /* Green from the image */
-}
-
-.btn-login-submit:hover {
-  background-color: #059669;
-}
-
-.auth-switch-text {
-  text-align: center;
-  font-size: 14px;
-  color: #333;
-}
-
-.auth-switch-link {
-  color: #2563eb;
-  font-weight: 600;
-  cursor: pointer;
-  text-decoration: underline;
+  border: none;
 }
 
 .close-modal {
   position: absolute;
   top: 15px;
   right: 15px;
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: #666;
+  z-index: 10;
 }
 
 /* Modal animation */
