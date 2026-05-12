@@ -1,88 +1,304 @@
+/* ==================== Navbar Base ==================== */
 .navbar {
+  background-color: #fff;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar-inner {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
-  background-color: var(--bg-light);
+  padding: 14px 20px;
 }
 
+/* ==================== Logo ==================== */
 .navbar-logo {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--text-dark);
+  cursor: pointer;
+  transition: opacity 0.2s;
 }
 
+.navbar-logo:hover {
+  opacity: 0.85;
+}
+
+.logo-text {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+/* ==================== Nav Links ==================== */
 .navbar-links {
   display: flex;
-  gap: 30px;
+  gap: 6px;
   align-items: center;
   font-weight: 600;
-  color: #888888;
+  font-size: 15px;
 }
 
 .navbar-links a {
-  padding: 8px 16px;
-  border-radius: 4px;
+  padding: 8px 20px;
+  border-radius: 20px;
+  transition: all 0.25s ease;
+  color: #6b7280;
 }
 
 .navbar-links a.active {
-  background-color: var(--btn-purple);
-  color: var(--text-light);
+  background-color: #14AE5C;
+  color: #fff;
 }
 
 .navbar-links a:hover:not(.active) {
-  color: var(--text-dark);
+  color: #1a1a1a;
+  background-color: #f3f4f6;
 }
 
+/* ==================== Action Buttons ==================== */
 .navbar-actions {
   display: flex;
-  gap: 15px;
+  gap: 10px;
+  align-items: center;
 }
 
-.btn-login, .btn-register {
-  padding: 10px 24px;
+.btn-login,
+.btn-register {
+  padding: 8px 22px;
   font-weight: 600;
-  border-radius: 4px;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.25s ease;
+  cursor: pointer;
 }
 
 .btn-login {
-  background-color: var(--btn-light-grey);
-  color: var(--btn-red-text);
+  border: 1.5px solid #1a1a1a;
+  background: transparent;
+  color: #1a1a1a;
 }
 
-.btn-register {
-  background-color: #D3D3D3; /* Slightly darker grey for register as seen in screenshot */
-  color: var(--btn-red-text);
-}
-
-.btn-login:hover, .btn-register:hover {
-  filter: brightness(0.95);
+.btn-login:hover {
+  background: #1a1a1a;
+  color: #fff;
   transform: translateY(-1px);
 }
 
+.btn-register {
+  border: 1.5px solid #14AE5C;
+  background: #14AE5C;
+  color: #fff;
+}
+
+.btn-register:hover {
+  background: #0d9a4e;
+  border-color: #0d9a4e;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(20, 174, 92, 0.3);
+}
+
+/* ==================== User Profile (Logged In) ==================== */
 .user-profile {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 10px;
+  position: relative;
+  cursor: pointer;
 }
 
 .user-name {
   font-weight: 600;
-  color: var(--text-dark);
+  color: #1a1a1a;
+  font-size: 15px;
+  transition: color 0.2s;
 }
 
-.btn-logout {
-  padding: 8px 16px;
-  background-color: var(--btn-light-grey);
-  color: var(--btn-red-text);
-  border-radius: 4px;
+.user-name:hover {
+  color: #14AE5C;
+}
+
+.user-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #14AE5C 0%, #0d8a47 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  user-select: none;
+}
+
+.user-avatar:hover {
+  transform: scale(1.08);
+  box-shadow: 0 2px 10px rgba(20, 174, 92, 0.3);
+}
+
+/* ==================== Dropdown Menu ==================== */
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  min-width: 220px;
+  z-index: 200;
+  overflow: hidden;
+  animation: dropdownFadeIn 0.25s cubic-bezier(0.21, 1.02, 0.73, 1);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+@keyframes dropdownFadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+}
+
+.dropdown-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #14AE5C 0%, #0d8a47 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.dropdown-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.dropdown-name {
   font-weight: 600;
+  font-size: 14px;
+  color: #1a1a1a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.btn-logout:hover {
-  background-color: #fca5a5;
-  color: #7f1d1d;
+.dropdown-email {
+  font-size: 12px;
+  color: #94a3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: #f1f5f9;
+  margin: 0;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #dc2626;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #fef2f2;
+}
+
+.dropdown-item i {
+  font-size: 16px;
+}
+
+/* ==================== Mobile Menu Button ==================== */
+.mobile-menu-btn {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.mobile-menu-btn span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: #1a1a1a;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-btn.active span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.mobile-menu-btn.active span:nth-child(2) {
+  opacity: 0;
+}
+.mobile-menu-btn.active span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ==================== Responsive ==================== */
+@media (max-width: 768px) {
+  .mobile-menu-btn {
+    display: flex;
+    order: 3;
+  }
+
+  .navbar-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    flex-direction: column;
+    padding: 16px 20px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    gap: 4px;
+  }
+
+  .navbar-links.mobile-open {
+    display: flex;
+  }
+
+  .navbar-links a {
+    padding: 12px 20px;
+    border-radius: 8px;
+    width: 100%;
+  }
+
+  .navbar-actions {
+    order: 2;
+  }
+
+  .user-name {
+    display: none;
+  }
 }

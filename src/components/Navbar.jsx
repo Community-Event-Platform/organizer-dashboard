@@ -1,51 +1,125 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import '../css/Navbar.css';
 
+/**
+ * Navbar - Top navigation bar
+ * Shows: Logo, nav links, user profile (when logged in) or Login/Register buttons
+ * Features: Avatar dropdown with logout, active tab highlighting
+ */
 const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, activeTab, onTabChange }) => {
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Get user initials for avatar
+  const getInitials = (name) => {
+    if (!name) return 'U';
+    const parts = name.trim().split(' ');
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+    return name[0].toUpperCase();
+  };
+
   return (
-    <nav className="navbar container">
-      <div className="navbar-logo">
-        <svg viewBox="0 0 24 24" fill="var(--secondary-orange)" width="28" height="28">
-          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-        </svg>
-        <span className="logo-text">EventHub</span>
-      </div>
-      
-      <ul className="navbar-links">
-        <li>
-          <a 
-            href="#" 
-            className={!user || activeTab === 'dashboard' ? 'active' : ''} 
-            onClick={(e) => { e.preventDefault(); onTabChange('dashboard'); }}
-          >
-            Dashboard
-          </a>
-        </li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Events</a></li>
-        <li>
-          <a 
-            href="#" 
-            className={activeTab === 'guests' ? 'active' : ''} 
-            onClick={(e) => { e.preventDefault(); onTabChange('guests'); }}
-          >
-            Guests
-          </a>
-        </li>
-      </ul>
-      
-      <div className="navbar-actions">
-        {user ? (
-          <div className="user-profile">
-            <span className="user-name">Hi, {user.name}</span>
-            <button className="btn-logout" onClick={onLogout}>Logout</button>
-          </div>
-        ) : (
-          <>
-            <button className="btn-login" onClick={onLoginClick}>Login</button>
-            <button className="btn-register" onClick={onRegisterClick}>Register</button>
-          </>
-        )}
+    <nav className="navbar">
+      <div className="container navbar-inner">
+        {/* Logo */}
+        <div className="navbar-logo" onClick={() => onTabChange('home')}>
+          <svg viewBox="0 0 24 24" fill="#14AE5C" width="28" height="28">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+          </svg>
+          <span className="logo-text">EventHub</span>
+        </div>
+
+        {/* Mobile hamburger */}
+        <button
+          className={`mobile-menu-btn ${mobileMenuOpen ? 'active' : ''}`}
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label="Menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        {/* Nav links */}
+        <ul className={`navbar-links ${mobileMenuOpen ? 'mobile-open' : ''}`}>
+          <li>
+            <a
+              href="#"
+              className={activeTab === 'home' ? 'active' : ''}
+              onClick={(e) => { e.preventDefault(); onTabChange('home'); setMobileMenuOpen(false); }}
+            >
+              Home
+            </a>
+          </li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Events</a></li>
+          <li>
+            <a
+              href="#"
+              className={activeTab === 'participants' ? 'active' : ''}
+              onClick={(e) => { e.preventDefault(); onTabChange('participants'); setMobileMenuOpen(false); }}
+            >
+              Participants
+            </a>
+          </li>
+        </ul>
+
+        {/* Actions */}
+        <div className="navbar-actions">
+          {user ? (
+            <div className="user-profile" ref={dropdownRef}>
+              <span
+                className="user-name"
+                onClick={() => setShowDropdown(!showDropdown)}
+              >
+                {user.name}
+              </span>
+              <div
+                className="user-avatar"
+                onClick={() => setShowDropdown(!showDropdown)}
+              >
+                {getInitials(user.name)}
+              </div>
+
+              {/* Dropdown menu */}
+              {showDropdown && (
+                <div className="user-dropdown">
+                  <div className="dropdown-header">
+                    <div className="dropdown-avatar">{getInitials(user.name)}</div>
+                    <div className="dropdown-info">
+                      <span className="dropdown-name">{user.name}</span>
+                      <span className="dropdown-email">{user.email}</span>
+                    </div>
+                  </div>
+                  <div className="dropdown-divider"></div>
+                  <button className="dropdown-item" onClick={() => { onLogout(); setShowDropdown(false); }}>
+                    <i className="bi bi-box-arrow-right"></i>
+                    Đăng xuất
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <>
+              <button className="btn-login" onClick={onLoginClick}>Login</button>
+              <button className="btn-register" onClick={onRegisterClick}>Register</button>
+            </>
+          )}
+        </div>
       </div>
     </nav>
   );
