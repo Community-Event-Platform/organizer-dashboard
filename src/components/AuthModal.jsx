@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { organizerLogin, organizerRegister } from '../services/api';
 import '../css/AuthModal.css';
 
-const API_BASE_URL = 'http://localhost:8000';
-
-const AuthModal = ({ isOpen, onClose, initialMode = 'login', onAuthSuccess }) => {
-  const [mode, setMode] = useState(initialMode); // 'login' or 'register'
+/**
+ * AuthModal - Handles both Login and Register for Organizer
+ * Features: Email validation, password toggle, loading state, toast notifications
+ */
+const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess, addToast }) => {
+  const [mode, setMode] = useState(initialMode);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -13,8 +19,22 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login', onAuthSuccess }) =>
     password_confirmation: '',
     agree: false,
   });
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+
+  // Sync mode when prop changes
+  useEffect(() => {
+    setMode(initialMode);
+    setErrors({});
+  }, [initialMode]);
+
+  // Reset form when modal opens/closes
+  useEffect(() => {
+    if (isOpen) {
+      setFormData({ name: '', email: '', password: '', password_confirmation: '', agree: false });
+      setErrors({});
+      setShowPassword(false);
+      setShowConfirmPassword(false);
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -24,210 +44,273 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login', onAuthSuccess }) =>
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
     }));
+    // Clear error for this field when user starts typing
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  // Client-side validation
+  const validateForm = () => {
+    const newErrors = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (mode === 'register' && !formData.name.trim()) {
+      newErrors.name = 'Vui lòng nhập họ tên';
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = 'Vui lòng nhập email';
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = 'Email không hợp lệ';
+    }
+
+    if (!formData.password) {
+      newErrors.password = 'Vui lòng nhập mật khẩu';
+    } else if (mode === 'register' && formData.password.length < 6) {
+      newErrors.password = 'Mật khẩu phải có ít nhất 6 ký tự';
+    }
+
+    if (mode === 'register') {
+      if (!formData.password_confirmation) {
+        newErrors.password_confirmation = 'Vui lòng xác nhận mật khẩu';
+      } else if (formData.password !== formData.password_confirmation) {
+        newErrors.password_confirmation = 'Mật khẩu xác nhận không khớp';
+      }
+
+      if (!formData.agree) {
+        newErrors.agree = 'Bạn phải đồng ý với điều khoản dịch vụ';
+      }
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
+    if (!validateForm()) return;
+
     setLoading(true);
 
-    const endpoint = mode === 'login' ? '/api/login' : '/api/register';
-    const payload = mode === 'login' 
-      ? { email: formData.email, password: formData.password }
-      : { 
-          name: formData.name, 
-          email: formData.email, 
-          password: formData.password, 
-          password_confirmation: formData.password_confirmation,
-          role: 'organizer' 
-        };
-
     try {
-      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
+      if (mode === 'login') {
+        // ===== LOGIN =====
+        const response = await organizerLogin({
+          email: formData.email,
+          password: formData.password,
+        });
 
-      const data = await response.json();
+        const data = response.data;
 
-      if (!response.ok) {
-        throw new Error(data.message || 'Something went wrong');
+        // Save token and organizer info to localStorage
+        localStorage.setItem('token', data.token || data.access_token);
+        localStorage.setItem('user', JSON.stringify(data.organizer || data.data));
+
+        if (addToast) addToast('Đăng nhập thành công! 🎉', 'success');
+        if (onAuthSuccess) onAuthSuccess(data.organizer || data.data);
+        onClose();
+      } else {
+        // ===== REGISTER =====
+        await organizerRegister({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          password_confirmation: formData.password_confirmation,
+        });
+
+        if (addToast) addToast('Đăng ký thành công! Vui lòng đăng nhập.', 'success');
+        
+        // Switch to login mode after successful registration
+        setMode('login');
+        setFormData({ name: '', email: formData.email, password: '', password_confirmation: '', agree: false });
       }
-
-      // Success
-      localStorage.setItem('token', data.access_token);
-      localStorage.setItem('user', JSON.stringify(data.data));
-      
-      if (onAuthSuccess) onAuthSuccess(data.data);
-      onClose();
     } catch (err) {
-      setError(err.message);
+      const errorMessage = err.response?.data?.message || err.message || 'Đã xảy ra lỗi. Vui lòng thử lại.';
+      if (addToast) addToast(errorMessage, 'error');
+      setErrors({ general: errorMessage });
     } finally {
       setLoading(false);
     }
   };
 
-  const UserIcon = () => (
-    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none">
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-      <circle cx="12" cy="7" r="4"></circle>
-    </svg>
-  );
-
-  const EmailIcon = () => (
-    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none">
-      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-      <polyline points="22,6 12,13 2,6"></polyline>
-    </svg>
-  );
-
-  const LockIcon = () => (
-    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none">
-      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-    </svg>
-  );
-
-  const EyeIcon = () => (
-    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none">
-      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-      <circle cx="12" cy="12" r="3"></circle>
-    </svg>
-  );
+  const switchMode = (newMode) => {
+    setMode(newMode);
+    setErrors({});
+    setFormData({ name: '', email: '', password: '', password_confirmation: '', agree: false });
+    setShowPassword(false);
+    setShowConfirmPassword(false);
+  };
 
   return (
     <div className="auth-modal-overlay" onClick={onClose}>
-      <div className="auth-modal p-4" onClick={(e) => e.stopPropagation()}>
-        <button className="btn-close close-modal" onClick={onClose} aria-label="Close"></button>
-        
-        <div className="auth-modal-header text-center mb-4">
-          <h2 className="fw-bold">{mode === 'login' ? 'Đăng nhập' : 'Đăng ký tài khoản mới'}</h2>
-          <p className="text-muted small">
-            {mode === 'login' 
+      <div className="auth-modal" onClick={(e) => e.stopPropagation()}>
+        {/* Close button */}
+        <button className="close-modal" onClick={onClose} aria-label="Close">
+          <i className="bi bi-x-lg"></i>
+        </button>
+
+        {/* Header */}
+        <div className="auth-modal-header">
+          <div className="auth-logo-icon">
+            <i className={`bi ${mode === 'login' ? 'bi-box-arrow-in-right' : 'bi-person-plus'}`}></i>
+          </div>
+          <h2>{mode === 'login' ? 'Đăng nhập' : 'Đăng ký tài khoản mới'}</h2>
+          <p>
+            {mode === 'login'
               ? 'Chào mừng bạn quay trở lại! Vui lòng đăng nhập để tiếp tục quản lý sự kiện của bạn.'
-              : 'Hãy tham gia cộng đồng của chúng tôi và bắt đầu tạo ra những sự kiện tuyệt vời cho cộng đồng của bạn.'}
+              : 'Hãy tham gia cộng đồng của chúng tôi và bắt đầu tạo ra những sự kiện tuyệt vời.'}
           </p>
         </div>
 
-        {error && <div className="alert alert-danger py-2 text-center small">{error}</div>}
+        {/* General error */}
+        {errors.general && (
+          <div className="auth-error-banner">
+            <i className="bi bi-exclamation-circle"></i>
+            {errors.general}
+          </div>
+        )}
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} noValidate>
+          {/* Name field - Register only */}
           {mode === 'register' && (
-            <div className="mb-3">
-              <label className="form-label fw-semibold small">Full name:</label>
-              <div className="input-group">
-                <span className="input-group-text bg-white border-end-0">
-                  <i className="bi bi-person text-secondary"></i>
-                </span>
-                <input 
-                  type="text" 
-                  className="form-control border-start-0" 
+            <div className="auth-form-group">
+              <label className="auth-label">Họ và tên</label>
+              <div className={`auth-input-wrapper ${errors.name ? 'input-error' : ''}`}>
+                <i className="bi bi-person auth-input-icon"></i>
+                <input
+                  type="text"
                   name="name"
-                  placeholder="Enter your name" 
+                  placeholder="Nhập họ tên của bạn"
                   value={formData.name}
                   onChange={handleChange}
-                  required 
+                  className="auth-input"
                 />
               </div>
+              {errors.name && <span className="auth-field-error">{errors.name}</span>}
             </div>
           )}
 
-          <div className="mb-3">
-            <label className="form-label fw-semibold small">Email:</label>
-            <div className="input-group">
-              <span className="input-group-text bg-white border-end-0">
-                <i className="bi bi-envelope text-secondary"></i>
-              </span>
-              <input 
-                type="email" 
-                className="form-control border-start-0" 
+          {/* Email field */}
+          <div className="auth-form-group">
+            <label className="auth-label">Email</label>
+            <div className={`auth-input-wrapper ${errors.email ? 'input-error' : ''}`}>
+              <i className="bi bi-envelope auth-input-icon"></i>
+              <input
+                type="email"
                 name="email"
-                placeholder="Enter your email" 
+                placeholder="Nhập email của bạn"
                 value={formData.email}
                 onChange={handleChange}
-                required 
+                className="auth-input"
               />
             </div>
+            {errors.email && <span className="auth-field-error">{errors.email}</span>}
           </div>
 
-          <div className="mb-3">
-            <label className="form-label fw-semibold small">Password:</label>
-            <div className="input-group">
-              <span className="input-group-text bg-white border-end-0">
-                <i className="bi bi-lock text-secondary"></i>
-              </span>
-              <input 
-                type={showPassword ? "text" : "password"} 
-                className="form-control border-start-0 border-end-0" 
+          {/* Password field */}
+          <div className="auth-form-group">
+            <label className="auth-label">Mật khẩu</label>
+            <div className={`auth-input-wrapper ${errors.password ? 'input-error' : ''}`}>
+              <i className="bi bi-lock auth-input-icon"></i>
+              <input
+                type={showPassword ? 'text' : 'password'}
                 name="password"
-                placeholder="Enter your password" 
+                placeholder="Nhập mật khẩu"
                 value={formData.password}
                 onChange={handleChange}
-                required 
+                className="auth-input"
               />
-              <span className="input-group-text bg-white border-start-0" style={{ cursor: 'pointer' }} onClick={() => setShowPassword(!showPassword)}>
-                <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'} text-secondary`}></i>
-              </span>
+              <button
+                type="button"
+                className="auth-toggle-password"
+                onClick={() => setShowPassword(!showPassword)}
+                tabIndex={-1}
+              >
+                <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`}></i>
+              </button>
             </div>
+            {errors.password && <span className="auth-field-error">{errors.password}</span>}
           </div>
 
+          {/* Confirm Password - Register only */}
           {mode === 'register' && (
-            <div className="mb-3">
-              <label className="form-label fw-semibold small">Confirm password:</label>
-              <div className="input-group">
-                <span className="input-group-text bg-white border-end-0">
-                  <i className="bi bi-lock text-secondary"></i>
-                </span>
-                <input 
-                  type={showPassword ? "text" : "password"} 
-                  className="form-control border-start-0" 
+            <div className="auth-form-group">
+              <label className="auth-label">Xác nhận mật khẩu</label>
+              <div className={`auth-input-wrapper ${errors.password_confirmation ? 'input-error' : ''}`}>
+                <i className="bi bi-lock auth-input-icon"></i>
+                <input
+                  type={showConfirmPassword ? 'text' : 'password'}
                   name="password_confirmation"
-                  placeholder="Confirm enter your password" 
+                  placeholder="Nhập lại mật khẩu"
                   value={formData.password_confirmation}
                   onChange={handleChange}
-                  required 
+                  className="auth-input"
                 />
+                <button
+                  type="button"
+                  className="auth-toggle-password"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  tabIndex={-1}
+                >
+                  <i className={`bi ${showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'}`}></i>
+                </button>
               </div>
+              {errors.password_confirmation && <span className="auth-field-error">{errors.password_confirmation}</span>}
             </div>
           )}
 
+          {/* Agree checkbox - Register only */}
           {mode === 'register' && (
-            <div className="form-check mb-4 small">
-              <input 
-                className="form-check-input" 
-                type="checkbox" 
+            <div className="auth-checkbox-group">
+              <input
+                type="checkbox"
                 name="agree"
+                id="agreeCheck"
                 checked={formData.agree}
                 onChange={handleChange}
-                id="agreeCheck"
-                required 
+                className="auth-checkbox"
               />
-              <label className="form-check-label" htmlFor="agreeCheck">
-                Tôi đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của EventHub.
+              <label htmlFor="agreeCheck" className="auth-checkbox-label">
+                Tôi đồng ý với <a href="#" className="auth-link">Điều khoản dịch vụ</a> và{' '}
+                <a href="#" className="auth-link">Chính sách bảo mật</a> của EventHub.
               </label>
+              {errors.agree && <span className="auth-field-error">{errors.agree}</span>}
             </div>
           )}
 
-          <button 
-            type="submit" 
-            className={`btn w-100 py-2 fw-bold mb-3 ${mode === 'login' ? 'btn-success btn-login-submit' : 'btn-warning btn-register-submit'}`}
+          {/* Submit button */}
+          <button
+            type="submit"
+            className={`auth-submit-btn ${mode === 'login' ? 'btn-login-green' : 'btn-register-orange'}`}
             disabled={loading}
           >
             {loading ? (
-              <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-            ) : null}
-            {loading ? 'Đang xử lý...' : (mode === 'login' ? 'Đăng nhập' : 'Đăng ký')}
+              <>
+                <span className="auth-spinner"></span>
+                Đang xử lý...
+              </>
+            ) : (
+              mode === 'login' ? 'Đăng nhập' : 'Đăng ký'
+            )}
           </button>
 
-          <div className="text-center small">
+          {/* Switch mode */}
+          <div className="auth-switch">
             {mode === 'login' ? (
-              <>Bạn chưa có tài khoản? <span className="text-primary fw-bold cursor-pointer" style={{ cursor: 'pointer' }} onClick={() => setMode('register')}>Đăng ký ngay</span></>
+              <>
+                Bạn chưa có tài khoản?{' '}
+                <span className="auth-switch-link" onClick={() => switchMode('register')}>
+                  Đăng ký ngay
+                </span>
+              </>
             ) : (
-              <>Bạn đã có tài khoản? <span className="text-primary fw-bold cursor-pointer" style={{ cursor: 'pointer' }} onClick={() => setMode('login')}>Đăng nhập ngay</span></>
+              <>
+                Bạn đã có tài khoản?{' '}
+                <span className="auth-switch-link" onClick={() => switchMode('login')}>
+                  Đăng nhập ngay
+                </span>
+              </>
             )}
           </div>
         </form>

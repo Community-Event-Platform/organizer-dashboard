@@ -1,90 +1,317 @@
+/* ==================== Auth Modal Overlay ==================== */
 .auth-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.45);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(6px);
+  padding: 20px;
 }
 
+/* ==================== Modal Container ==================== */
 .auth-modal {
-  background: rgba(148, 187, 212, 0.75);
-  backdrop-filter: blur(15px);
-  border-radius: 12px;
+  background: #ffffff;
+  border-radius: 16px;
   width: 100%;
-  max-width: 450px;
-  padding: 40px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  color: #333;
+  max-width: 460px;
+  padding: 36px 32px 28px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
   position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  animation: modalFadeIn 0.3s cubic-bezier(0.21, 1.02, 0.73, 1) forwards;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ==================== Close Button ==================== */
+.close-modal {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: #f1f5f9;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+.close-modal:hover {
+  background: #e2e8f0;
+  color: #1a1a1a;
+  transform: rotate(90deg);
+}
+
+/* ==================== Header ==================== */
 .auth-modal-header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 28px;
+}
+
+.auth-logo-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #14AE5C 0%, #0d8a47 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin: 0 auto 16px;
+  box-shadow: 0 4px 14px rgba(20, 174, 92, 0.3);
 }
 
 .auth-modal-header h2 {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 700;
-  margin-bottom: 10px;
   color: #1a1a1a;
+  margin-bottom: 8px;
 }
 
 .auth-modal-header p {
-  font-size: 14px;
-  color: #444;
-  line-height: 1.4;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.5;
+  max-width: 340px;
+  margin: 0 auto;
 }
 
+/* ==================== Error Banner ==================== */
+.auth-error-banner {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ==================== Form Groups ==================== */
 .auth-form-group {
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
-.auth-modal .form-control {
-  padding: 10px 12px;
+.auth-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.auth-input-wrapper {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0 14px;
+  background: #fff;
+  transition: all 0.2s ease;
+}
+
+.auth-input-wrapper:focus-within {
+  border-color: #14AE5C;
+  box-shadow: 0 0 0 3px rgba(20, 174, 92, 0.1);
+}
+
+.auth-input-wrapper.input-error {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.08);
+}
+
+.auth-input-icon {
+  color: #94a3b8;
+  font-size: 16px;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.auth-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 12px 0;
   font-size: 14px;
-  color: #212529 !important; /* Force dark text */
-  background-color: #fff !important;
+  color: #1a1a1a;
+  background: transparent;
+  font-family: inherit;
 }
 
-.auth-modal .input-group-text {
-  color: #6c757d;
+.auth-input::placeholder {
+  color: #b0b8c4;
 }
 
-.auth-modal .form-control::placeholder {
-  color: #adb5bd;
-}
-
-.auth-modal .btn-login-submit {
-  background-color: #198754; /* Bootstrap success */
+.auth-toggle-password {
+  background: none;
   border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+  font-size: 16px;
+  transition: color 0.2s;
+  flex-shrink: 0;
 }
 
-.auth-modal .btn-register-submit {
-  background-color: var(--secondary-orange);
+.auth-toggle-password:hover {
+  color: #64748b;
+}
+
+/* ==================== Field Error ==================== */
+.auth-field-error {
+  display: block;
+  color: #ef4444;
+  font-size: 12px;
+  margin-top: 5px;
+  padding-left: 2px;
+}
+
+/* ==================== Checkbox Group ==================== */
+.auth-checkbox-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+
+.auth-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: #14AE5C;
+  margin-top: 2px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.auth-checkbox-label {
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.5;
+  flex: 1;
+}
+
+.auth-link {
+  color: #14AE5C;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+}
+
+/* ==================== Submit Button ==================== */
+.auth-submit-btn {
+  width: 100%;
+  padding: 13px;
   border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 18px;
 }
 
-.close-modal {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  z-index: 10;
+.btn-login-green {
+  background: linear-gradient(135deg, #14AE5C 0%, #0d9a4e 100%);
+  box-shadow: 0 4px 14px rgba(20, 174, 92, 0.35);
 }
 
-/* Modal animation */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
+.btn-login-green:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(20, 174, 92, 0.45);
 }
 
-.auth-modal {
-  animation: fadeIn 0.3s ease-out;
+.btn-register-orange {
+  background: linear-gradient(135deg, #FF8A00 0%, #e67a00 100%);
+  box-shadow: 0 4px 14px rgba(255, 138, 0, 0.35);
+}
+
+.btn-register-orange:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(255, 138, 0, 0.45);
+}
+
+.auth-submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ==================== Loading Spinner ==================== */
+.auth-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: authSpin 0.6s linear infinite;
+}
+
+@keyframes authSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* ==================== Switch Mode ==================== */
+.auth-switch {
+  text-align: center;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.auth-switch-link {
+  color: #14AE5C;
+  font-weight: 700;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.auth-switch-link:hover {
+  color: #0d8a47;
+  text-decoration: underline;
+}
+
+/* ==================== Responsive ==================== */
+@media (max-width: 480px) {
+  .auth-modal {
+    padding: 28px 20px 22px;
+    margin: 10px;
+  }
+
+  .auth-modal-header h2 {
+    font-size: 20px;
+  }
 }
