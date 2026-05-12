@@ -1,6 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
+  /* Primary Colors - as specified */
+  --primary-green: #14AE5C;
+  --primary-green-dark: #0d9a4e;
+  --primary-green-light: #dcfce7;
+  --light-bg: #F4FAF7;
+  --footer-bg-light: #E6E6E6;
+
+  /* Legacy variables kept for backward compatibility */
   --primary-purple: #3B1E4A;
   --primary-purple-light: #5A3272;
   --secondary-orange: #FF8A00;
@@ -9,13 +17,21 @@
   --btn-red-text: #D32F2F;
   --footer-bg: #404040;
   --footer-text: #D1D5DB;
-  --text-dark: #333333;
+
+  /* Text */
+  --text-dark: #1a1a1a;
+  --text-secondary: #64748b;
   --text-light: #FFFFFF;
+
+  /* Backgrounds */
   --bg-light: #FFFFFF;
-  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --bg-card: #FFFFFF;
+
+  /* Typography */
+  font-family: 'Inter', system-ui, -apple-system, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  color-scheme: light dark;
+  color-scheme: light;
 }
 
 * {
@@ -24,18 +40,24 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
   background-color: var(--bg-light);
   color: var(--text-dark);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
   text-decoration: none;
   color: inherit;
-  transition: color 0.3s ease;
+  transition: color 0.2s ease;
 }
 
 ul {
@@ -46,11 +68,43 @@ button {
   cursor: pointer;
   border: none;
   font-family: inherit;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+input, textarea, select {
+  font-family: inherit;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
+}
+
+/* Selection color */
+::selection {
+  background-color: rgba(20, 174, 92, 0.15);
+  color: var(--text-dark);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
