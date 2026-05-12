@@ -1,78 +1,144 @@
-.dashboard-container {
-  padding: 40px 0;
-  background-color: #f8fafc;
+/* ==================== Dashboard Wrapper ==================== */
+.dashboard-wrapper {
   min-height: calc(100vh - 80px);
+  background-color: #F4FAF7;
 }
 
+/* ==================== Hero Section ==================== */
 .dashboard-hero {
-  background-color: #3b1e4a; /* Dark purple from image */
+  background: linear-gradient(135deg, #14AE5C 0%, #0d8a47 100%);
   color: #fff;
-  padding: 60px 20px;
+  padding: 48px 20px;
   text-align: center;
-  border-radius: 0;
-  margin-bottom: 40px;
 }
 
 .dashboard-hero h1 {
-  color: #10b981; /* Green text */
-  font-size: 36px;
+  color: #fff;
+  font-size: 34px;
   font-weight: 700;
   margin-bottom: 10px;
+  line-height: 1.35;
+}
+
+.dashboard-hero h1 em {
+  font-style: italic;
+  font-weight: 400;
 }
 
 .dashboard-hero p {
-  font-size: 16px;
-  color: #ddd;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ==================== Dashboard Container ==================== */
+.dashboard-container {
+  padding: 40px 0 60px;
+}
+
+.dashboard-section {
+  margin-bottom: 40px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .section-title {
   font-size: 20px;
   font-weight: 700;
-  margin-bottom: 25px;
   color: #1a1a1a;
+  margin-bottom: 24px;
 }
 
-/* Stats Cards */
+.section-header .section-title {
+  margin-bottom: 0;
+}
+
+/* ==================== Add Category Button ==================== */
+.btn-add-category {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #14AE5C 0%, #0d9a4e 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(20, 174, 92, 0.25);
+}
+
+.btn-add-category:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(20, 174, 92, 0.35);
+}
+
+/* ==================== Statistics Cards ==================== */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-  margin-bottom: 50px;
+  gap: 24px;
+  margin-bottom: 40px;
 }
 
 .stat-card {
   background: #fff;
-  padding: 30px;
-  border-radius: 12px;
+  padding: 28px 24px;
+  border-radius: 14px;
   text-align: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .stat-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
 }
 
 .stat-icon-wrapper {
-  width: 60px;
-  height: 60px;
-  border-radius: 12px;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 auto 15px;
+  margin: 0 auto 14px;
   font-size: 24px;
+  transition: transform 0.3s ease;
 }
 
-.icon-blue { background-color: #e0f2fe; color: #0ea5e9; }
-.icon-orange { background-color: #ffedd5; color: #f97316; }
-.icon-green { background-color: #dcfce7; color: #22c55e; }
+.stat-card:hover .stat-icon-wrapper {
+  transform: scale(1.08);
+}
+
+/* Stat card color variants */
+.stat-blue .stat-icon-wrapper {
+  background-color: #e0f2fe;
+  color: #0ea5e9;
+}
+
+.stat-orange .stat-icon-wrapper {
+  background-color: #ffedd5;
+  color: #f97316;
+}
+
+.stat-green .stat-icon-wrapper {
+  background-color: #dcfce7;
+  color: #14AE5C;
+}
 
 .stat-value {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 700;
   color: #1a1a1a;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
 }
 
 .stat-label {
@@ -81,58 +147,450 @@
   font-weight: 500;
 }
 
-/* Categories Table */
+/* ==================== Categories Table ==================== */
 .categories-card {
   background: #fff;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  padding: 0;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
-.table th {
+.dashboard-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.dashboard-table th {
   font-weight: 600;
-  color: #1a1a1a;
-  border-bottom: 2px solid #f1f5f9;
-  padding: 15px;
+  color: #64748b;
+  background: #f8fafc;
+  padding: 14px 24px;
+  text-align: left;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #f1f5f9;
 }
 
-.table td {
-  padding: 15px;
+.dashboard-table td {
+  padding: 16px 24px;
   vertical-align: middle;
-  color: #475569;
+  color: #334155;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 14px;
+}
+
+.dashboard-table tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.dashboard-table tbody tr:hover {
+  background-color: #f8fdf9;
+}
+
+.dashboard-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.td-id {
+  font-weight: 600;
+  color: #94a3b8;
+  width: 60px;
+}
+
+.td-count {
+  font-weight: 700;
+  text-align: center;
+  color: #1a1a1a;
+}
+
+.td-actions {
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Category name with icon */
+.category-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .category-icon {
   width: 40px;
   height: 40px;
-  border-radius: 8px;
+  border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 20px;
+  font-size: 18px;
+  flex-shrink: 0;
 }
 
-.bg-purple-light { background-color: #f3e8ff; color: #9333ea; }
-.bg-orange-light { background-color: #fff7ed; color: #ea580c; }
-.bg-blue-light { background-color: #eff6ff; color: #2563eb; }
+.cat-icon-purple { background-color: #f3e8ff; color: #9333ea; }
+.cat-icon-orange { background-color: #fff7ed; color: #ea580c; }
+.cat-icon-blue { background-color: #eff6ff; color: #2563eb; }
+.cat-icon-green { background-color: #dcfce7; color: #14AE5C; }
+.cat-icon-default { background-color: #f1f5f9; color: #64748b; }
 
+/* ==================== Action Buttons ==================== */
 .btn-action {
-  padding: 6px 16px;
+  padding: 7px 16px;
   font-size: 13px;
   font-weight: 600;
-  border-radius: 6px;
-  margin-left: 10px;
+  border-radius: 8px;
+  margin-left: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .btn-edit {
-  background-color: #eef2ff;
-  color: #4f46e5;
+  background-color: #dcfce7;
+  color: #16a34a;
+}
+
+.btn-edit:hover {
+  background-color: #bbf7d0;
+  transform: translateY(-1px);
 }
 
 .btn-delete {
-  background-color: #fff1f2;
-  color: #e11d48;
+  background-color: #fee2e2;
+  color: #dc2626;
 }
 
-.btn-edit:hover { background-color: #e0e7ff; }
-.btn-delete:hover { background-color: #ffe4e6; }
+.btn-delete:hover {
+  background-color: #fecaca;
+  transform: translateY(-1px);
+}
+
+/* ==================== Table States ==================== */
+.table-loading,
+.table-empty {
+  text-align: center;
+  padding: 48px 20px !important;
+  color: #94a3b8;
+}
+
+.table-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.table-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.table-empty i {
+  font-size: 32px;
+  color: #cbd5e1;
+}
+
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e2e8f0;
+  border-top-color: #14AE5C;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ==================== Modal Overlay ==================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  padding: 20px;
+}
+
+/* ==================== Category Modal ==================== */
+.category-modal {
+  background: #fff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 440px;
+  padding: 28px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  animation: modalSlideIn 0.3s cubic-bezier(0.21, 1.02, 0.73, 1) forwards;
+}
+
+@keyframes modalSlideIn {
+  from { opacity: 0; transform: translateY(-16px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.category-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.category-modal-header h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.modal-close-btn {
+  background: #f1f5f9;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.modal-close-btn:hover {
+  background: #e2e8f0;
+  color: #1a1a1a;
+}
+
+.category-form-group {
+  margin-bottom: 24px;
+}
+
+.category-form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.category-form-group input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #1a1a1a;
+  outline: none;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.category-form-group input:focus {
+  border-color: #14AE5C;
+  box-shadow: 0 0 0 3px rgba(20, 174, 92, 0.1);
+}
+
+.category-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn-cancel {
+  padding: 10px 22px;
+  background: #f1f5f9;
+  color: #475569;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-cancel:hover {
+  background: #e2e8f0;
+}
+
+.btn-save {
+  padding: 10px 24px;
+  background: linear-gradient(135deg, #14AE5C 0%, #0d9a4e 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(20, 174, 92, 0.25);
+}
+
+.btn-save:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(20, 174, 92, 0.35);
+}
+
+.btn-save:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.btn-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  display: inline-block;
+}
+
+/* ==================== Delete Confirmation Modal ==================== */
+.delete-confirm-modal {
+  background: #fff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 400px;
+  padding: 32px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  animation: modalSlideIn 0.3s cubic-bezier(0.21, 1.02, 0.73, 1) forwards;
+}
+
+.delete-icon-wrapper {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #fef2f2;
+  color: #ef4444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  font-size: 24px;
+}
+
+.delete-confirm-modal h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 10px;
+}
+
+.delete-confirm-modal p {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.delete-modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn-confirm-delete {
+  padding: 10px 24px;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
+}
+
+.btn-confirm-delete:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+}
+
+/* ==================== Status Badges (for Guests) ==================== */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-success { background-color: #dcfce7; color: #16a34a; }
+.badge-primary { background-color: #dbeafe; color: #2563eb; }
+.badge-warning { background-color: #fef3c7; color: #d97706; }
+.badge-secondary { background-color: #f1f5f9; color: #64748b; }
+
+/* ==================== Utility Classes ==================== */
+.d-flex { display: flex; }
+.align-items-center { align-items: center; }
+.justify-content-between { justify-content: space-between; }
+.gap-3 { gap: 12px; }
+.mb-0 { margin-bottom: 0; }
+.mb-4 { margin-bottom: 24px; }
+.mb-5 { margin-bottom: 48px; }
+.py-5 { padding-top: 48px; padding-bottom: 48px; }
+.text-end { text-align: right; }
+.text-center { text-align: center; }
+.fw-bold { font-weight: 700; }
+.text-muted { color: #64748b; }
+
+/* ==================== Responsive ==================== */
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .dashboard-hero h1 {
+    font-size: 26px;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .categories-card {
+    overflow-x: auto;
+  }
+
+  .dashboard-table {
+    min-width: 500px;
+  }
+
+  .dashboard-table th,
+  .dashboard-table td {
+    padding: 12px 16px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+}

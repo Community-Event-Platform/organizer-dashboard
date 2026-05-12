@@ -1,69 +1,201 @@
 import React, { useState, useEffect } from 'react';
+import { getDashboardStats, getCategories, createCategory, updateCategory, deleteCategory } from '../services/api';
 import '../css/Dashboard.css';
 
-const Dashboard = () => {
-  const [data, setData] = useState({
-    stats: { total_events: 0, total_participants: 0, active_events: 0 },
-    categories: []
+/**
+ * Dashboard - Organizer main dashboard
+ * Features: Hero section, statistics cards, categories CRUD table
+ * All data fetched from API with loading/error states
+ */
+const Dashboard = ({ addToast }) => {
+  // Dashboard statistics
+  const [stats, setStats] = useState({
+    totalEvents: 0,
+    participants: 0,
+    activeEvents: 0,
   });
-  const [loading, setLoading] = useState(true);
 
+  // Categories management
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [statsLoading, setStatsLoading] = useState(true);
+
+  // Category form modal state
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [editingCategory, setEditingCategory] = useState(null);
+  const [categoryForm, setCategoryForm] = useState({ name: '' });
+  const [formLoading, setFormLoading] = useState(false);
+
+  // Delete confirmation
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
+
+  // ===== Fetch dashboard stats from API =====
   useEffect(() => {
-    const fetchDashboardData = async () => {
+    const fetchStats = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:8000/api/dashboard-stats', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Accept': 'application/json',
-          }
+        const response = await getDashboardStats();
+        const data = response.data;
+        setStats({
+          totalEvents: data.totalEvents || data.total_events || 0,
+          participants: data.participants || data.total_participants || 0,
+          activeEvents: data.activeEvents || data.active_events || 0,
         });
-        const result = await response.json();
-        setData(result);
       } catch (err) {
-        console.error('Error fetching dashboard data:', err);
+        console.error('Error fetching dashboard stats:', err);
       } finally {
-        setLoading(false);
+        setStatsLoading(false);
       }
     };
-
-    fetchDashboardData();
+    fetchStats();
   }, []);
 
-  const getCategoryIcon = (name) => {
-    const icons = {
-      'Music': { icon: 'bi-music-note-beamed', class: 'bg-purple-light' },
-      'Sports': { icon: 'bi-dribbble', class: 'bg-orange-light' },
-      'Community': { icon: 'bi-people-fill', class: 'bg-blue-light' },
-    };
-    return icons[name] || { icon: 'bi-tag', class: 'bg-secondary-light' };
+  // ===== Fetch categories from API =====
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    setLoading(true);
+    try {
+      const response = await getCategories();
+      const data = response.data;
+      // Handle both array response and {data: [...]} response
+      setCategories(Array.isArray(data) ? data : data.data || []);
+    } catch (err) {
+      console.error('Error fetching categories:', err);
+      if (addToast) addToast('Không thể tải danh mục. Vui lòng thử lại.', 'error');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const stats = [
-    { id: 1, label: 'Toatal Events', value: data.stats.total_events, icon: 'bi-calendar-event', colorClass: 'icon-blue' },
-    { id: 2, label: 'Participants', value: data.stats.total_participants, icon: 'bi-people', colorClass: 'icon-orange' },
-    { id: 3, label: 'Active Events', value: data.stats.active_events, icon: 'bi-graph-up-arrow', colorClass: 'icon-green' },
+  // ===== Category CRUD handlers =====
+
+  const handleAddCategory = () => {
+    setEditingCategory(null);
+    setCategoryForm({ name: '' });
+    setShowCategoryModal(true);
+  };
+
+  const handleEditCategory = (category) => {
+    setEditingCategory(category);
+    setCategoryForm({ name: category.name });
+    setShowCategoryModal(true);
+  };
+
+  const handleDeleteClick = (category) => {
+    setDeleteConfirm(category);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deleteConfirm) return;
+    try {
+      await deleteCategory(deleteConfirm.id);
+      setCategories((prev) => prev.filter((c) => c.id !== deleteConfirm.id));
+      if (addToast) addToast('Xóa danh mục thành công!', 'success');
+    } catch (err) {
+      const msg = err.response?.data?.message || 'Không thể xóa danh mục.';
+      if (addToast) addToast(msg, 'error');
+    } finally {
+      setDeleteConfirm(null);
+    }
+  };
+
+  const handleCategorySubmit = async (e) => {
+    e.preventDefault();
+    if (!categoryForm.name.trim()) {
+      if (addToast) addToast('Vui lòng nhập tên danh mục.', 'warning');
+      return;
+    }
+
+    setFormLoading(true);
+    try {
+      if (editingCategory) {
+        // Update existing category
+        const response = await updateCategory(editingCategory.id, { name: categoryForm.name });
+        const updated = response.data.data || response.data;
+        setCategories((prev) =>
+          prev.map((c) => (c.id === editingCategory.id ? { ...c, ...updated, name: categoryForm.name } : c))
+        );
+        if (addToast) addToast('Cập nhật danh mục thành công!', 'success');
+      } else {
+        // Create new category
+        const response = await createCategory({ name: categoryForm.name });
+        const newCat = response.data.data || response.data;
+        setCategories((prev) => [...prev, newCat]);
+        if (addToast) addToast('Thêm danh mục thành công!', 'success');
+      }
+      setShowCategoryModal(false);
+    } catch (err) {
+      const msg = err.response?.data?.message || 'Đã xảy ra lỗi. Vui lòng thử lại.';
+      if (addToast) addToast(msg, 'error');
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  // Category icon mapping
+  const getCategoryIcon = (name) => {
+    const icons = {
+      'Music': { icon: 'bi-music-note-beamed', class: 'cat-icon-purple' },
+      'Sports': { icon: 'bi-dribbble', class: 'cat-icon-orange' },
+      'Community': { icon: 'bi-people-fill', class: 'cat-icon-blue' },
+      'Technology': { icon: 'bi-cpu', class: 'cat-icon-green' },
+      'Education': { icon: 'bi-book', class: 'cat-icon-blue' },
+      'Food': { icon: 'bi-cup-hot', class: 'cat-icon-orange' },
+      'Art': { icon: 'bi-palette', class: 'cat-icon-purple' },
+    };
+    return icons[name] || { icon: 'bi-tag', class: 'cat-icon-default' };
+  };
+
+  // Statistics cards data
+  const statCards = [
+    {
+      id: 1,
+      label: 'Total Events',
+      value: statsLoading ? '...' : stats.totalEvents,
+      icon: 'bi-calendar-event',
+      colorClass: 'stat-blue',
+    },
+    {
+      id: 2,
+      label: 'Participants',
+      value: statsLoading ? '...' : stats.participants,
+      icon: 'bi-people',
+      colorClass: 'stat-orange',
+    },
+    {
+      id: 3,
+      label: 'Active Events',
+      value: statsLoading ? '...' : stats.activeEvents,
+      icon: 'bi-graph-up-arrow',
+      colorClass: 'stat-green',
+    },
   ];
 
   return (
     <div className="dashboard-wrapper">
-      {/* Dashboard Hero */}
+      {/* ===== Dashboard Hero Section - Green gradient ===== */}
       <div className="dashboard-hero">
         <div className="container">
-          <h1>Chào mừng bạn đến với <br/>Event organizer</h1>
+          <h1>
+            <em>Chào mừng bạn đến với</em>
+            <br />
+            Event organizer
+          </h1>
           <p>Quản lý và theo dõi các sự kiện của bạn</p>
         </div>
       </div>
 
       <div className="dashboard-container">
         <div className="container">
-          {/* Stats Section */}
-          <section className="mb-5">
+          {/* ===== Statistics Section ===== */}
+          <section className="dashboard-section">
             <h2 className="section-title">Dashboard Overview</h2>
             <div className="stats-grid">
-              {stats.map((stat) => (
-                <div key={stat.id} className="stat-card">
-                  <div className={`stat-icon-wrapper ${stat.colorClass}`}>
+              {statCards.map((stat) => (
+                <div key={stat.id} className={`stat-card ${stat.colorClass}`}>
+                  <div className="stat-icon-wrapper">
                     <i className={`bi ${stat.icon}`}></i>
                   </div>
                   <div className="stat-value">{stat.value}</div>
@@ -73,11 +205,17 @@ const Dashboard = () => {
             </div>
           </section>
 
-          {/* Categories Section */}
-          <section>
-            <h2 className="section-title">Events Categories</h2>
+          {/* ===== Categories Section ===== */}
+          <section className="dashboard-section">
+            <div className="section-header">
+              <h2 className="section-title">Events Categories</h2>
+              <button className="btn-add-category" onClick={handleAddCategory}>
+                <i className="bi bi-plus-lg"></i> Add Category
+              </button>
+            </div>
+
             <div className="categories-card">
-              <table className="table">
+              <table className="dashboard-table">
                 <thead>
                   <tr>
                     <th>ID</th>
@@ -88,38 +226,126 @@ const Dashboard = () => {
                 </thead>
                 <tbody>
                   {loading ? (
-                    <tr><td colSpan="4" className="text-center py-5">Loading data...</td></tr>
-                  ) : data.categories.map((cat) => {
-                    const iconData = getCategoryIcon(cat.name);
-                    return (
-                      <tr key={cat.id}>
-                        <td>{cat.id}</td>
-                        <td>
-                          <div className="d-flex align-items-center gap-3">
-                            <div className={`category-icon ${iconData.class}`}>
-                              <i className={`bi ${iconData.icon}`}></i>
+                    <tr>
+                      <td colSpan="4" className="table-loading">
+                        <div className="loading-spinner"></div>
+                        <span>Đang tải dữ liệu...</span>
+                      </td>
+                    </tr>
+                  ) : categories.length === 0 ? (
+                    <tr>
+                      <td colSpan="4" className="table-empty">
+                        <i className="bi bi-inbox"></i>
+                        <span>Chưa có danh mục nào. Hãy thêm danh mục đầu tiên!</span>
+                      </td>
+                    </tr>
+                  ) : (
+                    categories.map((cat) => {
+                      const iconData = getCategoryIcon(cat.name);
+                      return (
+                        <tr key={cat.id}>
+                          <td className="td-id">{cat.id}</td>
+                          <td>
+                            <div className="category-name-cell">
+                              <div className={`category-icon ${iconData.class}`}>
+                                <i className={`bi ${iconData.icon}`}></i>
+                              </div>
+                              <span>{cat.name}</span>
                             </div>
-                            <span>{cat.name}</span>
-                          </div>
-                        </td>
-                        <td className="fw-bold text-center">{cat.events_count || 0}</td>
-                        <td className="text-end">
-                          <button className="btn btn-action btn-edit">
-                            <i className="bi bi-pencil-square me-1"></i> Edit
-                          </button>
-                          <button className="btn btn-action btn-delete">
-                            <i className="bi bi-trash me-1"></i> Delete
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
+                          </td>
+                          <td className="td-count">{cat.eventsCount || cat.events_count || 0}</td>
+                          <td className="td-actions">
+                            <button
+                              className="btn-action btn-edit"
+                              onClick={() => handleEditCategory(cat)}
+                            >
+                              <i className="bi bi-pencil-square"></i> Edit
+                            </button>
+                            <button
+                              className="btn-action btn-delete"
+                              onClick={() => handleDeleteClick(cat)}
+                            >
+                              <i className="bi bi-trash"></i> Delete
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
                 </tbody>
               </table>
             </div>
           </section>
         </div>
       </div>
+
+      {/* ===== Category Add/Edit Modal ===== */}
+      {showCategoryModal && (
+        <div className="modal-overlay" onClick={() => setShowCategoryModal(false)}>
+          <div className="category-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="category-modal-header">
+              <h3>{editingCategory ? 'Chỉnh sửa danh mục' : 'Thêm danh mục mới'}</h3>
+              <button className="modal-close-btn" onClick={() => setShowCategoryModal(false)}>
+                <i className="bi bi-x-lg"></i>
+              </button>
+            </div>
+            <form onSubmit={handleCategorySubmit}>
+              <div className="category-form-group">
+                <label>Tên danh mục</label>
+                <input
+                  type="text"
+                  placeholder="Nhập tên danh mục..."
+                  value={categoryForm.name}
+                  onChange={(e) => setCategoryForm({ name: e.target.value })}
+                  autoFocus
+                />
+              </div>
+              <div className="category-modal-actions">
+                <button
+                  type="button"
+                  className="btn-cancel"
+                  onClick={() => setShowCategoryModal(false)}
+                >
+                  Hủy
+                </button>
+                <button type="submit" className="btn-save" disabled={formLoading}>
+                  {formLoading ? (
+                    <>
+                      <span className="btn-spinner"></span> Đang lưu...
+                    </>
+                  ) : (
+                    editingCategory ? 'Cập nhật' : 'Thêm mới'
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ===== Delete Confirmation Modal ===== */}
+      {deleteConfirm && (
+        <div className="modal-overlay" onClick={() => setDeleteConfirm(null)}>
+          <div className="delete-confirm-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="delete-icon-wrapper">
+              <i className="bi bi-exclamation-triangle-fill"></i>
+            </div>
+            <h3>Xác nhận xóa</h3>
+            <p>
+              Bạn có chắc chắn muốn xóa danh mục <strong>"{deleteConfirm.name}"</strong>?
+              Hành động này không thể hoàn tác.
+            </p>
+            <div className="delete-modal-actions">
+              <button className="btn-cancel" onClick={() => setDeleteConfirm(null)}>
+                Hủy
+              </button>
+              <button className="btn-confirm-delete" onClick={handleConfirmDelete}>
+                <i className="bi bi-trash"></i> Xóa
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
