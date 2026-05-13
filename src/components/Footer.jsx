@@ -7,12 +7,12 @@ const Footer = () => {
       <div className="container footer-content">
         <div className="footer-col about">
           <h4>About the website</h4>
-          <p>An event management and networking platform for a community. Experience the thrill of exciting events and connect with like-minded people near you. Explore our <a href="#">About</a> page to learn more about us.</p>
+          <p>An event management and networking platform for a community. Experience the thrill of exciting events and connect with like-minded people near you. Explore our <a href="#" className="about-link">About</a> page to learn more about us.</p>
           <div className="social-icons">
-            <span className="social-icon"></span>
-            <span className="social-icon"></span>
-            <span className="social-icon"></span>
-            <span className="social-icon"></span>
+            <a href="#" className="social-icon fb"><i className="bi bi-facebook"></i></a>
+            <a href="#" className="social-icon tw"><i className="bi bi-twitter-x"></i></a>
+            <a href="#" className="social-icon ig"><i className="bi bi-instagram"></i></a>
+            <a href="#" className="social-icon yt"><i className="bi bi-youtube"></i></a>
           </div>
         </div>
 
@@ -42,28 +42,28 @@ const Footer = () => {
           <h4>Contact</h4>
           <ul>
             <li>
-              <span className="icon">📍</span>
+              <i className="bi bi-geo-alt-fill contact-icon"></i>
               No.123, ABC Street, Son Tra District, DaNang City
             </li>
             <li>
-              <span className="icon">📞</span>
+              <i className="bi bi-telephone-fill contact-icon"></i>
               (+84) 373 532 152
             </li>
             <li>
-              <span className="icon">✉️</span>
+              <i className="bi bi-envelope-fill contact-icon"></i>
               Eventorganizer123@projectadvanced.PNV.com
             </li>
             <li>
-              <span className="icon">🕒</span>
-              Monday - Saturday: <strong>8:00 - 17:00</strong>
+              <i className="bi bi-clock-fill contact-icon"></i>
+              <span>Monday - Saturday: <strong>8:00 - 17:00</strong></span>
             </li>
           </ul>
         </div>
       </div>
       
       <div className="footer-bottom">
-        <p>© 2026 EventHub. All rights reserved.</p>
-        <p>The Community Event Platform was developed by Group 5 of the Advanced Web project.</p>
+        <p className="copyright">© 2026 EventHub. All rights reserved.</p>
+        <p className="developed-by">The Community Event Platform was developed by Group 5 of the Advanced Web project.</p>
       </div>
     </footer>
   );
