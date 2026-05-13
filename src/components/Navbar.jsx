@@ -37,9 +37,7 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, activeTab, onTa
       <div className="container navbar-inner">
         {/* Logo */}
         <div className="navbar-logo" onClick={() => onTabChange('home')}>
-          <svg viewBox="0 0 24 24" fill="#14AE5C" width="28" height="28">
-            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-          </svg>
+          <i className="bi bi-lightning-charge-fill" style={{ color: '#14AE5C', fontSize: '28px' }}></i>
           <span className="logo-text">EventHub</span>
         </div>
 
@@ -65,13 +63,35 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, activeTab, onTa
               Home
             </a>
           </li>
-          <li><a href="#">About</a></li>
-          <li><a href="#">Events</a></li>
+          <li><a href="#" onClick={(e) => { e.preventDefault(); alert('Trang giới thiệu đang được phát triển.'); }}>About</a></li>
+          <li>
+            <a 
+              href="#" 
+              onClick={(e) => { 
+                e.preventDefault(); 
+                if (!user) {
+                  alert('Bạn phải đăng nhập để sử dụng trang này.');
+                } else {
+                  // Handle events tab
+                }
+              }}
+            >
+              Events
+            </a>
+          </li>
           <li>
             <a
               href="#"
               className={activeTab === 'participants' ? 'active' : ''}
-              onClick={(e) => { e.preventDefault(); onTabChange('participants'); setMobileMenuOpen(false); }}
+              onClick={(e) => { 
+                e.preventDefault(); 
+                if (!user) {
+                  alert('Bạn phải đăng nhập để sử dụng trang này.');
+                } else {
+                  onTabChange('participants'); 
+                }
+                setMobileMenuOpen(false); 
+              }}
             >
               Participants
             </a>

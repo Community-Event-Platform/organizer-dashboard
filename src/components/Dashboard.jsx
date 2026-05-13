@@ -35,10 +35,12 @@ const Dashboard = ({ addToast }) => {
       try {
         const response = await getDashboardStats();
         const data = response.data;
+        // The backend returns { stats: { total_events, ... }, categories: [...] }
+        const statsData = data.stats || {};
         setStats({
-          totalEvents: data.totalEvents || data.total_events || 0,
-          participants: data.participants || data.total_participants || 0,
-          activeEvents: data.activeEvents || data.active_events || 0,
+          totalEvents: statsData.total_events || statsData.totalEvents || 0,
+          participants: statsData.total_participants || statsData.participants || 0,
+          activeEvents: statsData.active_events || statsData.activeEvents || 0,
         });
       } catch (err) {
         console.error('Error fetching dashboard stats:', err);
@@ -59,8 +61,9 @@ const Dashboard = ({ addToast }) => {
     try {
       const response = await getCategories();
       const data = response.data;
-      // Handle both array response and {data: [...]} response
-      setCategories(Array.isArray(data) ? data : data.data || []);
+      // Handle both array response and {data: [...]}, and check for {categories: [...]} from dashboard
+      const categoryList = data.categories || (Array.isArray(data) ? data : data.data || []);
+      setCategories(categoryList);
     } catch (err) {
       console.error('Error fetching categories:', err);
       if (addToast) addToast('Không thể tải danh mục. Vui lòng thử lại.', 'error');

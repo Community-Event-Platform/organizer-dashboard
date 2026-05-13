@@ -40,17 +40,17 @@ api.interceptors.response.use(
 // ==================== Auth APIs ====================
 
 export const organizerLogin = (credentials) => {
-  return api.post('/organizer/login', credentials);
+  return api.post('/login', credentials);
 };
 
 export const organizerRegister = (userData) => {
-  return api.post('/organizer/register', userData);
+  return api.post('/register', userData);
 };
 
 // ==================== Dashboard APIs ====================
 
 export const getDashboardStats = () => {
-  return api.get('/organizer/dashboard');
+  return api.get('/dashboard-stats');
 };
 
 // ==================== Categories APIs ====================

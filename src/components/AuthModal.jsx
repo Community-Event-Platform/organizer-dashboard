@@ -117,6 +117,7 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
           email: formData.email,
           password: formData.password,
           password_confirmation: formData.password_confirmation,
+          role: 'organizer',
         });
 
         if (addToast) addToast('Đăng ký thành công! Vui lòng đăng nhập.', 'success');
