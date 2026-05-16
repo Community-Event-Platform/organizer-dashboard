@@ -2,10 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { organizerLogin, organizerRegister } from '../services/api';
 import '../css/AuthModal.css';
 
-/**
- * AuthModal - Handles both Login and Register for Organizer
- * Features: Email validation, password toggle, loading state, toast notifications
- */
 const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess, addToast }) => {
   const [mode, setMode] = useState(initialMode);
   const [showPassword, setShowPassword] = useState(false);
@@ -13,23 +9,21 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
-    name: '',
+    full_name: '',
     email: '',
     password: '',
     password_confirmation: '',
     agree: false,
   });
 
-  // Sync mode when prop changes
   useEffect(() => {
     setMode(initialMode);
     setErrors({});
   }, [initialMode]);
 
-  // Reset form when modal opens/closes
   useEffect(() => {
     if (isOpen) {
-      setFormData({ name: '', email: '', password: '', password_confirmation: '', agree: false });
+      setFormData({ full_name: '', email: '', password: '', password_confirmation: '', agree: false });
       setErrors({});
       setShowPassword(false);
       setShowConfirmPassword(false);
@@ -44,19 +38,17 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
     }));
-    // Clear error for this field when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: '' }));
     }
   };
 
-  // Client-side validation
   const validateForm = () => {
     const newErrors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (mode === 'register' && !formData.name.trim()) {
-      newErrors.name = 'Vui lòng nhập họ tên';
+    if (mode === 'register' && !formData.full_name.trim()) {
+      newErrors.full_name = 'Vui lòng nhập họ tên';
     }
 
     if (!formData.email.trim()) {
@@ -95,15 +87,12 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
 
     try {
       if (mode === 'login') {
-        // ===== LOGIN =====
         const response = await organizerLogin({
           email: formData.email,
           password: formData.password,
         });
 
         const data = response.data;
-
-        // Save token and organizer info to localStorage
         localStorage.setItem('token', data.token || data.access_token);
         localStorage.setItem('user', JSON.stringify(data.organizer || data.data));
 
@@ -111,9 +100,8 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
         if (onAuthSuccess) onAuthSuccess(data.organizer || data.data);
         onClose();
       } else {
-        // ===== REGISTER =====
         await organizerRegister({
-          name: formData.name,
+          full_name: formData.full_name,
           email: formData.email,
           password: formData.password,
           password_confirmation: formData.password_confirmation,
@@ -121,10 +109,8 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
         });
 
         if (addToast) addToast('Đăng ký thành công! Vui lòng đăng nhập.', 'success');
-        
-        // Switch to login mode after successful registration
         setMode('login');
-        setFormData({ name: '', email: formData.email, password: '', password_confirmation: '', agree: false });
+        setFormData({ full_name: '', email: formData.email, password: '', password_confirmation: '', agree: false });
       }
     } catch (err) {
       const errorMessage = err.response?.data?.message || err.message || 'Đã xảy ra lỗi. Vui lòng thử lại.';
@@ -138,7 +124,7 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
   const switchMode = (newMode) => {
     setMode(newMode);
     setErrors({});
-    setFormData({ name: '', email: '', password: '', password_confirmation: '', agree: false });
+    setFormData({ full_name: '', email: '', password: '', password_confirmation: '', agree: false });
     setShowPassword(false);
     setShowConfirmPassword(false);
   };
@@ -146,12 +132,10 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
   return (
     <div className="auth-modal-overlay" onClick={onClose}>
       <div className="auth-modal" onClick={(e) => e.stopPropagation()}>
-        {/* Close button */}
         <button className="close-modal" onClick={onClose} aria-label="Close">
           <i className="bi bi-x-lg"></i>
         </button>
 
-        {/* Header */}
         <div className="auth-modal-header">
           <div className="auth-logo-icon">
             <i className={`bi ${mode === 'login' ? 'bi-box-arrow-in-right' : 'bi-person-plus'}`}></i>
@@ -164,7 +148,6 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
           </p>
         </div>
 
-        {/* General error */}
         {errors.general && (
           <div className="auth-error-banner">
             <i className="bi bi-exclamation-circle"></i>
@@ -173,26 +156,24 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
         )}
 
         <form onSubmit={handleSubmit} noValidate>
-          {/* Name field - Register only */}
           {mode === 'register' && (
             <div className="auth-form-group">
               <label className="auth-label">Họ và tên</label>
-              <div className={`auth-input-wrapper ${errors.name ? 'input-error' : ''}`}>
+              <div className={`auth-input-wrapper ${errors.full_name ? 'input-error' : ''}`}>
                 <i className="bi bi-person auth-input-icon"></i>
                 <input
                   type="text"
-                  name="name"
+                  name="full_name"
                   placeholder="Nhập họ tên của bạn"
-                  value={formData.name}
+                  value={formData.full_name}
                   onChange={handleChange}
                   className="auth-input"
                 />
               </div>
-              {errors.name && <span className="auth-field-error">{errors.name}</span>}
+              {errors.full_name && <span className="auth-field-error">{errors.full_name}</span>}
             </div>
           )}
 
-          {/* Email field */}
           <div className="auth-form-group">
             <label className="auth-label">Email</label>
             <div className={`auth-input-wrapper ${errors.email ? 'input-error' : ''}`}>
@@ -209,7 +190,6 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
             {errors.email && <span className="auth-field-error">{errors.email}</span>}
           </div>
 
-          {/* Password field */}
           <div className="auth-form-group">
             <label className="auth-label">Mật khẩu</label>
             <div className={`auth-input-wrapper ${errors.password ? 'input-error' : ''}`}>
@@ -234,7 +214,6 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
             {errors.password && <span className="auth-field-error">{errors.password}</span>}
           </div>
 
-          {/* Confirm Password - Register only */}
           {mode === 'register' && (
             <div className="auth-form-group">
               <label className="auth-label">Xác nhận mật khẩu</label>
@@ -261,7 +240,6 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
             </div>
           )}
 
-          {/* Agree checkbox - Register only */}
           {mode === 'register' && (
             <div className="auth-checkbox-group">
               <input
@@ -280,7 +258,6 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
             </div>
           )}
 
-          {/* Submit button */}
           <button
             type="submit"
             className={`auth-submit-btn ${mode === 'login' ? 'btn-login-green' : 'btn-register-orange'}`}
@@ -296,7 +273,6 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
             )}
           </button>
 
-          {/* Switch mode */}
           <div className="auth-switch">
             {mode === 'login' ? (
               <>
