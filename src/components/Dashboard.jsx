@@ -29,46 +29,36 @@ const Dashboard = ({ addToast }) => {
   // Delete confirmation
   const [deleteConfirm, setDeleteConfirm] = useState(null);
 
-  // ===== Fetch dashboard stats from API =====
+  // ===== Fetch dashboard stats and categories from API =====
   useEffect(() => {
-    const fetchStats = async () => {
+    const fetchDashboardData = async () => {
+      setStatsLoading(true);
+      setLoading(true);
       try {
         const response = await getDashboardStats();
         const data = response.data;
-        // The backend returns { stats: { total_events, ... }, categories: [...] }
+        
+        // 1. Set stats
         const statsData = data.stats || {};
         setStats({
           totalEvents: statsData.total_events || statsData.totalEvents || 0,
           participants: statsData.total_participants || statsData.participants || 0,
           activeEvents: statsData.active_events || statsData.activeEvents || 0,
         });
+
+        // 2. Set categories with event counts
+        if (data.categories) {
+          setCategories(data.categories);
+        }
       } catch (err) {
         console.error('Error fetching dashboard stats:', err);
+        if (addToast) addToast('Không thể tải dữ liệu dashboard. Vui lòng thử lại.', 'error');
       } finally {
         setStatsLoading(false);
-      }
-    };
-    fetchStats();
-  }, []);
-
-  // ===== Fetch categories from API =====
-  useEffect(() => {
-    const fetchCategories = async () => {
-      setLoading(true);
-      try {
-        const response = await getCategories();
-        const data = response.data;
-        // Handle both array response and {data: [...]}, and check for {categories: [...]} from dashboard
-        const categoryList = data.categories || (Array.isArray(data) ? data : data.data || []);
-        setCategories(categoryList);
-      } catch (err) {
-        console.error('Error fetching categories:', err);
-        if (addToast) addToast('Không thể tải danh mục. Vui lòng thử lại.', 'error');
-      } finally {
         setLoading(false);
       }
     };
-    fetchCategories();
+    fetchDashboardData();
   }, [addToast]);
 
   // ===== Category CRUD handlers =====
