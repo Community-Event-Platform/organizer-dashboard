@@ -59,6 +59,19 @@
   background-color: #f3f4f6;
 }
 
+/* Style Events and Participants as greyed out before login */
+.navbar:has(.btn-login) .navbar-links li:nth-child(3) a,
+.navbar:has(.btn-login) .navbar-links li:nth-child(4) a {
+  color: #b8b8b8;
+  cursor: not-allowed;
+}
+
+.navbar:has(.btn-login) .navbar-links li:nth-child(3) a:hover,
+.navbar:has(.btn-login) .navbar-links li:nth-child(4) a:hover {
+  background-color: transparent;
+  color: #b8b8b8;
+}
+
 /* ==================== Action Buttons ==================== */
 .navbar-actions {
   display: flex;
@@ -74,31 +87,16 @@
   font-size: 14px;
   transition: all 0.25s ease;
   cursor: pointer;
-}
-
-.btn-login {
-  border: 1.5px solid #1a1a1a;
   background: transparent;
-  color: #1a1a1a;
-}
-
-.btn-login:hover {
-  background: #1a1a1a;
-  color: #fff;
-  transform: translateY(-1px);
-}
-
-.btn-register {
   border: 1.5px solid #14AE5C;
+  color: #14AE5C;
+}
+
+.btn-login:hover,
+.btn-register:hover {
   background: #14AE5C;
   color: #fff;
-}
-
-.btn-register:hover {
-  background: #0d9a4e;
-  border-color: #0d9a4e;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(20, 174, 92, 0.3);
 }
 
 /* ==================== User Profile (Logged In) ==================== */

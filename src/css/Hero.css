@@ -5,10 +5,10 @@
 }
 
 .hero-header {
-  background: linear-gradient(135deg, var(--primary-purple) 0%, var(--primary-purple-light) 100%);
+  background: #F4FBF7; /* A very light green background matching the screenshot */
   padding: 60px 20px;
   text-align: center;
-  color: var(--text-light);
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .hero-header h1 {
@@ -16,10 +16,11 @@
   font-weight: 700;
   margin-bottom: 20px;
   line-height: 1.2;
+  color: #1a1a1a; /* Dark text matching the screenshot */
 }
 
 .text-green {
-  color: #10B981; /* A nice bright green matching the screenshot */
+  color: #14AE5C; /* Event organizer green matching the theme */
 }
 
 .hero-header p {
@@ -29,6 +30,7 @@
   line-height: 1.6;
   opacity: 0.9;
   font-style: italic;
+  color: #4b5563; /* Dark text matching the screenshot */
 }
 
 .hero-carousel {
