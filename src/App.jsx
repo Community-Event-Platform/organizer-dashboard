@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Dashboard from './components/Dashboard'
-import Guests from './components/Guests'
 import Footer from './components/Footer'
 import AuthModal from './components/AuthModal'
 import { ToastContainer, useToast } from './components/Toast'
@@ -13,23 +12,21 @@ import './css/App.css'
  * Manages: authentication state, tab navigation, toast notifications
  */
 function App() {
-  const [user, setUser] = useState(null);
-  const [activeTab, setActiveTab] = useState('home');
-  const [authModal, setAuthModal] = useState({ isOpen: false, mode: 'login' });
-  const { toasts, addToast, removeToast } = useToast();
-
-  // Restore user session from localStorage on mount
-  useEffect(() => {
+  const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
       try {
-        setUser(JSON.parse(savedUser));
+        return JSON.parse(savedUser);
       } catch {
         localStorage.removeItem('user');
         localStorage.removeItem('token');
       }
     }
-  }, []);
+    return null;
+  });
+  const [activeTab, setActiveTab] = useState('home');
+  const [authModal, setAuthModal] = useState({ isOpen: false, mode: 'login' });
+  const { toasts, addToast, removeToast } = useToast();
 
   const openAuthModal = (mode) => {
     setAuthModal({ isOpen: true, mode });
@@ -58,8 +55,6 @@ function App() {
       return <Hero />;
     }
     switch (activeTab) {
-      case 'participants':
-        return <Guests />;
       case 'home':
       default:
         return <Dashboard addToast={addToast} />;

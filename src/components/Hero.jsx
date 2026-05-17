@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import '../css/Hero.css';
 
 // Import local slide images
@@ -39,10 +39,10 @@ const Hero = () => {
   // Auto-rotation every 5 seconds
   useEffect(() => {
     const timer = setInterval(() => {
-      nextSlide();
+      setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
     }, 5000);
     return () => clearInterval(timer);
-  }, [currentSlide]);
+  }, [slides.length]);
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));

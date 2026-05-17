@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { getDashboardStats, getCategories, createCategory, updateCategory, deleteCategory } from '../services/api';
 import '../css/Dashboard.css';
 
@@ -53,24 +53,23 @@ const Dashboard = ({ addToast }) => {
 
   // ===== Fetch categories from API =====
   useEffect(() => {
+    const fetchCategories = async () => {
+      setLoading(true);
+      try {
+        const response = await getCategories();
+        const data = response.data;
+        // Handle both array response and {data: [...]}, and check for {categories: [...]} from dashboard
+        const categoryList = data.categories || (Array.isArray(data) ? data : data.data || []);
+        setCategories(categoryList);
+      } catch (err) {
+        console.error('Error fetching categories:', err);
+        if (addToast) addToast('Không thể tải danh mục. Vui lòng thử lại.', 'error');
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchCategories();
-  }, []);
-
-  const fetchCategories = async () => {
-    setLoading(true);
-    try {
-      const response = await getCategories();
-      const data = response.data;
-      // Handle both array response and {data: [...]}, and check for {categories: [...]} from dashboard
-      const categoryList = data.categories || (Array.isArray(data) ? data : data.data || []);
-      setCategories(categoryList);
-    } catch (err) {
-      console.error('Error fetching categories:', err);
-      if (addToast) addToast('Không thể tải danh mục. Vui lòng thử lại.', 'error');
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [addToast]);
 
   // ===== Category CRUD handlers =====
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { organizerLogin, organizerRegister } from '../services/api';
 import '../css/AuthModal.css';
 
@@ -16,6 +16,7 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
     agree: false,
   });
 
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     setMode(initialMode);
     setErrors({});
@@ -29,6 +30,7 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
       setShowConfirmPassword(false);
     }
   }, [isOpen]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   if (!isOpen) return null;
 
@@ -96,7 +98,7 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
         localStorage.setItem('token', data.token || data.access_token);
         localStorage.setItem('user', JSON.stringify(data.organizer || data.data));
 
-        if (addToast) addToast('Đăng nhập thành công! 🎉', 'success');
+        if (addToast) addToast('Đăng nhập thành công!', 'success');
         if (onAuthSuccess) onAuthSuccess(data.organizer || data.data);
         onClose();
       } else {
