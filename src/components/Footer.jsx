@@ -22,7 +22,6 @@ const Footer = () => {
             <li><a href="#">Events managements</a></li>
             <li><a href="#">About Us</a></li>
             <li><a href="#">Event attendee management</a></li>
-            <li><a href="#">Updating...</a></li>
           </ul>
         </div>
 
@@ -32,8 +31,6 @@ const Footer = () => {
             <li><a href="#">View My events</a></li>
             <li><a href="#">View all event registrants</a></li>
             <li><a href="#">Event Update</a></li>
-            <li><a href="#">Updating...</a></li>
-            <li><a href="#">Updating...</a></li>
           </ul>
         </div>
 

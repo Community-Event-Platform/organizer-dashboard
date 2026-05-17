@@ -1,43 +1,50 @@
 .footer {
-  background-color: #e2e2e2; /* Light grey background from Figma */
-  color: #333;
-  padding: 60px 0 0; /* Bottom padding removed as it's handled by footer-bottom */
-  font-size: 0.95rem;
+  background-color: #e2e2e2;
+  color: #4b5563;
+  padding: 20px 0 0;
+  font-size: 11px;
 }
 
 .footer-content {
   display: grid;
   grid-template-columns: 1.5fr 1fr 1fr 1.5fr;
-  gap: 40px;
-  margin-bottom: 40px;
-  padding-bottom: 40px;
+  gap: 30px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
 }
 
 .footer-col h4 {
-  color: #14AE5C; /* Green color from Figma */
-  font-size: 1.2rem;
-  margin-bottom: 25px;
+  color: #14AE5C;
+  font-size: 0.95rem;
+  margin-bottom: 10px;
   font-weight: 700;
   position: relative;
   display: inline-block;
 }
 
-/* Blue underline under headers */
 .footer-col h4::after {
   content: '';
   position: absolute;
-  left: 0;
-  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -4px;
   width: 60%;
   height: 2px;
-  background-color: #4361ee; /* Blue underline */
+  background-color: #4361ee;
+}
+
+.footer-col.about {
+  text-align: center;
 }
 
 .footer-col.about p {
-  line-height: 1.6;
-  margin-top: 10px;
-  margin-bottom: 25px;
-  color: #333;
+  line-height: 1.5;
+  margin-top: 4px;
+  margin-bottom: 10px;
+  color: #4b5563;
+  font-weight: 500;
+  font-style: italic;
+  text-align: center;
 }
 
 .footer-col.about .about-link {
@@ -47,27 +54,27 @@
 
 .social-icons {
   display: flex;
-  gap: 12px;
+  gap: 10px;
+  justify-content: center;
 }
 
 .social-icon {
-  width: 42px;
-  height: 42px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
+  font-size: 16px;
   color: white;
   transition: transform 0.3s ease, filter 0.3s ease;
 }
 
 .social-icon:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
   filter: brightness(1.1);
 }
 
-/* Brand colors for social icons */
 .social-icon.fb { background-color: #1877F2; }
 .social-icon.tw { background-color: #1DA1F2; }
 .social-icon.ig { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
@@ -76,15 +83,15 @@
 .footer-col ul {
   list-style: none;
   padding: 0;
-  margin-top: 10px;
+  margin-top: 6px;
 }
 
 .footer-col ul li {
-  margin-bottom: 15px;
+  margin-bottom: 5px;
 }
 
 .footer-col ul a {
-  color: #333;
+  color: #4b5563;
   transition: color 0.3s ease;
   font-weight: 500;
 }
@@ -93,37 +100,43 @@
   color: #14AE5C;
 }
 
+.footer-col.contact h4 {
+  font-size: 0.95rem;
+}
+
 .footer-col.contact ul li {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  line-height: 1.5;
-  color: #333;
+  gap: 10px;
+  line-height: 1.4;
+  color: #4b5563;
   font-weight: 500;
+  margin-bottom: 6px;
+  word-break: break-all;
 }
 
 .contact-icon {
-  color: #14AE5C; /* Green icons for contact */
-  font-size: 1.2rem;
+  color: #14AE5C;
+  font-size: 0.85rem;
   margin-top: 2px;
 }
 
 .footer-bottom {
   background-color: #ffffff;
-  padding: 30px 20px;
+  padding: 10px 20px;
   text-align: center;
   border-top: 1px solid #ddd;
 }
 
 .footer-bottom .copyright {
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 11px;
   color: #1a1a1a;
-  margin-bottom: 8px;
+  margin-bottom: 2px;
 }
 
 .footer-bottom .developed-by {
-  font-size: 0.9rem;
-  color: #444;
+  font-size: 10px;
+  color: #6b7280;
   font-weight: 500;
 }

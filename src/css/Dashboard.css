@@ -8,49 +8,50 @@
 .dashboard-hero {
   background: linear-gradient(135deg, #14AE5C 0%, #0d8a47 100%);
   color: #fff;
-  padding: 48px 20px;
+  padding: 24px 20px;
   text-align: center;
 }
 
 .dashboard-hero h1 {
   color: #fff;
-  font-size: 34px;
+  font-size: 28px;
   font-weight: 700;
-  margin-bottom: 10px;
-  line-height: 1.35;
+  margin-bottom: 6px;
+  line-height: 1.25;
 }
 
 .dashboard-hero h1 em {
   font-style: italic;
   font-weight: 400;
+  font-size: 1rem;
 }
 
 .dashboard-hero p {
-  font-size: 15px;
+  font-size: 13.5px;
   color: rgba(255, 255, 255, 0.85);
 }
 
 /* ==================== Dashboard Container ==================== */
 .dashboard-container {
-  padding: 40px 0 60px;
+  padding: 20px 0 40px;
 }
 
 .dashboard-section {
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .section-title {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 700;
   color: #1a1a1a;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
 }
 
 .section-header .section-title {
@@ -62,55 +63,59 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 10px 20px;
+  padding: 6px 14px;
   background: linear-gradient(135deg, #14AE5C 0%, #0d9a4e 100%);
   color: white;
   border: none;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: 4px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(20, 174, 92, 0.25);
+  box-shadow: 0 1px 4px rgba(20, 174, 92, 0.2);
 }
 
 .btn-add-category:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(20, 174, 92, 0.35);
+  box-shadow: 0 3px 8px rgba(20, 174, 92, 0.3);
 }
 
 /* ==================== Statistics Cards ==================== */
 .stats-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  margin-bottom: 40px;
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 30px;
 }
 
 .stat-card {
   background: #fff;
-  padding: 28px 24px;
-  border-radius: 14px;
+  padding: 24px 20px;
+  border-radius: 12px;
   text-align: center;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
-  transition: all 0.3s ease;
+  width: 190px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
   border: 1px solid rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.3s ease;
 }
 
 .stat-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
 .stat-icon-wrapper {
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 auto 14px;
-  font-size: 24px;
+  margin-bottom: 16px;
+  font-size: 22px;
   transition: transform 0.3s ease;
 }
 
@@ -135,26 +140,34 @@
 }
 
 .stat-value {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 700;
   color: #1a1a1a;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
+  line-height: 1.1;
+  text-align: center;
+}
+
+.stat-orange .stat-value {
+  color: #f97316;
 }
 
 .stat-label {
   color: #64748b;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
+  margin: 0;
+  text-align: center;
 }
 
 /* ==================== Categories Table ==================== */
 .categories-card {
   background: #fff;
   padding: 0;
-  border-radius: 14px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   overflow: hidden;
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .dashboard-table {
@@ -166,20 +179,20 @@
   font-weight: 600;
   color: #64748b;
   background: #f8fafc;
-  padding: 14px 24px;
+  padding: 10px 16px;
   text-align: left;
-  font-size: 13px;
+  font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   border-bottom: 1px solid #f1f5f9;
 }
 
 .dashboard-table td {
-  padding: 16px 24px;
+  padding: 8px 16px;
   vertical-align: middle;
   color: #334155;
   border-bottom: 1px solid #f1f5f9;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .dashboard-table tbody tr {
@@ -197,7 +210,7 @@
 .td-id {
   font-weight: 600;
   color: #94a3b8;
-  width: 60px;
+  width: 50px;
 }
 
 .td-count {
@@ -215,17 +228,17 @@
 .category-name-cell {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .category-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 18px;
+  font-size: 14px;
   flex-shrink: 0;
 }
 
@@ -237,17 +250,17 @@
 
 /* ==================== Action Buttons ==================== */
 .btn-action {
-  padding: 7px 16px;
-  font-size: 13px;
+  padding: 4px 10px;
+  font-size: 12px;
   font-weight: 600;
-  border-radius: 8px;
-  margin-left: 8px;
+  border-radius: 4px;
+  margin-left: 6px;
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
 }
 
 .btn-edit {

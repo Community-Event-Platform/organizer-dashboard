@@ -101,19 +101,14 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, activeTab, onTa
         {/* Actions */}
         <div className="navbar-actions">
           {user ? (
-            <div className="user-profile" ref={dropdownRef}>
-              <span
-                className="user-name"
-                onClick={() => setShowDropdown(!showDropdown)}
-              >
+            <div className="user-profile" ref={dropdownRef} onClick={() => setShowDropdown(!showDropdown)}>
+              <span className="user-name">
                 {user.name}
               </span>
-              <div
-                className="user-avatar"
-                onClick={() => setShowDropdown(!showDropdown)}
-              >
-                {getInitials(user.name)}
+              <div className="user-avatar">
+                <i className="bi bi-person-fill" style={{ fontSize: '18px', color: '#fff' }}></i>
               </div>
+              <i className="bi bi-caret-down-fill dropdown-arrow"></i>
 
               {/* Dropdown menu */}
               {showDropdown && (
