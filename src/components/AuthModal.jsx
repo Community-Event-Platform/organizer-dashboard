@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { organizerLogin, organizerRegister } from '../services/api';
-import '../css/AuthModal.css';
+import './css/AuthModal.css';
 
 const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess, addToast }) => {
   const [mode, setMode] = useState(initialMode);

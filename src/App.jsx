@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import Navbar from './components/Navbar'
-import Hero from './components/Hero'
-import Dashboard from './components/Dashboard'
-import Footer from './components/Footer'
+import Navbar from './components/layout/Navbar'
+import Hero from './components/pages/Hero'
+import Dashboard from './components/pages/Dashboard'
+import Footer from './components/layout/Footer'
 import AuthModal from './components/AuthModal'
 import { ToastContainer, useToast } from './components/Toast'
-import './css/App.css'
+import './components/css/App.css'
 
 /**
  * App - Root component for EventHub Organizer Dashboard

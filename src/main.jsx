@@ -2,7 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
-import './css/index.css'
+import './components/css/index.css'
 import App from './App.jsx'
 
 console.log('Main.jsx is executing');

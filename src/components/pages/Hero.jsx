@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import '../css/Hero.css';
 
 // Import local slide images
-import slide1 from '../assets/slides/slide1.png';
-import slide2 from '../assets/slides/slide2.png';
-import slide3 from '../assets/slides/slide3.png';
+import slide1 from '../../assets/slides/slide1.png';
+import slide2 from '../../assets/slides/slide2.png';
+import slide3 from '../../assets/slides/slide3.png';
 
 const Hero = () => {
   const [currentSlide, setCurrentSlide] = useState(0);

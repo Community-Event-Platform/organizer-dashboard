@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getDashboardStats, getCategories, createCategory, updateCategory, deleteCategory } from '../services/api';
+import { getDashboardStats, getCategories, createCategory, updateCategory, deleteCategory } from '../../services/api';
 import '../css/Dashboard.css';
 
 /**
