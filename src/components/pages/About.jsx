@@ -1,11 +1,12 @@
 import React from 'react';
+import homepageImg from '../../assets/About/homepage.png';
 import '../css/About.css';
 
 /**
  * About Page Component
  * Renders the introductory information for organizers detailing how their events
- * are displayed on the user-facing attendee client. Includes an interactive mockup
- * browser shell of the attendee interface.
+ * are displayed on the user-facing attendee client. Includes a browser shell mockup
+ * rendering the static attendee homepage image.
  */
 const About = () => {
   return (
@@ -101,136 +102,49 @@ const About = () => {
 
             {/* Right Column - Attendee UI Mockup */}
             <div className="about-mockup-col">
-              {/* Browser mockup container */}
-              <div className="browser-mockup">
-                {/* Browser top title bar */}
-                <div className="browser-title-bar">
-                  <div className="browser-dots">
+              {/* Chrome style browser mockup container */}
+              <div className="browser-mockup chrome-browser">
+                {/* Chrome Window Tabs Header */}
+                <div className="chrome-tabs-bar">
+                  <div className="chrome-dots">
                     <span className="dot dot-red"></span>
                     <span className="dot dot-yellow"></span>
                     <span className="dot dot-green"></span>
                   </div>
-                  <div className="browser-address-bar">
-                    <i className="bi bi-lock-fill"></i> localhost:5173
+                  <div className="chrome-tabs">
+                    <div className="chrome-tab active-tab">
+                      <i className="bi bi-lightning-charge-fill text-success me-1"></i>
+                      <span className="tab-title">EventHub</span>
+                      <i className="bi bi-x tab-close"></i>
+                    </div>
+                    <div className="chrome-tab-new">
+                      <i className="bi bi-plus"></i>
+                    </div>
                   </div>
                 </div>
 
-                {/* Mockup webpage viewport */}
-                <div className="mockup-viewport">
-                  {/* Mock Navbar */}
-                  <div className="mock-navbar">
-                    <div className="mock-logo">
-                      <i className="bi bi-lightning-charge-fill text-success"></i>
-                      <span style={{ fontSize: '0.8rem', fontWeight: 'bold' }}>EventHub</span>
-                    </div>
-                    <div className="mock-nav-links">
-                      <span className="mock-link active-link">Home</span>
-                      <span className="mock-link">Event</span>
-                      <span className="mock-link">Contact</span>
-                      <span className="mock-link">About</span>
-                    </div>
-                    <div className="mock-nav-buttons">
-                      <span className="mock-btn-login">Login</span>
-                      <span className="mock-btn-register">Register</span>
-                    </div>
+                {/* Chrome Address Bar / Toolbar */}
+                <div className="chrome-toolbar">
+                  <div className="chrome-nav-buttons">
+                    <i className="bi bi-arrow-left"></i>
+                    <i className="bi bi-arrow-right"></i>
+                    <i className="bi bi-arrow-clockwise"></i>
                   </div>
-
-                  {/* Mock Hero Banner */}
-                  <div className="mock-hero">
-                    <h3>Sự kiện hàng đầu Dành cho bạn</h3>
-                    <p>Khám phá và tham gia các sự kiện tuyệt vời nhất gần bạn. Nơi âm nhạc, công nghệ thể thao và nghệ thuật giao hòa</p>
-                    <div className="mock-search-bar">
-                      <span className="search-placeholder"><i className="bi bi-search text-muted me-2"></i> Tìm kiếm tên, địa điểm ...</span>
-                      <span className="search-divider"></span>
-                      <span className="search-placeholder">Danh mục <i className="bi bi-chevron-down ms-1 text-muted"></i></span>
-                      <span className="search-divider"></span>
-                      <span className="search-placeholder"><i className="bi bi-calendar3 text-muted me-2"></i> Ngày</span>
+                  <div className="chrome-address-bar">
+                    <div className="chrome-address-left">
+                      <i className="bi bi-shield-fill-check text-success me-1"></i>
+                      <span className="address-text">http://eventhub/user.com</span>
                     </div>
+                    <i className="bi bi-star"></i>
                   </div>
-
-                  {/* Mock Events Section */}
-                  <div className="mock-events-section">
-                    <h4 className="section-title">Sự kiện hàng đầu</h4>
-                    
-                    <div className="mock-events-grid">
-                      {/* Card 1: Music */}
-                      <div className="mock-event-card">
-                        <div className="mock-card-img music-img">
-                          <span className="mock-badge badge-music">Music</span>
-                        </div>
-                        <div className="mock-card-body">
-                          <h5>Summer Music Festival 2026</h5>
-                          <p className="card-location"><i className="bi bi-geo-alt-fill me-1"></i> City Stadium</p>
-                          <div className="card-meta">
-                            <span className="card-price">50 spots left</span>
-                            <span className="card-rating"><i className="bi bi-star-fill text-warning me-1"></i> 4.8</span>
-                          </div>
-                          <span className="mock-card-btn">View Details</span>
-                        </div>
-                      </div>
-
-                      {/* Card 2: Sports */}
-                      <div className="mock-event-card">
-                        <div className="mock-card-img sports-img">
-                          <span className="mock-badge badge-sports">Sports</span>
-                        </div>
-                        <div className="mock-card-body">
-                          <h5>Community Sports Day</h5>
-                          <p className="card-location"><i className="bi bi-geo-alt-fill me-1"></i> City Park</p>
-                          <div className="card-meta">
-                            <span className="card-price">30 spots left</span>
-                            <span className="card-rating"><i className="bi bi-star-fill text-warning me-1"></i> 4.6</span>
-                          </div>
-                          <span className="mock-card-btn">View Details</span>
-                        </div>
-                      </div>
-
-                      {/* Card 3: Food */}
-                      <div className="mock-event-card">
-                        <div className="mock-card-img food-img">
-                          <span className="mock-badge badge-food">Food</span>
-                        </div>
-                        <div className="mock-card-body">
-                          <h5>Food & Culture Fair</h5>
-                          <p className="card-location"><i className="bi bi-geo-alt-fill me-1"></i> Downtown Plaza</p>
-                          <div className="card-meta">
-                            <span className="card-price">20 spots left</span>
-                            <span className="card-rating"><i className="bi bi-star-fill text-warning me-1"></i> 4.9</span>
-                          </div>
-                          <span className="mock-card-btn">View Details</span>
-                        </div>
-                      </div>
-
-                      {/* Card 4: Tech */}
-                      <div className="mock-event-card">
-                        <div className="mock-card-img tech-img">
-                          <span className="mock-badge badge-tech">Community</span>
-                        </div>
-                        <div className="mock-card-body">
-                          <h5>Tech Workshop Series</h5>
-                          <p className="card-location"><i className="bi bi-geo-alt-fill me-1"></i> Innovation Hub</p>
-                          <div className="card-meta">
-                            <span className="card-price">15 spots left</span>
-                            <span className="card-rating"><i className="bi bi-star-fill text-warning me-1"></i> 4.7</span>
-                          </div>
-                          <span className="mock-card-btn">View Details</span>
-                        </div>
-                      </div>
-                    </div>
+                  <div className="chrome-menu">
+                    <i className="bi bi-three-dots-vertical"></i>
                   </div>
+                </div>
 
-                  {/* Mock Categories Bar */}
-                  <div className="mock-categories-bar">
-                    <h4>Browse by Category</h4>
-                    <p>Find events that match your interests</p>
-                    <div className="mock-cats-grid">
-                      <span className="mock-cat-item"><i className="bi bi-music-note-beamed text-primary"></i> Music</span>
-                      <span className="mock-cat-item"><i className="bi bi-dribbble text-success"></i> Sports</span>
-                      <span className="mock-cat-item"><i className="bi bi-cup-hot text-warning"></i> Food</span>
-                      <span className="mock-cat-item"><i className="bi bi-mortarboard text-info"></i> Education</span>
-                      <span className="mock-cat-item"><i className="bi bi-people text-danger"></i> Community</span>
-                    </div>
-                  </div>
+                {/* Mockup webpage viewport rendering the static image */}
+                <div className="mockup-viewport image-viewport">
+                  <img src={homepageImg} alt="EventHub User Website Mockup" className="mockup-img" />
                 </div>
               </div>
 
