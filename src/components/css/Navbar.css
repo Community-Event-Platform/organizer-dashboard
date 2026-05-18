@@ -322,3 +322,44 @@
     display: none;
   }
 }
+
+/* Premium Segmented Language Selector Capsule (Matches User Image) */
+.lang-toggle-segmented {
+  display: inline-flex;
+  background-color: #111111;
+  border-radius: 20px;
+  padding: 3px;
+  user-select: none;
+  height: 32px;
+  align-items: center;
+  border: 1px solid #222222;
+  gap: 2px;
+}
+
+.lang-segment-btn {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  padding: 0 14px;
+  height: 24px;
+  border-radius: 16px;
+  font-weight: 700;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.5px;
+}
+
+.lang-segment-btn:hover:not(.active) {
+  color: #dddddd;
+  opacity: 0.9;
+}
+
+.lang-segment-btn.active {
+  background-color: #ffffff;
+  color: #FF0000; /* Bold Red text matching User image JP active status */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}

@@ -144,21 +144,21 @@ const Dashboard = ({ addToast }) => {
   const statCards = [
     {
       id: 1,
-      label: 'Total Events',
+      label: 'Tổng sự kiện',
       value: statsLoading ? '...' : stats.totalEvents,
       icon: 'bi-calendar-event',
       colorClass: 'stat-blue',
     },
     {
       id: 2,
-      label: 'Participants',
+      label: 'Tổng người đăng ký',
       value: statsLoading ? '...' : stats.participants,
       icon: 'bi-people',
       colorClass: 'stat-orange',
     },
     {
       id: 3,
-      label: 'Active Events',
+      label: 'Sự kiện hoạt động',
       value: statsLoading ? '...' : stats.activeEvents,
       icon: 'bi-graph-up-arrow',
       colorClass: 'stat-green',
@@ -183,7 +183,7 @@ const Dashboard = ({ addToast }) => {
         <div className="container">
           {/* ===== Statistics Section ===== */}
           <section className="dashboard-section">
-            <h2 className="section-title">Dashboard Overview</h2>
+            <h2 className="section-title">Tổng quan Dashboard</h2>
             <div className="stats-grid">
               {statCards.map((stat) => (
                 <div key={stat.id} className={`stat-card ${stat.colorClass}`}>
@@ -200,9 +200,9 @@ const Dashboard = ({ addToast }) => {
           {/* ===== Categories Section ===== */}
           <section className="dashboard-section">
             <div className="section-header">
-              <h2 className="section-title">Events Categories</h2>
+              <h2 className="section-title">Danh mục sự kiện</h2>
               <button className="btn-add-category" onClick={handleAddCategory}>
-                <i className="bi bi-plus-lg"></i> Add Category
+                <i className="bi bi-plus-lg"></i> Thêm danh mục
               </button>
             </div>
 
@@ -210,10 +210,10 @@ const Dashboard = ({ addToast }) => {
               <table className="dashboard-table">
                 <thead>
                   <tr>
-                    <th>ID</th>
-                    <th>Categories Name</th>
-                    <th>Number of events</th>
-                    <th className="text-end">Actions</th>
+                    <th>Mã số</th>
+                    <th>Tên danh mục</th>
+                    <th>Số lượng sự kiện</th>
+                    <th className="text-end">Hành động</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -251,13 +251,13 @@ const Dashboard = ({ addToast }) => {
                               className="btn-action btn-edit"
                               onClick={() => handleEditCategory(cat)}
                             >
-                              <i className="bi bi-pencil-square"></i> Edit
+                              <i className="bi bi-pencil-square"></i> Chỉnh sửa
                             </button>
                             <button
                               className="btn-action btn-delete"
                               onClick={() => handleDeleteClick(cat)}
                             >
-                              <i className="bi bi-trash"></i> Delete
+                              <i className="bi bi-trash"></i> Xóa
                             </button>
                           </td>
                         </tr>
@@ -306,7 +306,7 @@ const Dashboard = ({ addToast }) => {
                       <span className="btn-spinner"></span> Đang lưu...
                     </>
                   ) : (
-                    editingCategory ? 'Cập nhật' : 'Thêm mới'
+                    editingCategory ? 'Lưu thay đổi' : 'Thêm danh mục'
                   )}
                 </button>
               </div>
@@ -324,15 +324,14 @@ const Dashboard = ({ addToast }) => {
             </div>
             <h3>Xác nhận xóa</h3>
             <p>
-              Bạn có chắc chắn muốn xóa danh mục <strong>"{deleteConfirm.name}"</strong>?
-              Hành động này không thể hoàn tác.
+              Bạn có chắc chắn muốn xóa danh mục "{deleteConfirm.name}" không?
             </p>
             <div className="delete-modal-actions">
               <button className="btn-cancel" onClick={() => setDeleteConfirm(null)}>
                 Hủy
               </button>
               <button className="btn-confirm-delete" onClick={handleConfirmDelete}>
-                <i className="bi bi-trash"></i> Xóa
+                <i className="bi bi-trash"></i> Xóa bỏ
               </button>
             </div>
           </div>
