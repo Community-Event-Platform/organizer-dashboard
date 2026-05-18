@@ -63,7 +63,15 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, activeTab, onTa
               Home
             </a>
           </li>
-          <li><a href="#" onClick={(e) => { e.preventDefault(); alert('Trang giới thiệu đang được phát triển.'); }}>About</a></li>
+          <li>
+            <a
+              href="#"
+              className={activeTab === 'about' ? 'active' : ''}
+              onClick={(e) => { e.preventDefault(); onTabChange('about'); setMobileMenuOpen(false); }}
+            >
+              About
+            </a>
+          </li>
           <li>
             <a 
               href="#" 

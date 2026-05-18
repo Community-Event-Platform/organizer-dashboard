@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Navbar from './components/layout/Navbar'
 import Hero from './components/pages/Hero'
 import Dashboard from './components/pages/Dashboard'
+import About from './components/pages/About'
 import Footer from './components/layout/Footer'
 import AuthModal from './components/AuthModal'
 import { ToastContainer, useToast } from './components/Toast'
@@ -51,6 +52,9 @@ function App() {
 
   // Render main content based on login state and active tab
   const renderContent = () => {
+    if (activeTab === 'about') {
+      return <About />;
+    }
     if (!user) {
       return <Hero />;
     }
