@@ -53,6 +53,24 @@ export const getDashboardStats = () => {
   return api.get('/dashboard-stats');
 };
 
+// ==================== Events APIs ====================
+
+export const getOrganizerEvents = () => {
+  return api.get('/organizer/events');
+};
+
+export const createEvent = (eventData) => {
+  return api.post('/events', eventData);
+};
+
+export const updateEvent = (id, eventData) => {
+  return api.put(`/events/${id}`, eventData);
+};
+
+export const deleteEvent = (id) => {
+  return api.delete(`/events/${id}`);
+};
+
 // ==================== Categories APIs ====================
 
 export const getCategories = () => {
