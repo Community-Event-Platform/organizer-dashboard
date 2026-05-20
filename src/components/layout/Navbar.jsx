@@ -75,13 +75,15 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, activeTab, onTa
           <li>
             <a 
               href="#" 
+              className={activeTab === 'events' ? 'active' : ''}
               onClick={(e) => { 
                 e.preventDefault(); 
                 if (!user) {
                   alert('Bạn phải đăng nhập để sử dụng trang này.');
                 } else {
-                  // Handle events tab
+                  onTabChange('events');
                 }
+                setMobileMenuOpen(false);
               }}
             >
               Sự kiện
