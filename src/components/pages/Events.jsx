@@ -187,7 +187,22 @@ const Events = ({ addToast }) => {
               </div>
             </div>
 
-            {/* Checkbox "Require Additional Info" placeholder for CEP-44 */}
+            {formData.event_type === 'Free' && (
+              <div className="form-row">
+                <div className="form-group checkbox-group">
+                  <input
+                    type="checkbox"
+                    id="require_additional_info"
+                    name="require_additional_info"
+                    checked={formData.require_additional_info}
+                    onChange={handleChange}
+                  />
+                  <label htmlFor="require_additional_info">
+                    Yêu cầu thêm thông tin người tham gia
+                  </label>
+                </div>
+              </div>
+            )}
 
             <div className="form-actions">
               <button type="button" className="btn-reset-event" onClick={handleReset} disabled={isSubmitting}>
