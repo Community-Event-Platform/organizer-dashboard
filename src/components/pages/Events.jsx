@@ -55,7 +55,37 @@ const Events = ({ addToast }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Implementation for API call will be here
+    setIsSubmitting(true);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/events`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          ...formData,
+          status: 'Draft' // CEP-45: Save with Draft status by default
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Có lỗi xảy ra khi tạo sự kiện');
+      }
+
+      // CEP-46: Display success notification
+      if (addToast) addToast('Tạo sự kiện nháp thành công!', 'success');
+      handleReset();
+    } catch (error) {
+      console.error('Lỗi tạo sự kiện:', error);
+      if (addToast) addToast(error.message || 'Không thể tạo sự kiện.', 'error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleReset = () => {
