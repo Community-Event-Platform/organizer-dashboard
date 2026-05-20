@@ -1,8 +1,6 @@
-
 import { useState, useEffect } from 'react';
-import { getDashboardStats, getCategories, createCategory, updateCategory, deleteCategory } from '../../services/api';
+import { getDashboardStats, createCategory, updateCategory, deleteCategory } from '../../../services/api';
 import '../../css/Dashboard.css';
-
 import CategoryTable from './CategoryTable';
 import CategoryModal from './CategoryModal';
 import DeleteConfirmModal from './DeleteConfirmModal';
@@ -14,53 +12,49 @@ const Dashboard = ({ addToast }) => {
     activeEvents: 0,
   });
 
-  // Categories management
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [statsLoading, setStatsLoading] = useState(true);
 
-  // Category form modal state
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
   const [categoryForm, setCategoryForm] = useState({ name: '' });
   const [formLoading, setFormLoading] = useState(false);
 
-  // Delete confirmation
   const [deleteConfirm, setDeleteConfirm] = useState(null);
 
-  // ===== Fetch dashboard stats and categories from API =====
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      setStatsLoading(true);
-      setLoading(true);
-      try {
-        const response = await getDashboardStats();
-        const data = response.data;
-        
-        // 1. Set stats
-        const statsData = data.stats || {};
-        setStats({
-          totalEvents: statsData.total_events || statsData.totalEvents || 0,
-          participants: statsData.total_participants || statsData.participants || 0,
-          activeEvents: statsData.active_events || statsData.activeEvents || 0,
-        });
+  // Hàm Fetch dữ liệu chính đồng bộ toàn trang
+  const fetchDashboardData = async () => {
+    setStatsLoading(true);
+    setLoading(true);
+    try {
+      const response = await getDashboardStats();
+      const data = response.data;
+      
+      const statsData = data.stats || {};
+      setStats({
+        totalEvents: statsData.total_events || statsData.totalEvents || 0,
+        participants: statsData.total_participants || statsData.participants || 0,
+        activeEvents: statsData.active_events || statsData.activeEvents || 0,
+      });
 
-        // 2. Set categories with event counts
-        if (data.categories) {
-          setCategories(data.categories);
-        }
-      } catch (err) {
-        console.error('Error fetching dashboard stats:', err);
-        if (addToast) addToast('Không thể tải dữ liệu dashboard. Vui lòng thử lại.', 'error');
-      } finally {
-        setStatsLoading(false);
-        setLoading(false);
+      if (data.categories) {
+        setCategories(data.categories);
       }
-    };
-    fetchDashboardData();
-  }, [addToast]);
+    } catch (err) {
+      console.error('Error fetching dashboard stats:', err);
+      if (addToast) addToast('Không thể tải dữ liệu dashboard.', 'error');
+    } finally {
+      setStatsLoading(false);
+      setLoading(false);
+    }
+  };
 
-  // ===== Category CRUD handlers =====
+  // Mảng phụ thuộc [] rỗng dứt điểm việc lặp request vô hạn
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
   const handleAddCategory = () => {
     setEditingCategory(null);
     setCategoryForm({ name: '' });
@@ -81,9 +75,10 @@ const Dashboard = ({ addToast }) => {
     if (!deleteConfirm) return;
     try {
       await deleteCategory(deleteConfirm.id);
-      setCategories((prev) => prev.filter((c) => c.id !== deleteConfirm.id));
       if (addToast) addToast('Xóa danh mục thành công!', 'success');
+      fetchDashboardData(); // Cập nhật lại danh sách ngay lập tức
     } catch (err) {
+      console.error('Error deleting category:', err);
       const msg = err.response?.data?.message || 'Không thể xóa danh mục.';
       if (addToast) addToast(msg, 'error');
     } finally {
@@ -103,21 +98,17 @@ const Dashboard = ({ addToast }) => {
     setFormLoading(true);
     try {
       if (editingCategory) {
-        // Update existing category
         await updateCategory(editingCategory.id, { name: trimmedName });
-        setCategories((prev) =>
-          prev.map((c) => (c.id === editingCategory.id ? { ...c, name: trimmedName } : c))
-        );
         if (addToast) addToast('Cập nhật danh mục thành công!', 'success');
       } else {
-        // Create new category
-        const response = await createCategory({ name: trimmedName });
-        const newCat = response.data.data || response.data;
-        setCategories((prev) => [...prev, { ...newCat, name: trimmedName, eventsCount: 0 }]);
+        await createCategory({ name: trimmedName });
         if (addToast) addToast('Thêm danh mục thành công!', 'success');
       }
       setShowCategoryModal(false);
+      setCategoryForm({ name: '' });
+      fetchDashboardData(); // Tự động đồng bộ số liệu mới mà không cần F5
     } catch (err) {
+      console.error('Error saving category:', err);
       const msg = err.response?.data?.message || 'Đã xảy ra lỗi. Vui lòng thử lại.';
       if (addToast) addToast(msg, 'error');
     } finally {
@@ -125,7 +116,6 @@ const Dashboard = ({ addToast }) => {
     }
   };
 
-  // Category icon mapping
   const getCategoryIcon = (name) => {
     const icons = {
       'Music': { icon: 'bi-music-note-beamed', class: 'cat-icon-purple' },
@@ -139,56 +129,29 @@ const Dashboard = ({ addToast }) => {
     return icons[name] || { icon: 'bi-tag', class: 'cat-icon-default' };
   };
 
-  // Statistics cards data
   const statCards = [
-    {
-      id: 1,
-      label: 'Total Events', // Fix lỗi Toatal
-      value: statsLoading ? '...' : stats.totalEvents,
-      icon: 'bi-calendar-event',
-      colorClass: 'stat-blue',
-    },
-    {
-      id: 2,
-      label: 'Participants',
-      value: statsLoading ? '...' : stats.participants,
-      icon: 'bi-people',
-      colorClass: 'stat-orange',
-    },
-    {
-      id: 3,
-      label: 'Active Events',
-      value: statsLoading ? '...' : stats.activeEvents,
-      icon: 'bi-graph-up-arrow',
-      colorClass: 'stat-green',
-    },
+    { id: 1, label: 'Total Events', value: statsLoading ? '...' : stats.totalEvents, icon: 'bi-calendar-event', colorClass: 'stat-blue' },
+    { id: 2, label: 'Participants', value: statsLoading ? '...' : stats.participants, icon: 'bi-people', colorClass: 'stat-orange' },
+    { id: 3, label: 'Active Events', value: statsLoading ? '...' : stats.activeEvents, icon: 'bi-graph-up-arrow', colorClass: 'stat-green' },
   ];
 
   return (
     <div className="dashboard-wrapper">
-      {/* ===== Dashboard Hero Section - Green gradient ===== */}
       <div className="dashboard-hero">
         <div className="container">
-          <h1>
-            <em>Chào mừng bạn đến với</em>
-            <br />
-            Event organizer
-          </h1>
+          <h1><em>Chào mừng bạn đến với</em><br />Event organizer</h1>
           <p>Quản lý và theo dõi các sự kiện của bạn</p>
         </div>
       </div>
 
       <div className="dashboard-container">
         <div className="container">
-          {/* ===== Statistics Section ===== */}
           <section className="dashboard-section">
             <h2 className="section-title">Dashboard Overview</h2>
             <div className="stats-grid">
               {statCards.map((stat) => (
                 <div key={stat.id} className={`stat-card ${stat.colorClass}`}>
-                  <div className="stat-icon-wrapper">
-                    <i className={`bi ${stat.icon}`}></i>
-                  </div>
+                  <div className="stat-icon-wrapper"><i className={`bi ${stat.icon}`}></i></div>
                   <div className="stat-value">{stat.value}</div>
                   <div className="stat-label">{stat.label}</div>
                 </div>
@@ -196,7 +159,6 @@ const Dashboard = ({ addToast }) => {
             </div>
           </section>
 
-          {/* ===== Categories Section ===== */}
           <section className="dashboard-section">
             <div className="section-header">
               <h2 className="section-title">Events Categories</h2>
@@ -218,7 +180,6 @@ const Dashboard = ({ addToast }) => {
         </div>
       </div>
 
-      {/* ===== Category Add/Edit Modal ===== */}
       <CategoryModal 
         isOpen={showCategoryModal}
         editingCategory={editingCategory}
@@ -229,7 +190,6 @@ const Dashboard = ({ addToast }) => {
         formLoading={formLoading}
       />
 
-      {/* ===== Delete Confirmation Modal ===== */}
       <DeleteConfirmModal 
         category={deleteConfirm}
         onConfirm={handleConfirmDelete}
