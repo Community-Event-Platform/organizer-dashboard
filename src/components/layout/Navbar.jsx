@@ -60,7 +60,7 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, activeTab, onTa
               className={activeTab === 'home' ? 'active' : ''}
               onClick={(e) => { e.preventDefault(); onTabChange('home'); setMobileMenuOpen(false); }}
             >
-              Home
+              Trang chủ
             </a>
           </li>
           <li>
@@ -69,22 +69,24 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, activeTab, onTa
               className={activeTab === 'about' ? 'active' : ''}
               onClick={(e) => { e.preventDefault(); onTabChange('about'); setMobileMenuOpen(false); }}
             >
-              About
+              Giới thiệu
             </a>
           </li>
           <li>
             <a 
               href="#" 
+              className={activeTab === 'events' ? 'active' : ''}
               onClick={(e) => { 
                 e.preventDefault(); 
                 if (!user) {
                   alert('Bạn phải đăng nhập để sử dụng trang này.');
                 } else {
-                  // Handle events tab
+                  onTabChange('events');
                 }
+                setMobileMenuOpen(false);
               }}
             >
-              Events
+              Sự kiện
             </a>
           </li>
           <li>
@@ -101,7 +103,7 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, activeTab, onTa
                 setMobileMenuOpen(false); 
               }}
             >
-              Participants
+              Người tham gia
             </a>
           </li>
         </ul>
@@ -120,7 +122,7 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, activeTab, onTa
 
               {/* Dropdown menu */}
               {showDropdown && (
-                <div className="user-dropdown">
+                <div className="user-dropdown" onClick={(e) => e.stopPropagation()}>
                   <div className="dropdown-header">
                     <div className="dropdown-avatar">{getInitials(user.name)}</div>
                     <div className="dropdown-info">
@@ -138,8 +140,8 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, activeTab, onTa
             </div>
           ) : (
             <>
-              <button className="btn-login" onClick={onLoginClick}>Login</button>
-              <button className="btn-register" onClick={onRegisterClick}>Register</button>
+              <button className="btn-login" onClick={onLoginClick}>Đăng nhập</button>
+              <button className="btn-register" onClick={onRegisterClick}>Đăng ký</button>
             </>
           )}
         </div>

@@ -50,7 +50,7 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (mode === 'register' && !formData.full_name.trim()) {
-      newErrors.full_name = 'Vui lòng nhập họ tên';
+      newErrors.full_name = 'Vui lòng nhập họ tên của bạn';
     }
 
     if (!formData.email.trim()) {

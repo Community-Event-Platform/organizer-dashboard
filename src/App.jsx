@@ -6,6 +6,7 @@ import About from './components/pages/About'
 import Footer from './components/layout/Footer'
 import AuthModal from './components/AuthModal'
 import { ToastContainer, useToast } from './components/Toast'
+import Events from './components/pages/Events'
 import './components/css/App.css'
 
 /**
@@ -54,6 +55,9 @@ function App() {
   const renderContent = () => {
     if (activeTab === 'about') {
       return <About />;
+    }
+    if (activeTab === 'events') {
+      return <Events addToast={addToast} />;
     }
     if (!user) {
       return <Hero />;

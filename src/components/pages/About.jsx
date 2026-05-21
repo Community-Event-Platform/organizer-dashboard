@@ -16,8 +16,7 @@ const About = () => {
         <div className="container">
           <h1 className="banner-title">Event của bạn sẽ xuất hiện như thế nào?</h1>
           <p className="banner-subtitle">
-            Sự kiện của bạn sẽ được hiển thị trên nền tảng dành cho người dùng của EventHub,
-            giúp bạn tiếp cận nhiều người tham gia hơn.
+            Sự kiện của bạn sẽ được hiển thị trên nền tảng dành cho người dùng của EventHub, giúp bạn tiếp cận nhiều người tham gia hơn.
           </p>
         </div>
       </div>
@@ -92,7 +91,7 @@ const About = () => {
                   rel="noopener noreferrer" 
                   className="btn-visit-user"
                 >
-                  Visit EventHub User Website <i className="bi bi-box-arrow-up-right ms-2"></i>
+                  Ghé thăm EventHub User <i className="bi bi-box-arrow-up-right ms-2"></i>
                 </a>
                 <p className="btn-helper-text">
                   <i className="bi bi-shield-check text-success me-2"></i> Trang web dành cho người dùng (mở trong tab mới)
