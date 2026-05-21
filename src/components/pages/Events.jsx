@@ -363,12 +363,18 @@ const Events = ({ addToast }) => {
                       </button>
                     </td>
                     <td className="cell-actions text-center">
-                      <button className="btn-edit" onClick={() => handleOpenEditModal(event)} title="Chỉnh sửa">
-                        <i className="bi bi-pencil"></i>
-                      </button>
-                      <button className="btn-delete" onClick={() => handleDeleteClick(event)} title="Xóa">
-                        <i className="bi bi-lock-fill"></i>
-                      </button>
+                      {event.status?.toLowerCase() === 'published' ? (
+                        <span className="no-actions">—</span>
+                      ) : (
+                        <>
+                          <button className="btn-edit" onClick={() => handleOpenEditModal(event)} title="Chỉnh sửa">
+                            <i className="bi bi-pencil"></i>
+                          </button>
+                          <button className="btn-delete" onClick={() => handleDeleteClick(event)} title="Xóa">
+                            <i className="bi bi-lock-fill"></i>
+                          </button>
+                        </>
+                      )}
                     </td>
                   </tr>
                 ))
