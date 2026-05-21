@@ -248,13 +248,13 @@ const Dashboard = ({ addToast }) => {
                           <td className="td-count">{cat.eventsCount || cat.events_count || 0}</td>
                           <td className="td-actions">
                             <button
-                              className="btn-action btn-edit"
+                              className="btn-action btn-action-edit"
                               onClick={() => handleEditCategory(cat)}
                             >
                               <i className="bi bi-pencil-square"></i> Chỉnh sửa
                             </button>
                             <button
-                              className="btn-action btn-delete"
+                              className="btn-action btn-action-delete"
                               onClick={() => handleDeleteClick(cat)}
                             >
                               <i className="bi bi-trash"></i> Xóa
