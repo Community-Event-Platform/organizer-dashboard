@@ -55,7 +55,7 @@ const Events = ({ addToast }) => {
       }
     } catch (error) {
       console.error('Error fetching events:', error);
-      if (addToast) addToast('Không thể tải danh sách sự kiện.', 'error');
+      if (addToast) addToast('Unable to load event list.', 'error');
     } finally {
       setLoadingEvents(false);
     }
@@ -74,7 +74,7 @@ const Events = ({ addToast }) => {
         }
       } catch (error) {
         console.error('Error fetching categories:', error);
-        if (addToast) addToast('Không thể tải danh mục sự kiện.', 'error');
+        if (addToast) addToast('Unable to load event categories.', 'error');
       } finally {
         setLoadingCats(false);
       }
@@ -196,11 +196,11 @@ const Events = ({ addToast }) => {
     if (!deleteConfirm) return;
     try {
       await deleteEvent(deleteConfirm.id);
-      if (addToast) addToast('Xóa sự kiện thành công!', 'success');
+      if (addToast) addToast('Event deleted successfully!', 'success');
       fetchEvents();
     } catch (error) {
       console.error('Error deleting event:', error);
-      if (addToast) addToast(error.response?.data?.message || 'Không thể xóa sự kiện.', 'error');
+      if (addToast) addToast(error.response?.data?.message || 'Unable to delete event.', 'error');
     } finally {
       setDeleteConfirm(null);
     }
@@ -217,16 +217,16 @@ const Events = ({ addToast }) => {
 
       if (editingEvent) {
         await updateEvent(editingEvent.id, payload);
-        if (addToast) addToast('Cập nhật sự kiện thành công!', 'success');
+        if (addToast) addToast('Event updated successfully!', 'success');
       } else {
         await createEvent(payload);
-        if (addToast) addToast('Tạo sự kiện nháp thành công!', 'success');
+        if (addToast) addToast('Draft event created successfully!', 'success');
       }
       setShowModal(false);
       fetchEvents();
     } catch (error) {
-      console.error('Lỗi khi lưu sự kiện:', error);
-      const msg = error.response?.data?.message || error.message || 'Không thể lưu sự kiện.';
+      console.error('Error saving event:', error);
+      const msg = error.response?.data?.message || error.message || 'Unable to save event.';
       if (addToast) addToast(msg, 'error');
     } finally {
       setIsSubmitting(false);
@@ -318,14 +318,14 @@ const Events = ({ addToast }) => {
                 <tr>
                   <td colSpan="10" className="table-state-cell">
                     <div className="loading-spinner"></div>
-                    <p>Đang tải dữ liệu sự kiện...</p>
+                    <p>Loading event data...</p>
                   </td>
                 </tr>
               ) : filteredEvents.length === 0 ? (
                 <tr>
                   <td colSpan="10" className="table-state-cell">
                     <i className="bi bi-inbox-fill empty-icon"></i>
-                    <p>Không tìm thấy sự kiện nào.</p>
+                    <p>No events found.</p>
                   </td>
                 </tr>
               ) : (
@@ -334,7 +334,7 @@ const Events = ({ addToast }) => {
                     <td className="cell-event-name">{event.name}</td>
                     <td className="cell-description">
                       <div className="description-text" title={event.description}>
-                        {event.description || 'Không có mô tả.'}
+                        {event.description || 'No description available.'}
                       </div>
                     </td>
                     <td>
@@ -367,10 +367,10 @@ const Events = ({ addToast }) => {
                         <span className="no-actions">—</span>
                       ) : (
                         <>
-                          <button className="btn-edit" onClick={() => handleOpenEditModal(event)} title="Chỉnh sửa">
+                          <button className="btn-edit" onClick={() => handleOpenEditModal(event)} title="Edit">
                             <i className="bi bi-pencil"></i>
                           </button>
-                          <button className="btn-delete" onClick={() => handleDeleteClick(event)} title="Xóa">
+                          <button className="btn-delete" onClick={() => handleDeleteClick(event)} title="Delete">
                             <i className="bi bi-lock-fill"></i>
                           </button>
                         </>
@@ -426,7 +426,7 @@ const Events = ({ addToast }) => {
                   <i className="bi bi-plus-lg"></i>
                 </div>
                 <div className="header-text">
-                  <h2>{editingEvent ? 'Chỉnh sửa sự kiện' : 'Create New Event'}</h2>
+                  <h2>{editingEvent ? 'Edit Event' : 'Create New Event'}</h2>
                   <p>Provide details to organize your community event.</p>
                 </div>
               </div>
@@ -447,7 +447,7 @@ const Events = ({ addToast }) => {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    placeholder="T Giải bóng đá cộng đồng"
+                    placeholder="e.g. Community Football Match"
                     required
                   />
                 </div>
@@ -479,7 +479,7 @@ const Events = ({ addToast }) => {
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
-                  placeholder="Mô tả chi tiết sự kiện của bạn..."
+                  placeholder="Describe your event in detail..."
                   rows="3"
                 ></textarea>
               </div>
@@ -495,7 +495,7 @@ const Events = ({ addToast }) => {
                     name="location"
                     value={formData.location}
                     onChange={handleChange}
-                    placeholder="Sân vận động Chi Lăng"
+                    placeholder="Chi Lang Stadium"
                     required
                   />
                 </div>
@@ -576,7 +576,7 @@ const Events = ({ addToast }) => {
                         <div className="builder-input-row">
                           <input
                             type="text"
-                            placeholder="Field name (e.g. Lý do tham gia)"
+                            placeholder="Field name (e.g. Reason to attend)"
                             value={newFieldName}
                             onChange={(e) => setNewFieldName(e.target.value)}
                           />
@@ -661,10 +661,10 @@ const Events = ({ addToast }) => {
                 <button type="submit" className="btn-register-event-submit" disabled={isSubmitting}>
                   {isSubmitting ? (
                     <>
-                      <span className="btn-spinner"></span> Đang lưu...
+                      <span className="btn-spinner"></span> Saving...
                     </>
                   ) : (
-                    editingEvent ? 'Lưu thay đổi' : 'Register Event'
+                    editingEvent ? 'Save changes' : 'Register Event'
                   )}
                 </button>
               </div>
@@ -680,14 +680,14 @@ const Events = ({ addToast }) => {
             <div className="delete-icon-box">
               <i className="bi bi-exclamation-triangle-fill"></i>
             </div>
-            <h3>Xác nhận xóa sự kiện</h3>
-            <p>Bạn có chắc chắn muốn xóa sự kiện "{deleteConfirm.name}" không? Hành động này không thể hoàn tác.</p>
+            <h3>Confirm Event Deletion</h3>
+            <p>Are you sure you want to delete the event "{deleteConfirm.name}"? This action cannot be undone.</p>
             <div className="delete-modal-actions">
               <button className="btn-cancel" onClick={() => setDeleteConfirm(null)}>
-                Hủy
+                Cancel
               </button>
               <button className="btn-confirm-delete" onClick={handleConfirmDelete}>
-                Xóa sự kiện
+                Delete Event
               </button>
             </div>
           </div>

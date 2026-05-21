@@ -9,7 +9,7 @@ const CategoryTable = ({ categories, loading, onEdit, onDelete, getCategoryIcon 
           <tr>
             <td colSpan="4" className="table-loading">
               <div className="loading-spinner"></div>
-              <span>Đang tải dữ liệu...</span>
+              <span>Loading data...</span>
             </td>
           </tr>
         </tbody>
@@ -24,7 +24,7 @@ const CategoryTable = ({ categories, loading, onEdit, onDelete, getCategoryIcon 
           <tr>
             <td colSpan="4" className="table-empty">
               <i className="bi bi-inbox"></i>
-              <span>Chưa có danh mục nào. Hãy thêm danh mục đầu tiên!</span>
+              <span>No categories yet. Add your first category!</span>
             </td>
           </tr>
         </tbody>

@@ -52,7 +52,7 @@ const Dashboard = ({ addToast }) => {
         }
       } catch (err) {
         console.error('Error fetching dashboard stats:', err);
-        if (addToast) addToast('Không thể tải dữ liệu dashboard. Vui lòng thử lại.', 'error');
+        if (addToast) addToast('Unable to load dashboard data. Please try again.', 'error');
       } finally {
         setStatsLoading(false);
         setLoading(false);
@@ -84,9 +84,9 @@ const Dashboard = ({ addToast }) => {
     try {
       await deleteCategory(deleteConfirm.id);
       setCategories((prev) => prev.filter((c) => c.id !== deleteConfirm.id));
-      if (addToast) addToast('Xóa danh mục thành công!', 'success');
+      if (addToast) addToast('Category deleted successfully!', 'success');
     } catch (err) {
-      const msg = err.response?.data?.message || 'Không thể xóa danh mục.';
+      const msg = err.response?.data?.message || 'Unable to delete category.';
       if (addToast) addToast(msg, 'error');
     } finally {
       setDeleteConfirm(null);
@@ -96,8 +96,7 @@ const Dashboard = ({ addToast }) => {
   const handleCategorySubmit = async (e) => {
     e.preventDefault();
     if (!categoryForm.name.trim()) {
-      if (addToast) addToast('Vui lòng nhập tên danh mục.', 'warning');
-      return;
+      if (addToast) addToast('Please enter a category name.', 'warning');
     }
 
     setFormLoading(true);
@@ -109,17 +108,17 @@ const Dashboard = ({ addToast }) => {
         setCategories((prev) =>
           prev.map((c) => (c.id === editingCategory.id ? { ...c, ...updated, name: categoryForm.name } : c))
         );
-        if (addToast) addToast('Cập nhật danh mục thành công!', 'success');
+        if (addToast) addToast('Category updated successfully!', 'success');
       } else {
         // Create new category
         const response = await createCategory({ name: categoryForm.name });
         const newCat = response.data.data || response.data;
         setCategories((prev) => [...prev, newCat]);
-        if (addToast) addToast('Thêm danh mục thành công!', 'success');
+        if (addToast) addToast('Category added successfully!', 'success');
       }
       setShowCategoryModal(false);
     } catch (err) {
-      const msg = err.response?.data?.message || 'Đã xảy ra lỗi. Vui lòng thử lại.';
+      const msg = err.response?.data?.message || 'An error occurred. Please try again.';
       if (addToast) addToast(msg, 'error');
     } finally {
       setFormLoading(false);
@@ -144,21 +143,21 @@ const Dashboard = ({ addToast }) => {
   const statCards = [
     {
       id: 1,
-      label: 'Tổng sự kiện',
+      label: 'Total Events',
       value: statsLoading ? '...' : stats.totalEvents,
       icon: 'bi-calendar-event',
       colorClass: 'stat-blue',
     },
     {
       id: 2,
-      label: 'Tổng người đăng ký',
+      label: 'Total Registrations',
       value: statsLoading ? '...' : stats.participants,
       icon: 'bi-people',
       colorClass: 'stat-orange',
     },
     {
       id: 3,
-      label: 'Sự kiện hoạt động',
+      label: 'Active Events',
       value: statsLoading ? '...' : stats.activeEvents,
       icon: 'bi-graph-up-arrow',
       colorClass: 'stat-green',
@@ -171,11 +170,11 @@ const Dashboard = ({ addToast }) => {
       <div className="dashboard-hero">
         <div className="container">
           <h1>
-            <em>Chào mừng bạn trở lại</em>
+            <em>Welcome back</em>
             <br />
             Event organizer
           </h1>
-          <p>Quản lý và theo dõi các sự kiện của bạn</p>
+          <p>Manage and track your events</p>
         </div>
       </div>
 
@@ -183,7 +182,7 @@ const Dashboard = ({ addToast }) => {
         <div className="container">
           {/* ===== Statistics Section ===== */}
           <section className="dashboard-section">
-            <h2 className="section-title">Tổng quan Dashboard</h2>
+            <h2 className="section-title">Dashboard Overview</h2>
             <div className="stats-grid">
               {statCards.map((stat) => (
                 <div key={stat.id} className={`stat-card ${stat.colorClass}`}>
@@ -200,9 +199,9 @@ const Dashboard = ({ addToast }) => {
           {/* ===== Categories Section ===== */}
           <section className="dashboard-section">
             <div className="section-header">
-              <h2 className="section-title">Danh mục sự kiện</h2>
+              <h2 className="section-title">Event Categories</h2>
               <button className="btn-add-category" onClick={handleAddCategory}>
-                <i className="bi bi-plus-lg"></i> Thêm danh mục
+                <i className="bi bi-plus-lg"></i> Add Category
               </button>
             </div>
 
@@ -210,10 +209,10 @@ const Dashboard = ({ addToast }) => {
               <table className="dashboard-table">
                 <thead>
                   <tr>
-                    <th>Mã số</th>
-                    <th>Tên danh mục</th>
-                    <th>Số lượng sự kiện</th>
-                    <th className="text-end">Hành động</th>
+                    <th>ID</th>
+                    <th>Category Name</th>
+                    <th>Event Count</th>
+                    <th className="text-end">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -221,14 +220,14 @@ const Dashboard = ({ addToast }) => {
                     <tr>
                       <td colSpan="4" className="table-loading">
                         <div className="loading-spinner"></div>
-                        <span>Đang tải dữ liệu...</span>
+                        <span>Loading data...</span>
                       </td>
                     </tr>
                   ) : categories.length === 0 ? (
                     <tr>
                       <td colSpan="4" className="table-empty">
                         <i className="bi bi-inbox"></i>
-                        <span>Chưa có danh mục nào. Hãy thêm danh mục đầu tiên!</span>
+                        <span>No categories yet. Add your first category!</span>
                       </td>
                     </tr>
                   ) : (
@@ -247,18 +246,29 @@ const Dashboard = ({ addToast }) => {
                           </td>
                           <td className="td-count">{cat.eventsCount || cat.events_count || 0}</td>
                           <td className="td-actions">
-                            <button
-                              className="btn-action btn-action-edit"
-                              onClick={() => handleEditCategory(cat)}
-                            >
-                              <i className="bi bi-pencil-square"></i> Chỉnh sửa
-                            </button>
-                            <button
-                              className="btn-action btn-action-delete"
-                              onClick={() => handleDeleteClick(cat)}
-                            >
-                              <i className="bi bi-trash"></i> Xóa
-                            </button>
+                            {(() => {
+                              const hasEvents = (cat.eventsCount || cat.events_count || 0) > 0;
+                              return (
+                                <>
+                                  <button
+                                    className="btn-action btn-action-edit"
+                                    onClick={() => !hasEvents && handleEditCategory(cat)}
+                                    disabled={hasEvents}
+                                    title={hasEvents ? 'This category has events and cannot be edited.' : 'Edit'}
+                                  >
+                                    <i className="bi bi-pencil-square"></i> Edit
+                                  </button>
+                                  <button
+                                    className="btn-action btn-action-delete"
+                                    onClick={() => !hasEvents && handleDeleteClick(cat)}
+                                    disabled={hasEvents}
+                                    title={hasEvents ? 'This category has events and cannot be deleted.' : 'Delete'}
+                                  >
+                                    <i className="bi bi-trash"></i> Delete
+                                  </button>
+                                </>
+                              );
+                            })()}
                           </td>
                         </tr>
                       );
@@ -276,17 +286,17 @@ const Dashboard = ({ addToast }) => {
         <div className="modal-overlay" onClick={() => setShowCategoryModal(false)}>
           <div className="category-modal" onClick={(e) => e.stopPropagation()}>
             <div className="category-modal-header">
-              <h3>{editingCategory ? 'Chỉnh sửa danh mục' : 'Thêm danh mục mới'}</h3>
+              <h3>{editingCategory ? 'Edit Category' : 'Create New Category'}</h3>
               <button className="modal-close-btn" onClick={() => setShowCategoryModal(false)}>
                 <i className="bi bi-x-lg"></i>
               </button>
             </div>
             <form onSubmit={handleCategorySubmit}>
               <div className="category-form-group">
-                <label>Tên danh mục</label>
+                <label>Category Name</label>
                 <input
                   type="text"
-                  placeholder="Nhập tên danh mục..."
+                  placeholder="Enter category name..."
                   value={categoryForm.name}
                   onChange={(e) => setCategoryForm({ name: e.target.value })}
                   autoFocus
@@ -298,15 +308,15 @@ const Dashboard = ({ addToast }) => {
                   className="btn-cancel"
                   onClick={() => setShowCategoryModal(false)}
                 >
-                  Hủy
+                  Cancel
                 </button>
                 <button type="submit" className="btn-save" disabled={formLoading}>
                   {formLoading ? (
                     <>
-                      <span className="btn-spinner"></span> Đang lưu...
+                      <span className="btn-spinner"></span> Saving...
                     </>
                   ) : (
-                    editingCategory ? 'Lưu thay đổi' : 'Thêm danh mục'
+                    editingCategory ? 'Save Changes' : 'Add Category'
                   )}
                 </button>
               </div>
@@ -322,16 +332,16 @@ const Dashboard = ({ addToast }) => {
             <div className="delete-icon-wrapper">
               <i className="bi bi-exclamation-triangle-fill"></i>
             </div>
-            <h3>Xác nhận xóa</h3>
+            <h3>Confirm Delete</h3>
             <p>
-              Bạn có chắc chắn muốn xóa danh mục "{deleteConfirm.name}" không?
+              Are you sure you want to delete the category "{deleteConfirm.name}"?
             </p>
             <div className="delete-modal-actions">
               <button className="btn-cancel" onClick={() => setDeleteConfirm(null)}>
-                Hủy
+                Cancel
               </button>
               <button className="btn-confirm-delete" onClick={handleConfirmDelete}>
-                <i className="bi bi-trash"></i> Xóa
+                <i className="bi bi-trash"></i> Delete
               </button>
             </div>
           </div>

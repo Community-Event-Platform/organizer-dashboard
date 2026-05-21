@@ -14,9 +14,9 @@ const About = () => {
       {/* Brand Green Banner */}
       <div className="about-banner">
         <div className="container">
-          <h1 className="banner-title">Event của bạn sẽ xuất hiện như thế nào?</h1>
+          <h1 className="banner-title">How will your event appear?</h1>
           <p className="banner-subtitle">
-            Sự kiện của bạn sẽ được hiển thị trên nền tảng dành cho người dùng của EventHub, giúp bạn tiếp cận nhiều người tham gia hơn.
+            Your event will be displayed on the EventHub user platform, helping you reach more attendees.
           </p>
         </div>
       </div>
@@ -27,12 +27,12 @@ const About = () => {
           <div className="about-card-wrapper">
             {/* Left Column - Details and Actions */}
             <div className="about-info-col">
-              <h2 className="info-title">Event của bạn sẽ xuất hiện trên EventHub User</h2>
+<h2 className="info-title">Your event will appear on EventHub User</h2>
               <p className="info-desc">
-                Tất cả sự kiện được tạo bởi organizer sẽ tự động hiển thị trên nền tảng dành cho người dùng của EventHub.
+                All events created by organizers will automatically appear on the EventHub user platform.
               </p>
-              
-              <h3 className="list-title">Người dùng có thể :</h3>
+               
+              <h3 className="list-title">Users can:</h3>
               
               <div className="features-list">
                 <div className="feature-item">
@@ -40,8 +40,8 @@ const About = () => {
                     <i className="bi bi-search"></i>
                   </div>
                   <div className="feature-text">
-                    <h4 className="feature-heading">Tìm kiếm sự kiện</h4>
-                    <p className="feature-paragraph">Dễ dàng tìm thấy sự kiện phù hợp.</p>
+                    <h4 className="feature-heading">Search events</h4>
+                    <p className="feature-paragraph">Easily find the right event.</p>
                   </div>
                 </div>
 
@@ -50,8 +50,8 @@ const About = () => {
                     <i className="bi bi-eye"></i>
                   </div>
                   <div className="feature-text">
-                    <h4 className="feature-heading">Xem thông tin chi tiết</h4>
-                    <p className="feature-paragraph">Xem đầy đủ thông tin, thời gian, địa điểm, v.v.</p>
+                    <h4 className="feature-heading">View details</h4>
+                    <p className="feature-paragraph">See full information, time, location, and more.</p>
                   </div>
                 </div>
 
@@ -60,8 +60,8 @@ const About = () => {
                     <i className="bi bi-ticket-perforated"></i>
                   </div>
                   <div className="feature-text">
-                    <h4 className="feature-heading">Đăng ký tham gia</h4>
-                    <p className="feature-paragraph">Đăng ký nhanh chóng và tiện lợi.</p>
+                    <h4 className="feature-heading">Register to attend</h4>
+                    <p className="feature-paragraph">Register quickly and easily.</p>
                   </div>
                 </div>
 
@@ -70,8 +70,8 @@ const About = () => {
                     <i className="bi bi-people-fill"></i>
                   </div>
                   <div className="feature-text">
-                    <h4 className="feature-heading">Theo dõi hoạt động cộng đồng</h4>
-                    <p className="feature-paragraph">Cập nhật các sự kiện và hoạt động mới nhất.</p>
+                    <h4 className="feature-heading">Follow community activity</h4>
+                    <p className="feature-paragraph">Stay updated on the latest events and activities.</p>
                   </div>
                 </div>
               </div>
@@ -79,7 +79,7 @@ const About = () => {
               {/* Callout Box */}
               <div className="info-callout">
                 <p>
-                  EventHub giúp bạn kết nối với nhiều người tham gia hơn thông qua hệ thống quản lý và hiển thị sự kiện hiện đại.
+                  EventHub helps you connect with more attendees through a modern event management and display system.
                 </p>
               </div>
 
@@ -91,10 +91,10 @@ const About = () => {
                   rel="noopener noreferrer" 
                   className="btn-visit-user"
                 >
-                  Ghé thăm EventHub User <i className="bi bi-box-arrow-up-right ms-2"></i>
+                  Visit EventHub User <i className="bi bi-box-arrow-up-right ms-2"></i>
                 </a>
                 <p className="btn-helper-text">
-                  <i className="bi bi-shield-check text-success me-2"></i> Trang web dành cho người dùng (mở trong tab mới)
+                  <i className="bi bi-shield-check text-success me-2"></i> User website (opens in a new tab)
                 </p>
               </div>
             </div>
@@ -150,7 +150,7 @@ const About = () => {
               {/* Disclaimer pill */}
               <div className="disclaimer-banner">
                 <i className="bi bi-info-circle-fill me-2 text-primary"></i>
-                Giao diện hiển thị có thể thay đổi theo thời gian để mang lại trải nghiệm tốt nhất cho người dùng.
+                The display interface may change over time to provide the best user experience.
               </div>
             </div>
           </div>

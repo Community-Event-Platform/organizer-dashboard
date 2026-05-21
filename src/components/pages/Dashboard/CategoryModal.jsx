@@ -16,7 +16,7 @@ const CategoryModal = ({
     <div className="modal-overlay" onClick={onClose}>
       <div className="category-modal" onClick={(e) => e.stopPropagation()}>
         <div className="category-modal-header">
-          <h3>{editingCategory ? 'Chỉnh sửa danh mục' : 'Create New Categories'}</h3>
+          <h3>{editingCategory ? 'Edit Category' : 'Create New Category'}</h3>
           <button className="modal-close-btn" onClick={onClose}>
             <i className="bi bi-x-lg"></i>
           </button>
@@ -56,7 +56,7 @@ const CategoryModal = ({
             >
               {formLoading ? (
                 <>
-                  <span className="btn-spinner"></span> Đang lưu...
+                  <span className="btn-spinner"></span> Saving...
                 </>
               ) : (
                 editingCategory ? 'Update Category' : 'Create Category'

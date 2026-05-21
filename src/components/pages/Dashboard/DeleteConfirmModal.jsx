@@ -10,17 +10,17 @@ const DeleteConfirmModal = ({ category, onConfirm, onCancel }) => {
         <div className="delete-icon-wrapper">
           <i className="bi bi-exclamation-triangle-fill"></i>
         </div>
-        <h3>Xác nhận xóa</h3>
+        <h3>Confirm Delete</h3>
         <p>
-          Bạn có chắc chắn muốn xóa danh mục <strong>"{category.name}"</strong>?
-          Hành động này không thể hoàn tác.
+          Are you sure you want to delete the category <strong>"{category.name}"</strong>?
+          This action cannot be undone.
         </p>
         <div className="delete-modal-actions">
           <button className="btn-cancel" onClick={onCancel}>
             Cancel
           </button>
           <button className="btn-confirm-delete" onClick={onConfirm}>
-            <i className="bi bi-trash"></i> Xóa
+            <i className="bi bi-trash"></i> Delete
           </button>
         </div>
       </div>

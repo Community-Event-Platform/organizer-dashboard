@@ -13,25 +13,25 @@ const Hero = () => {
     {
       id: 1,
       image: slide1,
-      category: 'Âm nhạc',
-      title: 'Đại nhạc hội EDM 2026',
-      location: 'Sân vận động Quân khu 7',
+      category: 'Music',
+      title: 'EDM Music Festival 2026',
+      location: 'Military Region 7 Stadium',
       date: '20/06/2026'
     },
     {
       id: 2,
       image: slide2,
-      category: 'Công nghệ',
-      title: 'Hội thảo AI & Tương lai',
-      location: 'Trung tâm Hội nghị Quốc gia',
+      category: 'Technology',
+      title: 'AI & Future Conference',
+      location: 'National Convention Center',
       date: '15/07/2026'
     },
     {
       id: 3,
       image: slide3,
-      category: 'Thể thao',
-      title: 'Giải Marathon Thành phố',
-      location: 'Công viên Lê Văn Tám',
+      category: 'Sports',
+      title: 'City Marathon Event',
+      location: 'Le Van Tam Park',
       date: '05/08/2026'
     }
   ];
@@ -58,9 +58,9 @@ const Hero = () => {
     <div className="hero-container">
       {/* Top Header Section */}
       <div className="hero-header">
-        <h1>Chào mừng bạn đến với <br/><span className="text-green">Event organizer</span></h1>
+        <h1>Welcome to <br/><span className="text-green">Event Organizer</span></h1>
         <p>
-          Chào mừng bạn đến với website của nhà tổ chức sự kiện. Tại đây bạn có thể quản lý, theo dõi và cập nhật tất cả sự kiện của mình một cách dễ dàng và hiệu quả.
+          Welcome to the event organizer website. Here you can manage, monitor, and update all of your events easily and effectively.
         </p>
       </div>
 

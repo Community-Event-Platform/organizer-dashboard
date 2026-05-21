@@ -43,7 +43,7 @@ function App() {
     localStorage.removeItem('user');
     setUser(null);
     setActiveTab('home');
-    addToast('Đăng xuất thành công!', 'success');
+    addToast('Logged out successfully!', 'success');
   };
 
   const handleAuthSuccess = (userData) => {

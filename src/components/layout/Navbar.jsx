@@ -60,7 +60,7 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, activeTab, onTa
               className={activeTab === 'home' ? 'active' : ''}
               onClick={(e) => { e.preventDefault(); onTabChange('home'); setMobileMenuOpen(false); }}
             >
-              Trang chủ
+              Home
             </a>
           </li>
           <li>
@@ -69,7 +69,7 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, activeTab, onTa
               className={activeTab === 'about' ? 'active' : ''}
               onClick={(e) => { e.preventDefault(); onTabChange('about'); setMobileMenuOpen(false); }}
             >
-              Giới thiệu
+              About
             </a>
           </li>
           <li>
@@ -79,14 +79,14 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, activeTab, onTa
               onClick={(e) => { 
                 e.preventDefault(); 
                 if (!user) {
-                  alert('Bạn phải đăng nhập để sử dụng trang này.');
+                  alert('Please login to use this page.');
                 } else {
                   onTabChange('events');
                 }
                 setMobileMenuOpen(false);
               }}
             >
-              Sự kiện
+              Events
             </a>
           </li>
           <li>
@@ -96,14 +96,14 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, activeTab, onTa
               onClick={(e) => { 
                 e.preventDefault(); 
                 if (!user) {
-                  alert('Bạn phải đăng nhập để sử dụng trang này.');
+                  alert('Please login to use this page.');
                 } else {
                   onTabChange('participants'); 
                 }
                 setMobileMenuOpen(false); 
               }}
             >
-              Người tham gia
+              Participants
             </a>
           </li>
         </ul>
@@ -133,15 +133,15 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, activeTab, onTa
                   <div className="dropdown-divider"></div>
                   <button className="dropdown-item" onClick={() => { onLogout(); setShowDropdown(false); }}>
                     <i className="bi bi-box-arrow-right"></i>
-                    Đăng xuất
+                    Logout
                   </button>
                 </div>
               )}
             </div>
           ) : (
             <>
-              <button className="btn-login" onClick={onLoginClick}>Đăng nhập</button>
-              <button className="btn-register" onClick={onRegisterClick}>Đăng ký</button>
+              <button className="btn-login" onClick={onLoginClick}>Login</button>
+              <button className="btn-register" onClick={onRegisterClick}>Register</button>
             </>
           )}
         </div>

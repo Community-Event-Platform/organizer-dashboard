@@ -50,30 +50,30 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (mode === 'register' && !formData.full_name.trim()) {
-      newErrors.full_name = 'Vui lòng nhập họ tên của bạn';
+      newErrors.full_name = 'Please enter your full name';
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = 'Vui lòng nhập email';
+      newErrors.email = 'Please enter your email';
     } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = 'Email không hợp lệ';
+      newErrors.email = 'Invalid email address';
     }
 
     if (!formData.password) {
-      newErrors.password = 'Vui lòng nhập mật khẩu';
+      newErrors.password = 'Please enter your password';
     } else if (mode === 'register' && formData.password.length < 6) {
-      newErrors.password = 'Mật khẩu phải có ít nhất 6 ký tự';
+      newErrors.password = 'Password must have at least 6 characters';
     }
 
     if (mode === 'register') {
       if (!formData.password_confirmation) {
-        newErrors.password_confirmation = 'Vui lòng xác nhận mật khẩu';
+        newErrors.password_confirmation = 'Please confirm your password';
       } else if (formData.password !== formData.password_confirmation) {
-        newErrors.password_confirmation = 'Mật khẩu xác nhận không khớp';
+        newErrors.password_confirmation = 'Password confirmation does not match';
       }
 
       if (!formData.agree) {
-        newErrors.agree = 'Bạn phải đồng ý với điều khoản dịch vụ';
+        newErrors.agree = 'You must agree to the terms of service';
       }
     }
 
@@ -98,7 +98,7 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
         localStorage.setItem('token', data.token || data.access_token);
         localStorage.setItem('user', JSON.stringify(data.organizer || data.data));
 
-        if (addToast) addToast('Đăng nhập thành công!', 'success');
+        if (addToast) addToast('Login successful!', 'success');
         if (onAuthSuccess) onAuthSuccess(data.organizer || data.data);
         onClose();
       } else {
@@ -110,12 +110,12 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
           role: 'organizer',
         });
 
-        if (addToast) addToast('Đăng ký thành công! Vui lòng đăng nhập.', 'success');
+        if (addToast) addToast('Registration successful! Please login.', 'success');
         setMode('login');
         setFormData({ full_name: '', email: formData.email, password: '', password_confirmation: '', agree: false });
       }
     } catch (err) {
-      const errorMessage = err.response?.data?.message || err.message || 'Đã xảy ra lỗi. Vui lòng thử lại.';
+      const errorMessage = err.response?.data?.message || err.message || 'An error occurred. Please try again.';
       if (addToast) addToast(errorMessage, 'error');
       setErrors({ general: errorMessage });
     } finally {
@@ -142,11 +142,11 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
           <div className="auth-logo-icon">
             <i className={`bi ${mode === 'login' ? 'bi-box-arrow-in-right' : 'bi-person-plus'}`}></i>
           </div>
-          <h2>{mode === 'login' ? 'Đăng nhập' : 'Đăng ký tài khoản mới'}</h2>
+          <h2>{mode === 'login' ? 'Login' : 'Register a new account'}</h2>
           <p>
             {mode === 'login'
-              ? 'Chào mừng bạn quay trở lại! Vui lòng đăng nhập để tiếp tục quản lý sự kiện của bạn.'
-              : 'Hãy tham gia cộng đồng của chúng tôi và bắt đầu tạo ra những sự kiện tuyệt vời.'}
+              ? 'Welcome back! Please login to continue managing your events.'
+              : 'Join our community and start creating great events.'}
           </p>
         </div>
 
@@ -160,13 +160,13 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
         <form onSubmit={handleSubmit} noValidate>
           {mode === 'register' && (
             <div className="auth-form-group">
-              <label className="auth-label">Họ và tên</label>
+              <label className="auth-label">Full Name</label>
               <div className={`auth-input-wrapper ${errors.full_name ? 'input-error' : ''}`}>
                 <i className="bi bi-person auth-input-icon"></i>
                 <input
                   type="text"
                   name="full_name"
-                  placeholder="Nhập họ tên của bạn"
+                  placeholder="Enter your full name"
                   value={formData.full_name}
                   onChange={handleChange}
                   className="auth-input"
@@ -183,7 +183,7 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
               <input
                 type="email"
                 name="email"
-                placeholder="Nhập email của bạn"
+                placeholder="Enter your email"
                 value={formData.email}
                 onChange={handleChange}
                 className="auth-input"
@@ -193,13 +193,13 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
           </div>
 
           <div className="auth-form-group">
-            <label className="auth-label">Mật khẩu</label>
+            <label className="auth-label">Password</label>
             <div className={`auth-input-wrapper ${errors.password ? 'input-error' : ''}`}>
               <i className="bi bi-lock auth-input-icon"></i>
               <input
                 type={showPassword ? 'text' : 'password'}
                 name="password"
-                placeholder="Nhập mật khẩu"
+                placeholder="Enter your password"
                 value={formData.password}
                 onChange={handleChange}
                 className="auth-input"
@@ -218,13 +218,13 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
 
           {mode === 'register' && (
             <div className="auth-form-group">
-              <label className="auth-label">Xác nhận mật khẩu</label>
+              <label className="auth-label">Confirm Password</label>
               <div className={`auth-input-wrapper ${errors.password_confirmation ? 'input-error' : ''}`}>
                 <i className="bi bi-lock auth-input-icon"></i>
                 <input
                   type={showConfirmPassword ? 'text' : 'password'}
                   name="password_confirmation"
-                  placeholder="Nhập lại mật khẩu"
+                  placeholder="Re-enter your password"
                   value={formData.password_confirmation}
                   onChange={handleChange}
                   className="auth-input"
@@ -253,8 +253,8 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
                 className="auth-checkbox"
               />
               <label htmlFor="agreeCheck" className="auth-checkbox-label">
-                Tôi đồng ý với <a href="#" className="auth-link">Điều khoản dịch vụ</a> và{' '}
-                <a href="#" className="auth-link">Chính sách bảo mật</a> của EventHub.
+                I agree to the <a href="#" className="auth-link">Terms of Service</a> and{' '}
+                <a href="#" className="auth-link">Privacy Policy</a> of EventHub.
               </label>
               {errors.agree && <span className="auth-field-error">{errors.agree}</span>}
             </div>
@@ -268,26 +268,26 @@ const AuthModal = ({ isOpen, mode: initialMode = 'login', onClose, onAuthSuccess
             {loading ? (
               <>
                 <span className="auth-spinner"></span>
-                Đang xử lý...
+                Processing...
               </>
             ) : (
-              mode === 'login' ? 'Đăng nhập' : 'Đăng ký'
+              mode === 'login' ? 'Login' : 'Register'
             )}
           </button>
 
           <div className="auth-switch">
             {mode === 'login' ? (
               <>
-                Bạn chưa có tài khoản?{' '}
+                Don't have an account?{' '}
                 <span className="auth-switch-link" onClick={() => switchMode('register')}>
-                  Đăng ký ngay
+                  Register now
                 </span>
               </>
             ) : (
               <>
-                Bạn đã có tài khoản?{' '}
+                Already have an account?{' '}
                 <span className="auth-switch-link" onClick={() => switchMode('login')}>
-                  Đăng nhập ngay
+                  Login now
                 </span>
               </>
             )}

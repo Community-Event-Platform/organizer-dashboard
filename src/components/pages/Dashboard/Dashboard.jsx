@@ -43,7 +43,7 @@ const Dashboard = ({ addToast }) => {
       }
     } catch (err) {
       console.error('Error fetching dashboard stats:', err);
-      if (addToast) addToast('Không thể tải dữ liệu dashboard.', 'error');
+      if (addToast) addToast('Unable to load dashboard data.', 'error');
     } finally {
       setStatsLoading(false);
       setLoading(false);
@@ -75,11 +75,11 @@ const Dashboard = ({ addToast }) => {
     if (!deleteConfirm) return;
     try {
       await deleteCategory(deleteConfirm.id);
-      if (addToast) addToast('Xóa danh mục thành công!', 'success');
-      fetchDashboardData(); // Cập nhật lại danh sách ngay lập tức
+      if (addToast) addToast('Category deleted successfully!', 'success');
+      fetchDashboardData(); // Refresh the list immediately
     } catch (err) {
       console.error('Error deleting category:', err);
-      const msg = err.response?.data?.message || 'Không thể xóa danh mục.';
+      const msg = err.response?.data?.message || 'Unable to delete category.';
       if (addToast) addToast(msg, 'error');
     } finally {
       setDeleteConfirm(null);
@@ -91,7 +91,7 @@ const Dashboard = ({ addToast }) => {
     const trimmedName = categoryForm.name.trim();
 
     if (!trimmedName) {
-      if (addToast) addToast('Vui lòng nhập tên danh mục.', 'warning');
+      if (addToast) addToast('Please enter a category name.', 'warning');
       return;
     }
 
@@ -99,17 +99,17 @@ const Dashboard = ({ addToast }) => {
     try {
       if (editingCategory) {
         await updateCategory(editingCategory.id, { name: trimmedName });
-        if (addToast) addToast('Cập nhật danh mục thành công!', 'success');
+        if (addToast) addToast('Category updated successfully!', 'success');
       } else {
         await createCategory({ name: trimmedName });
-        if (addToast) addToast('Thêm danh mục thành công!', 'success');
+        if (addToast) addToast('Category added successfully!', 'success');
       }
       setShowCategoryModal(false);
       setCategoryForm({ name: '' });
-      fetchDashboardData(); // Tự động đồng bộ số liệu mới mà không cần F5
+      fetchDashboardData(); // Auto-sync updated stats without refresh
     } catch (err) {
       console.error('Error saving category:', err);
-      const msg = err.response?.data?.message || 'Đã xảy ra lỗi. Vui lòng thử lại.';
+      const msg = err.response?.data?.message || 'An error occurred. Please try again.';
       if (addToast) addToast(msg, 'error');
     } finally {
       setFormLoading(false);
@@ -139,8 +139,8 @@ const Dashboard = ({ addToast }) => {
     <div className="dashboard-wrapper">
       <div className="dashboard-hero">
         <div className="container">
-          <h1><em>Chào mừng bạn đến với</em><br />Event organizer</h1>
-          <p>Quản lý và theo dõi các sự kiện của bạn</p>
+          <h1><em>Welcome to</em><br />Event Organizer</h1>
+          <p>Manage and track your events</p>
         </div>
       </div>
 
@@ -163,7 +163,7 @@ const Dashboard = ({ addToast }) => {
             <div className="section-header">
               <h2 className="section-title">Events Categories</h2>
               <button className="btn-add-category" onClick={handleAddCategory}>
-                <i className="bi bi-plus-lg"></i> Add New Categories
+                <i className="bi bi-plus-lg"></i> Add New Category
               </button>
             </div>
 
