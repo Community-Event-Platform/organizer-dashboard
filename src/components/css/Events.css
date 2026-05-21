@@ -300,6 +300,13 @@
   white-space: nowrap;
 }
 
+.no-actions {
+  color: #64748b;
+  font-size: 0.95rem;
+  padding: 0 6px;
+  display: inline-block;
+}
+
 .btn-edit, .btn-delete {
   border: none;
   width: 34px;
