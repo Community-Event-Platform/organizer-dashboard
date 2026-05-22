@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getCategories, getOrganizerEvents, createEvent, updateEvent, deleteEvent } from '../../services/api';
 import '../css/Events.css';
 
@@ -47,7 +47,7 @@ const Events = ({ addToast }) => {
   });
 
   // Fetch organizer events
-  const fetchEvents = async () => {
+  const fetchEvents = useCallback(async () => {
     setLoadingEvents(true);
     try {
       const response = await getOrganizerEvents();
@@ -61,7 +61,7 @@ const Events = ({ addToast }) => {
     } finally {
       setLoadingEvents(false);
     }
-  };
+  }, [addToast]);
 
   // Fetch categories on mount
   useEffect(() => {
@@ -69,11 +69,10 @@ const Events = ({ addToast }) => {
       try {
         const response = await getCategories();
         const catData = response.data.data || response.data;
-        if (Array.isArray(catData)) {
-          setCategories(catData);
-        } else if (catData.categories) {
-          setCategories(catData.categories);
-        }
+        const categoriesList = Array.isArray(catData)
+          ? catData
+          : catData.categories || [];
+        setCategories([...categoriesList].sort((a, b) => Number(b.id) - Number(a.id)));
       } catch (error) {
         console.error('Error fetching categories:', error);
         if (addToast) addToast('Unable to load event categories.', 'error');
@@ -82,14 +81,13 @@ const Events = ({ addToast }) => {
       }
     };
 
-    fetchEvents();
-    fetchCategories();
-  }, [addToast]);
+    const loadInitialData = async () => {
+      await fetchEvents();
+      await fetchCategories();
+    };
 
-  // Handle pagination and filtering reset
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, selectedCategory]);
+    loadInitialData();
+  }, [addToast, fetchEvents]);
 
   const handleChange = (e) => {
     const { name, value, type, checked, files } = e.target;
@@ -164,6 +162,24 @@ const Events = ({ addToast }) => {
     const hours = String(d.getHours()).padStart(2, '0');
     const minutes = String(d.getMinutes()).padStart(2, '0');
     return `${day}-${month}-${year} ${hours}:${minutes}`;
+  };
+
+  const resolveImageUrl = (imagePath) => {
+    if (!imagePath) return '';
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return imagePath;
+    }
+
+    const rawApiUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, '');
+    if (!rawApiUrl) return imagePath;
+
+    // If backend API is mounted under /api, strip that prefix when loading storage URLs
+    const apiBase = rawApiUrl.replace(/\/api$/, '');
+
+    if (imagePath.startsWith('/')) {
+      return `${apiBase}${imagePath}`;
+    }
+    return `${apiBase}/${imagePath}`;
   };
 
   const handleOpenEditModal = (event) => {
@@ -305,13 +321,19 @@ const Events = ({ addToast }) => {
                 type="text"
                 placeholder="Search Events...."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setCurrentPage(1);
+                }}
               />
             </div>
             <div className="filter-dropdown-wrapper">
               <select
                 value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
+                onChange={(e) => {
+                  setSelectedCategory(e.target.value);
+                  setCurrentPage(1);
+                }}
                 disabled={loadingCats}
               >
                 <option value="">All categories</option>
@@ -746,7 +768,7 @@ const Events = ({ addToast }) => {
             <div className="event-view-content">
               {viewEvent.image && (
                 <div className="event-detail-image">
-                  <img src={viewEvent.image} alt={viewEvent.name} />
+                  <img src={resolveImageUrl(viewEvent.image)} alt={viewEvent.name} />
                 </div>
               )}
               <div className="event-detail-grid">

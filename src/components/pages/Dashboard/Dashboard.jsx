@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getDashboardStats, createCategory, updateCategory, deleteCategory } from '../../../services/api';
 import '../../css/Dashboard.css';
 import CategoryTable from './CategoryTable';
@@ -24,7 +24,7 @@ const Dashboard = ({ addToast }) => {
   const [deleteConfirm, setDeleteConfirm] = useState(null);
 
   // Hàm Fetch dữ liệu chính đồng bộ toàn trang
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     setStatsLoading(true);
     setLoading(true);
     try {
@@ -48,12 +48,16 @@ const Dashboard = ({ addToast }) => {
       setStatsLoading(false);
       setLoading(false);
     }
-  };
+  }, [addToast]);
 
-  // Mảng phụ thuộc [] rỗng dứt điểm việc lặp request vô hạn
+  // Mảng phụ thuộc [fetchDashboardData] đảm bảo dùng cùng hàm, không bị cảnh báo
   useEffect(() => {
-    fetchDashboardData();
-  }, []);
+    const loadDashboardData = async () => {
+      await fetchDashboardData();
+    };
+
+    loadDashboardData();
+  }, [fetchDashboardData]);
 
   const handleAddCategory = () => {
     setEditingCategory(null);
