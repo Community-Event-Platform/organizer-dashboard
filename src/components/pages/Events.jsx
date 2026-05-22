@@ -41,7 +41,8 @@ const Events = ({ addToast }) => {
     capacity: '',
     event_type: 'Free',
     require_additional_info: false,
-    status: 'Draft'
+    status: 'Draft',
+    image: null,
   });
 
   // Fetch organizer events
@@ -90,10 +91,16 @@ const Events = ({ addToast }) => {
   }, [searchQuery, selectedCategory]);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, type, checked, files } = e.target;
+    const fieldValue = type === 'checkbox'
+      ? checked
+      : type === 'file'
+      ? files && files[0]
+      : value;
+
     setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: fieldValue || null,
     }));
   };
 
@@ -128,7 +135,8 @@ const Events = ({ addToast }) => {
       capacity: '',
       event_type: 'Free',
       require_additional_info: false,
-      status: 'Draft'
+      status: 'Draft',
+      image: null,
     });
     setShowModal(true);
   };
@@ -183,7 +191,8 @@ const Events = ({ addToast }) => {
       capacity: event.capacity || '',
       event_type: event.event_type || 'Free',
       require_additional_info: event.require_additional_info === 1 || event.require_additional_info === true,
-      status: event.status || 'Draft'
+      status: event.status || 'Draft',
+      image: null,
     });
     setShowModal(true);
   };
@@ -210,16 +219,30 @@ const Events = ({ addToast }) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const payload = {
-        ...formData,
-        custom_form_spec: customFields.length > 0 ? JSON.stringify(customFields) : null
-      };
+      const formPayload = new FormData();
+      formPayload.append('name', formData.name);
+      formPayload.append('description', formData.description || '');
+      formPayload.append('category_id', formData.category_id);
+      formPayload.append('location', formData.location);
+      formPayload.append('date_time', formData.date_time);
+      formPayload.append('capacity', formData.capacity);
+      formPayload.append('status', formData.status);
+      formPayload.append('event_type', formData.event_type);
+      formPayload.append('require_additional_info', formData.require_additional_info ? 1 : 0);
+
+      if (customFields.length > 0) {
+        formPayload.append('custom_form_spec', JSON.stringify(customFields));
+      }
+
+      if (formData.image) {
+        formPayload.append('image', formData.image);
+      }
 
       if (editingEvent) {
-        await updateEvent(editingEvent.id, payload);
+        await updateEvent(editingEvent.id, formPayload);
         if (addToast) addToast('Event updated successfully!', 'success');
       } else {
-        await createEvent(payload);
+        await createEvent(formPayload);
         if (addToast) addToast('Draft event created successfully!', 'success');
       }
       setShowModal(false);
@@ -499,6 +522,24 @@ const Events = ({ addToast }) => {
                     required
                   />
                 </div>
+              </div>
+
+              {/* Event Banner Image */}
+              <div className="modal-form-group full-width">
+                <label htmlFor="image">Event Banner</label>
+                <input
+                  type="file"
+                  id="image"
+                  name="image"
+                  accept="image/*"
+                  onChange={handleChange}
+                />
+                {formData.image && (
+                  <p className="file-selected-label">Selected file: {formData.image.name}</p>
+                )}
+                {editingEvent && !formData.image && editingEvent.image && (
+                  <p className="file-selected-label">Current image already uploaded.</p>
+                )}
               </div>
 
               {/* Event Date & Time */}

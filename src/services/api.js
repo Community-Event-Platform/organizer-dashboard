@@ -6,7 +6,6 @@ const API_BASE_URL = import.meta.env.VITE_API_URL;
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
     'Accept': 'application/json',
   },
 });
@@ -64,6 +63,11 @@ export const createEvent = (eventData) => {
 };
 
 export const updateEvent = (id, eventData) => {
+  if (eventData instanceof FormData) {
+    eventData.append('_method', 'PUT');
+    return api.post(`/events/${id}`, eventData);
+  }
+
   return api.put(`/events/${id}`, eventData);
 };
 

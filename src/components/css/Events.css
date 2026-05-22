@@ -518,6 +518,7 @@
 .event-modal-form input[type="text"],
 .event-modal-form input[type="number"],
 .event-modal-form input[type="datetime-local"],
+.event-modal-form input[type="file"],
 .event-modal-form select,
 .event-modal-form textarea {
   width: 100%;
@@ -529,6 +530,12 @@
   background-color: white;
   transition: all 0.2s ease;
   font-family: inherit;
+}
+
+.file-selected-label {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #475569;
 }
 
 .event-modal-form input:focus,
