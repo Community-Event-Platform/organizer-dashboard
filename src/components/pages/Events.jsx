@@ -42,7 +42,7 @@ const Events = ({ addToast }) => {
     capacity: '',
     event_type: 'Free',
     require_additional_info: false,
-    status: 'Draft',
+    status: 'draft',
     image: null,
   });
 
@@ -131,7 +131,7 @@ const Events = ({ addToast }) => {
       capacity: '',
       event_type: 'Free',
       require_additional_info: false,
-      status: 'Draft',
+      status: 'draft',
       image: null,
     });
     setShowModal(true);
@@ -203,7 +203,7 @@ const Events = ({ addToast }) => {
       capacity: event.capacity || '',
       event_type: event.event_type || 'Free',
       require_additional_info: event.require_additional_info === 1 || event.require_additional_info === true,
-      status: event.status || 'Draft',
+      status: event.status || 'draft',
       image: null,
     });
     setShowModal(true);
@@ -459,7 +459,7 @@ const Events = ({ addToast }) => {
                       {event.registrations_count !== undefined ? event.registrations_count : 0}/{event.capacity}
                     </td>
                     <td>
-                      <span className={`badge-status status-${(event.status || 'Draft').toLowerCase()}`}>
+                      <span className={`badge-status status-${(event.status || 'draft').toLowerCase()}`}>
                         {event.status}
                       </span>
                     </td>
@@ -868,7 +868,7 @@ const Events = ({ addToast }) => {
                     onChange={handleChange}
                     required
                   >
-                    <option value="Draft">Draft</option>
+                    <option value="draft">Draft</option>
                     <option value="published">Published</option>
                     <option value="cancelled">Cancelled</option>
                   </select>
