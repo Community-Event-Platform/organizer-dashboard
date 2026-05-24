@@ -37,7 +37,7 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, activeTab, onTa
       <div className="container navbar-inner">
         {/* Logo */}
         <div className="navbar-logo" onClick={() => onTabChange('home')}>
-          <i className="bi bi-lightning-charge-fill" style={{ color: '#14AE5C', fontSize: '28px' }}></i>
+          <i className="bi bi-lightning-charge-fill navbar-logo-icon"></i>
           <span className="logo-text">EventHub</span>
         </div>
 
@@ -116,7 +116,7 @@ const Navbar = ({ user, onLoginClick, onRegisterClick, onLogout, activeTab, onTa
                 {user.name}
               </span>
               <div className="user-avatar">
-                <i className="bi bi-person-fill" style={{ fontSize: '18px', color: '#fff' }}></i>
+                <i className="bi bi-person-fill user-avatar-icon"></i>
               </div>
               <i className="bi bi-caret-down-fill dropdown-arrow"></i>
 

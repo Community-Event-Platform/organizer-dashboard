@@ -1,5 +1,4 @@
 // src/pages/Dashboard/CategoryTable.jsx
-import React from 'react';
 
 const CategoryTable = ({ categories, loading, onEdit, onDelete, getCategoryIcon }) => {
   if (loading) {

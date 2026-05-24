@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getDashboardStats, getCategories, createCategory, updateCategory, deleteCategory } from '../../services/api';
+import { getDashboardStats, createCategory, updateCategory, deleteCategory } from '../../services/api';
 import '../css/Dashboard.css';
 
 /**
@@ -8,29 +8,24 @@ import '../css/Dashboard.css';
  * All data fetched from API with loading/error states
  */
 const Dashboard = ({ addToast }) => {
-  // Dashboard statistics
-  const [stats, setStats] = useState({
+    const [stats, setStats] = useState({
     totalEvents: 0,
     participants: 0,
     activeEvents: 0,
   });
 
-  // Categories management
-  const [categories, setCategories] = useState([]);
+    const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [statsLoading, setStatsLoading] = useState(true);
 
-  // Category form modal state
-  const [showCategoryModal, setShowCategoryModal] = useState(false);
+    const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
   const [categoryForm, setCategoryForm] = useState({ name: '' });
   const [formLoading, setFormLoading] = useState(false);
 
-  // Delete confirmation
-  const [deleteConfirm, setDeleteConfirm] = useState(null);
+    const [deleteConfirm, setDeleteConfirm] = useState(null);
 
-  // ===== Fetch dashboard stats and categories from API =====
-  useEffect(() => {
+    useEffect(() => {
     const fetchDashboardData = async () => {
       setStatsLoading(true);
       setLoading(true);
@@ -61,8 +56,7 @@ const Dashboard = ({ addToast }) => {
     fetchDashboardData();
   }, [addToast]);
 
-  // ===== Category CRUD handlers =====
-
+  
   const handleAddCategory = () => {
     setEditingCategory(null);
     setCategoryForm({ name: '' });

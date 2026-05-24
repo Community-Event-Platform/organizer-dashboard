@@ -323,6 +323,16 @@
   }
 }
 
+.navbar-logo-icon {
+  color: #14AE5C;
+  font-size: 28px;
+}
+
+.user-avatar-icon {
+  font-size: 18px;
+  color: #fff;
+}
+
 /* Premium Segmented Language Selector Capsule (Matches User Image) */
 .lang-toggle-segmented {
   display: inline-flex;

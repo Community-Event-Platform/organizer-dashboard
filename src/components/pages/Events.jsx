@@ -11,25 +11,25 @@ const Events = ({ addToast }) => {
   const [loadingEvents, setLoadingEvents] = useState(true);
   const [loadingCats, setLoadingCats] = useState(true);
 
-  // Search & Filter state
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
 
-  // Pagination state
-  const [currentPage, setCurrentPage] = useState(1);
-  const eventsPerPage = 5;
+  const [upcomingPage, setUpcomingPage] = useState(1);
+  const [pastPage, setPastPage] = useState(1);
+  const eventsPerPage = 4;
+  
+  const [viewReviewsEvent, setViewReviewsEvent] = useState(null);
+  const [reviewsPage, setReviewsPage] = useState(1);
+  const reviewsPerPage = 4;
 
-  // Modal & Edit state
   const [showModal, setShowModal] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Custom Form Builder state
   const [customFields, setCustomFields] = useState([]);
   const [newFieldName, setNewFieldName] = useState('');
   const [newFieldType, setNewFieldType] = useState('text');
 
-  // Delete confirm state
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [viewEvent, setViewEvent] = useState(null);
 
@@ -46,7 +46,6 @@ const Events = ({ addToast }) => {
     image: null,
   });
 
-  // Fetch organizer events
   const fetchEvents = useCallback(async () => {
     setLoadingEvents(true);
     try {
@@ -63,7 +62,6 @@ const Events = ({ addToast }) => {
     }
   }, [addToast]);
 
-  // Fetch categories on mount
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -107,7 +105,6 @@ const Events = ({ addToast }) => {
     setFormData((prev) => ({
       ...prev,
       event_type: type,
-      // Reset additional info if paid
       require_additional_info: type === 'Free' ? prev.require_additional_info : false
     }));
   };
@@ -173,7 +170,6 @@ const Events = ({ addToast }) => {
     const rawApiUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, '');
     if (!rawApiUrl) return imagePath;
 
-    // If backend API is mounted under /api, strip that prefix when loading storage URLs
     const apiBase = rawApiUrl.replace(/\/api$/, '');
 
     if (imagePath.startsWith('/')) {
@@ -185,7 +181,6 @@ const Events = ({ addToast }) => {
   const handleOpenEditModal = (event) => {
     setEditingEvent(event);
     
-    // Parse custom form spec if it exists
     let parsedFields = [];
     if (event.custom_form_spec) {
       try {
@@ -243,6 +238,20 @@ const Events = ({ addToast }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+
+    const eventDate = new Date(formData.date_time);
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+    
+    const diffTime = eventDate.getTime() - currentDate.getTime();
+    const diffDays = diffTime / (1000 * 3600 * 24);
+    
+    if (diffDays < 3) {
+      if (addToast) addToast('Event start date must be at least 3 days from today.', 'error');
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       const formPayload = new FormData();
       formPayload.append('name', formData.name);
@@ -281,7 +290,6 @@ const Events = ({ addToast }) => {
     }
   };
 
-  // Filter logic
   const filteredEvents = events.filter((event) => {
     const matchesSearch =
       event.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -294,12 +302,54 @@ const Events = ({ addToast }) => {
     return matchesSearch && matchesCategory;
   });
 
-  // Pagination logic
-  const totalPages = Math.ceil(filteredEvents.length / eventsPerPage) || 1;
-  const paginatedEvents = filteredEvents.slice(
-    (currentPage - 1) * eventsPerPage,
-    currentPage * eventsPerPage
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+
+  const upcomingFilteredEvents = filteredEvents.filter(event => new Date(event.date_time) >= now);
+  const pastFilteredEvents = filteredEvents.filter(event => new Date(event.date_time) < now);
+
+  const upcomingTotalPages = Math.ceil(upcomingFilteredEvents.length / eventsPerPage) || 1;
+  const paginatedUpcomingEvents = upcomingFilteredEvents.slice(
+    (upcomingPage - 1) * eventsPerPage,
+    upcomingPage * eventsPerPage
   );
+
+  const pastTotalPages = Math.ceil(pastFilteredEvents.length / eventsPerPage) || 1;
+  const paginatedPastEvents = pastFilteredEvents.slice(
+    (pastPage - 1) * eventsPerPage,
+    pastPage * eventsPerPage
+  );
+
+  const renderPagination = (currentPage, totalPages, setPage) => {
+    if (totalPages <= 1) return null;
+    return (
+      <div className="events-pagination-container">
+        <button
+          className="btn-pagination-nav"
+          onClick={() => setPage(prev => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+        >
+          <i className="bi bi-chevron-left"></i>
+        </button>
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+          <button
+            key={page}
+            className={`btn-pagination-number ${currentPage === page ? 'active' : ''}`}
+            onClick={() => setPage(page)}
+          >
+            {page}
+          </button>
+        ))}
+        <button
+          className="btn-pagination-nav"
+          onClick={() => setPage(prev => Math.min(prev + 1, totalPages))}
+          disabled={currentPage === totalPages}
+        >
+          <i className="bi bi-chevron-right"></i>
+        </button>
+      </div>
+    );
+  };
 
   return (
     <div className="events-page-wrapper">
@@ -307,7 +357,7 @@ const Events = ({ addToast }) => {
         {/* Header Title Section */}
         <div className="events-page-header">
           <div className="header-text-block">
-            <h1>All Participants</h1>
+            <h1>All Events</h1>
             <p>Create, manage and organize your events.</p>
           </div>
         </div>
@@ -323,7 +373,8 @@ const Events = ({ addToast }) => {
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
-                  setCurrentPage(1);
+                  setUpcomingPage(1);
+                  setPastPage(1);
                 }}
               />
             </div>
@@ -332,7 +383,8 @@ const Events = ({ addToast }) => {
                 value={selectedCategory}
                 onChange={(e) => {
                   setSelectedCategory(e.target.value);
-                  setCurrentPage(1);
+                  setUpcomingPage(1);
+                  setPastPage(1);
                 }}
                 disabled={loadingCats}
               >
@@ -350,7 +402,8 @@ const Events = ({ addToast }) => {
           </button>
         </div>
 
-        {/* Events Table / Styled Cards */}
+        {/* Upcoming / Created Events Table */}
+        <h3 className="table-section-title">Upcoming / Created Events</h3>
         <div className="table-responsive-wrapper">
           <table className="events-custom-table">
             <thead>
@@ -363,27 +416,26 @@ const Events = ({ addToast }) => {
                 <th>Location</th>
                 <th>Capacity</th>
                 <th>Status</th>
-                <th>Reviews</th>
                 <th className="text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
               {loadingEvents ? (
                 <tr>
-                  <td colSpan="10" className="table-state-cell">
+                  <td colSpan="9" className="table-state-cell">
                     <div className="loading-spinner"></div>
                     <p>Loading event data...</p>
                   </td>
                 </tr>
-              ) : filteredEvents.length === 0 ? (
+              ) : upcomingFilteredEvents.length === 0 ? (
                 <tr>
-                  <td colSpan="10" className="table-state-cell">
+                  <td colSpan="9" className="table-state-cell">
                     <i className="bi bi-inbox-fill empty-icon"></i>
-                    <p>No events found.</p>
+                    <p>No upcoming events found.</p>
                   </td>
                 </tr>
               ) : (
-                paginatedEvents.map((event) => (
+                paginatedUpcomingEvents.map((event) => (
                   <tr key={event.id} className="event-table-row">
                     <td className="cell-event-name">{event.name}</td>
                     <td className="cell-description">
@@ -411,11 +463,6 @@ const Events = ({ addToast }) => {
                         {event.status}
                       </span>
                     </td>
-                    <td>
-                      <button className="btn-view-reviews">
-                        View <strong>{event.reviews_count || 0}</strong>
-                      </button>
-                    </td>
                     <td className="cell-actions text-center">
                       {event.status?.toLowerCase() === 'published' ? (
                         <button className="btn-view" onClick={() => handleOpenViewModal(event)} title="View details">
@@ -438,38 +485,136 @@ const Events = ({ addToast }) => {
             </tbody>
           </table>
         </div>
+        {renderPagination(upcomingPage, upcomingTotalPages, setUpcomingPage)}
 
-        {/* Pagination Section */}
-        {totalPages > 1 && (
-          <div className="events-pagination-container">
-            <button
-              className="btn-pagination-nav"
-              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-            >
-              <i className="bi bi-chevron-left"></i>
-            </button>
-            
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-              <button
-                key={page}
-                className={`btn-pagination-number ${currentPage === page ? 'active' : ''}`}
-                onClick={() => setCurrentPage(page)}
-              >
-                {page}
-              </button>
-            ))}
+        {/* Past Events Table */}
+        <h3 className="table-section-title mt-4">Past Events</h3>
+        <div className="table-responsive-wrapper">
+          <table className="events-custom-table past-events-table">
+            <thead>
+              <tr>
+                <th>Event Name</th>
+                <th>Reviews</th>
+                <th className="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loadingEvents ? (
+                <tr>
+                  <td colSpan="3" className="table-state-cell">
+                    <div className="loading-spinner"></div>
+                    <p>Loading event data...</p>
+                  </td>
+                </tr>
+              ) : pastFilteredEvents.length === 0 ? (
+                <tr>
+                  <td colSpan="3" className="table-state-cell">
+                    <i className="bi bi-inbox-fill empty-icon"></i>
+                    <p>No past events found.</p>
+                  </td>
+                </tr>
+              ) : (
+                paginatedPastEvents.map((event) => (
+                  <tr key={event.id} className="event-table-row">
+                    <td className="cell-event-name">{event.name}</td>
+                    <td>
+                      <span className="reviews-count-badge">
+                        {event.reviews_count || 0} reviews
+                      </span>
+                    </td>
+                    <td className="cell-actions text-center">
+                      <button className="btn-view-details" onClick={() => { setViewReviewsEvent(event); setReviewsPage(1); }}>
+                        View Details
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+        {renderPagination(pastPage, pastTotalPages, setPastPage)}
 
-            <button
-              className="btn-pagination-nav"
-              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-              disabled={currentPage === totalPages}
-            >
-              <i className="bi bi-chevron-right"></i>
-            </button>
-          </div>
-        )}
       </div>
+
+      {/* ===== Reviews Modal Popup ===== */}
+      {viewReviewsEvent && (
+        <div className="event-modal-overlay" onClick={() => setViewReviewsEvent(null)}>
+          <div className="event-modal-content reviews-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="event-modal-header">
+              <div className="header-title-wrapper">
+                <div className="header-icon-box">
+                  <i className="bi bi-star-fill"></i>
+                </div>
+                <div className="header-text">
+                  <h2>Reviews for {viewReviewsEvent.name}</h2>
+                  <p>Read what participants said about this event.</p>
+                </div>
+              </div>
+              <button className="modal-close-x" onClick={() => setViewReviewsEvent(null)}>
+                <i className="bi bi-x-lg"></i>
+              </button>
+            </div>
+            
+            <div className="reviews-list-container">
+              {(!viewReviewsEvent.reviews || viewReviewsEvent.reviews.length === 0) ? (
+                <div className="table-state-cell">
+                  <i className="bi bi-chat-square-text empty-icon"></i>
+                  <p>No reviews yet.</p>
+                </div>
+              ) : (
+                <>
+                  <div className="reviews-grid">
+                    {viewReviewsEvent.reviews
+                      .slice((reviewsPage - 1) * reviewsPerPage, reviewsPage * reviewsPerPage)
+                      .map((review, idx) => (
+                        <div key={idx} className="review-card">
+                          <div className="review-header">
+                            <span className="reviewer-name">{review.user_name || 'Anonymous'}</span>
+                            <span className="review-rating">
+                              {Array.from({ length: 5 }).map((_, i) => (
+                                <i key={i} className={`bi bi-star${i < review.rating ? '-fill text-warning' : ''}`}></i>
+                              ))}
+                            </span>
+                          </div>
+                          <p className="review-comment">{review.comment}</p>
+                        </div>
+                      ))
+                    }
+                  </div>
+                  {Math.ceil((viewReviewsEvent.reviews?.length || 0) / reviewsPerPage) > 1 && (
+                    <div className="events-pagination-container">
+                      <button
+                        className="btn-pagination-nav"
+                        onClick={() => setReviewsPage(prev => Math.max(prev - 1, 1))}
+                        disabled={reviewsPage === 1}
+                      >
+                        <i className="bi bi-chevron-left"></i>
+                      </button>
+                      {Array.from({ length: Math.ceil(viewReviewsEvent.reviews.length / reviewsPerPage) }, (_, i) => i + 1).map((page) => (
+                        <button
+                          key={page}
+                          className={`btn-pagination-number ${reviewsPage === page ? 'active' : ''}`}
+                          onClick={() => setReviewsPage(page)}
+                        >
+                          {page}
+                        </button>
+                      ))}
+                      <button
+                        className="btn-pagination-nav"
+                        onClick={() => setReviewsPage(prev => Math.min(prev + 1, Math.ceil(viewReviewsEvent.reviews.length / reviewsPerPage)))}
+                        disabled={reviewsPage === Math.ceil(viewReviewsEvent.reviews.length / reviewsPerPage)}
+                      >
+                        <i className="bi bi-chevron-right"></i>
+                      </button>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ===== Create/Edit Event Modal Popup ===== */}
       {showModal && (

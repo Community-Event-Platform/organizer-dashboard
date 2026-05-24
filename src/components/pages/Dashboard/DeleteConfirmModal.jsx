@@ -1,5 +1,4 @@
 // src/pages/Dashboard/DeleteConfirmModal.jsx
-import React from 'react';
 
 const DeleteConfirmModal = ({ category, onConfirm, onCancel }) => {
   if (!category) return null;

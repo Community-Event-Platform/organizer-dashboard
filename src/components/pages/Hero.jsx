@@ -72,10 +72,10 @@ const Hero = () => {
         
         {/* Carousel Controls */}
         <button className="carousel-btn prev" onClick={prevSlide}>
-          <i className="bi bi-chevron-left" style={{ fontSize: '24px' }}></i>
+          <i className="bi bi-chevron-left"></i>
         </button>
         <button className="carousel-btn next" onClick={nextSlide}>
-          <i className="bi bi-chevron-right" style={{ fontSize: '24px' }}></i>
+          <i className="bi bi-chevron-right"></i>
         </button>
 
         {/* Event Info */}

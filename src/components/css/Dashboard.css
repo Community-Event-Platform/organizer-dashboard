@@ -283,6 +283,15 @@
   transform: translateY(-1px);
 }
 
+.btn-action:disabled {
+  background-color: #e2e8f0;
+  color: #94a3b8;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+
 /* ==================== Table States ==================== */
 .table-loading,
 .table-empty {
@@ -369,6 +378,12 @@
   color: #1a1a1a;
 }
 
+.category-modal-desc {
+  color: #666;
+  font-size: 14px;
+  margin: -10px 0 20px 0;
+}
+
 .modal-close-btn {
   background: #f1f5f9;
   border: none;
@@ -418,10 +433,27 @@
   box-shadow: 0 0 0 3px rgba(20, 174, 92, 0.1);
 }
 
+.category-form-group .input-with-icon {
+  position: relative;
+}
+
+.category-form-group .input-with-icon input {
+  padding-left: 35px;
+}
+
+.category-form-group .input-with-icon i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+}
+
 .category-modal-actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+  margin-top: 20px;
 }
 
 .btn-cancel {
@@ -454,6 +486,7 @@
   align-items: center;
   gap: 6px;
   box-shadow: 0 2px 8px rgba(20, 174, 92, 0.25);
+  min-width: 140px;
 }
 
 .btn-save:hover:not(:disabled) {

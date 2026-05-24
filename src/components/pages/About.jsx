@@ -1,4 +1,3 @@
-import React from 'react';
 import homepageImg from '../../assets/About/homepage.png';
 import '../css/About.css';
 
