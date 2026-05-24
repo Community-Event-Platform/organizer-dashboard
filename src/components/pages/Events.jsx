@@ -715,8 +715,17 @@ const Events = ({ addToast }) => {
                 {formData.image && (
                   <p className="file-selected-label">Selected file: {formData.image.name}</p>
                 )}
+
                 {editingEvent && !formData.image && editingEvent.image && (
-                  <p className="file-selected-label">Current image already uploaded.</p>
+                  <div className="current-image-preview-wrapper">
+                    <p className="file-selected-label">Current image:</p>
+                    <img
+                      src={resolveImageUrl(editingEvent.image)}
+                      alt={editingEvent.name || 'Event banner'}
+                      className="current-image-preview"
+                      style={{ maxWidth: '320px', maxHeight: '180px', display: 'block', marginTop: '8px' }}
+                    />
+                  </div>
                 )}
               </div>
 
