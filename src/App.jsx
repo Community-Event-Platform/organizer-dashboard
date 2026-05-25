@@ -6,7 +6,7 @@ import About from './components/pages/About'
 import Footer from './components/layout/Footer'
 import AuthModal from './components/AuthModal'
 import { ToastContainer, useToast } from './components/Toast'
-import Events from './components/pages/Events'
+import Events from './components/pages/events/Events'
 import './components/css/App.css'
 
 /**
