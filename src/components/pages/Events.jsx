@@ -162,21 +162,33 @@ const Events = ({ addToast }) => {
   };
 
   const resolveImageUrl = (imagePath) => {
-    if (!imagePath) return '';
-    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-      return imagePath;
-    }
+  if (!imagePath) return '';
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    return imagePath;
+  }
 
-    const rawApiUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, '');
-    if (!rawApiUrl) return imagePath;
+  const rawApiUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, '');
+  if (!rawApiUrl) return imagePath;
 
-    const apiBase = rawApiUrl.replace(/\/api$/, '');
+  // Lấy được gốc domain: http://localhost:8000
+  const apiBase = rawApiUrl.replace(/\/api$/, '');
 
-    if (imagePath.startsWith('/')) {
-      return `${apiBase}${imagePath}`;
-    }
-    return `${apiBase}/${imagePath}`;
-  };
+  // Chuẩn hóa imagePath (bỏ dấu gạch chéo ở đầu nếu có để dễ xử lý)
+  const cleanPath = imagePath.startsWith('/') ? imagePath.substring(1) : imagePath;
+
+  // Trường hợp 1: Nếu trong DB đã lưu có sẵn chữ 'storage/' ở đầu
+  if (cleanPath.startsWith('storage/')) {
+    return `${apiBase}/${cleanPath}`;
+  }
+
+  // Trường hợp 2: Nếu trong DB lưu có chữ 'events/' nhưng chưa có 'storage/'
+  if (cleanPath.startsWith('events/')) {
+    return `${apiBase}/storage/${cleanPath}`;
+  }
+
+  // Trường hợp 3: Nếu trong DB chỉ lưu mỗi tên file trần (ví dụ: 'khFWO9a95...png')
+  return `${apiBase}/storage/events/${cleanPath}`;
+};
 
   const handleOpenEditModal = (event) => {
     setEditingEvent(event);
