@@ -24,6 +24,16 @@ const Dashboard = ({ addToast }) => {
   const [formLoading, setFormLoading] = useState(false);
 
     const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const categoriesPerPage = 5;
+
+  const totalPages = Math.max(1, Math.ceil(categories.length / categoriesPerPage));
+  const effectiveCurrentPage = Math.min(currentPage, totalPages);
+  const sortedCategories = [...categories].sort((a, b) => Number(a.id) - Number(b.id));
+  const paginatedCategories = sortedCategories.slice(
+    (effectiveCurrentPage - 1) * categoriesPerPage,
+    effectiveCurrentPage * categoriesPerPage
+  );
 
     useEffect(() => {
     const fetchDashboardData = async () => {
@@ -225,7 +235,7 @@ const Dashboard = ({ addToast }) => {
                       </td>
                     </tr>
                   ) : (
-                    categories.map((cat) => {
+                    paginatedCategories.map((cat) => {
                       const iconData = getCategoryIcon(cat.name);
                       return (
                         <tr key={cat.id}>
@@ -270,6 +280,36 @@ const Dashboard = ({ addToast }) => {
                   )}
                 </tbody>
               </table>
+              {totalPages > 1 && (
+                <div className="pagination-controls">
+                  <div className="pagination-info">Page {effectiveCurrentPage} of {totalPages}</div>
+                  <div className="pagination-buttons">
+                    <button
+                      className="btn-page"
+                      onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                      disabled={effectiveCurrentPage === 1}
+                    >
+                      Previous
+                    </button>
+                    {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                      <button
+                        key={page}
+                        className={`btn-page ${page === effectiveCurrentPage ? 'active' : ''}`}
+                        onClick={() => setCurrentPage(page)}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                    <button
+                      className="btn-page"
+                      onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                      disabled={effectiveCurrentPage === totalPages}
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </section>
         </div>

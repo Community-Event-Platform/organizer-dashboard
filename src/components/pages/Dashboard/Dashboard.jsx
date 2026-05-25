@@ -22,6 +22,8 @@ const Dashboard = ({ addToast }) => {
   const [formLoading, setFormLoading] = useState(false);
 
   const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const categoriesPerPage = 5;
 
   // Hàm Fetch dữ liệu chính đồng bộ toàn trang
   const fetchDashboardData = useCallback(async () => {
@@ -39,7 +41,8 @@ const Dashboard = ({ addToast }) => {
       });
 
       if (data.categories) {
-        setCategories(data.categories);
+        const sortedCategories = [...data.categories].sort((a, b) => Number(a.id) - Number(b.id));
+        setCategories(sortedCategories);
       }
     } catch (err) {
       console.error('Error fetching dashboard stats:', err);
@@ -120,6 +123,11 @@ const Dashboard = ({ addToast }) => {
     }
   };
 
+  const totalPages = Math.max(1, Math.ceil(categories.length / categoriesPerPage));
+  const effectiveCurrentPage = Math.min(currentPage, totalPages);
+  const sortedCategories = [...categories].sort((a, b) => Number(a.id) - Number(b.id));
+  const paginatedCategories = sortedCategories.slice((effectiveCurrentPage - 1) * categoriesPerPage, effectiveCurrentPage * categoriesPerPage);
+
   const getCategoryIcon = (name) => {
     const icons = {
       'Music': { icon: 'bi-music-note-beamed', class: 'cat-icon-purple' },
@@ -173,12 +181,42 @@ const Dashboard = ({ addToast }) => {
 
             <div className="categories-card">
               <CategoryTable 
-                categories={categories}
+                categories={paginatedCategories}
                 loading={loading}
                 onEdit={handleEditCategory}
                 onDelete={handleDeleteClick}
                 getCategoryIcon={getCategoryIcon}
               />
+              {totalPages > 1 && (
+                <div className="pagination-controls">
+                  <div className="pagination-info">Page {effectiveCurrentPage} of {totalPages}</div>
+                  <div className="pagination-buttons">
+                    <button
+                      className="btn-page"
+                      onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                      disabled={effectiveCurrentPage === 1}
+                    >
+                      Previous
+                    </button>
+                    {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                      <button
+                        key={page}
+                        className={`btn-page ${page === effectiveCurrentPage ? 'active' : ''}`}
+                        onClick={() => setCurrentPage(page)}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                    <button
+                      className="btn-page"
+                      onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                      disabled={effectiveCurrentPage === totalPages}
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </section>
         </div>
