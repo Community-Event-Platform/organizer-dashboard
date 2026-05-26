@@ -9,12 +9,12 @@ const API_BASE = 'http://localhost:8000/api';
  * CEP-84: Participants page — displays all participants across organizer's events.
  * Shows waitlist position, status badges, form responses, and pagination.
  */
-const Participants = ({ addToast }) => {
+const Participants = ({ addToast, initialEventId = 'all' }) => {
   const [participants, setParticipants] = useState([]);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [filterEvent, setFilterEvent] = useState('all');
+  const [filterEvent, setFilterEvent] = useState(initialEventId);
   const [filterStatus, setFilterStatus] = useState('all');
   const [page, setPage] = useState(1);
   const [selectedParticipant, setSelectedParticipant] = useState(null);
@@ -55,6 +55,10 @@ const Participants = ({ addToast }) => {
       if (res.ok) setEvents(json.data || []);
     } catch { /* silent */ }
   }, [token]);
+
+  useEffect(() => {
+    setFilterEvent(initialEventId);
+  }, [initialEventId]);
 
   useEffect(() => {
     fetchEvents();
