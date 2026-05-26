@@ -9,7 +9,7 @@ import '../../css/Events.css';
 /**
  * Events Component - Displays a table of all events and a modal for creation/edition
  */
-const Events = ({ addToast }) => {
+const Events = ({ addToast, onNavigate }) => {
   const [events, setEvents] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
@@ -561,6 +561,10 @@ const Events = ({ addToast }) => {
         onClose={handleCloseViewModal}
         resolveImageUrl={resolveImageUrl}
         formatDateTimeForTable={formatDateTimeForTable}
+        onNavigateToParticipants={() => {
+          handleCloseViewModal();
+          if (onNavigate) onNavigate('participants');
+        }}
       />
 
       <DeleteConfirmModal

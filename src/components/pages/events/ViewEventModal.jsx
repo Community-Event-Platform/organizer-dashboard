@@ -1,4 +1,4 @@
-const ViewEventModal = ({ viewEvent, onClose, resolveImageUrl, formatDateTimeForTable }) => {
+const ViewEventModal = ({ viewEvent, onClose, resolveImageUrl, formatDateTimeForTable, onNavigateToParticipants }) => {
   if (!viewEvent) return null;
 
   return (
@@ -61,7 +61,9 @@ const ViewEventModal = ({ viewEvent, onClose, resolveImageUrl, formatDateTimeFor
                       <span 
                         className="capacity-link" 
                         onClick={() => {
-                          alert('Tính năng chuyển sang trang Participants sẽ được thêm sau!');
+                          if (onNavigateToParticipants) {
+                            onNavigateToParticipants(viewEvent.id);
+                          }
                         }}
                       >
                         {viewEvent.participants_count || 0} / {viewEvent.capacity}

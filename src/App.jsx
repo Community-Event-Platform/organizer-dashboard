@@ -7,6 +7,7 @@ import Footer from './components/layout/Footer'
 import AuthModal from './components/AuthModal'
 import { ToastContainer, useToast } from './components/Toast'
 import Events from './components/pages/events/Events'
+import Participants from './components/pages/Participants/Participants'
 import './components/css/App.css'
 
 /**
@@ -57,7 +58,10 @@ function App() {
       return <About />;
     }
     if (activeTab === 'events') {
-      return <Events addToast={addToast} />;
+      return <Events addToast={addToast} onNavigate={setActiveTab} />;
+    }
+    if (activeTab === 'participants') {
+      return <Participants addToast={addToast} onNavigate={setActiveTab} />;
     }
     if (!user) {
       return <Hero />;
