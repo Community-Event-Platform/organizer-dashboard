@@ -136,9 +136,8 @@
 
 .events-custom-table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0 12px; /* Key to space out rows like cards */
-  margin-top: -12px;
+  border-collapse: collapse;
+  margin-top: 10px;
 }
 
 .events-custom-table th {
@@ -147,8 +146,8 @@
   font-weight: 700;
   color: #1e293b;
   font-size: 0.9rem;
-  border: none;
-  background-color: transparent;
+  border: 1px solid #e2e8f0;
+  background-color: #f8fafc;
 }
 
 .event-table-row td {
@@ -157,30 +156,22 @@
   vertical-align: middle;
   font-size: 0.95rem;
   color: #334155;
-  border-top: 1px solid rgba(226, 232, 240, 0.7);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.7);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.01);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #e2e8f0;
+  transition: background-color 0.2s ease;
 }
 
 /* Row hover effect */
 .event-table-row:hover td {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.02);
-  background-color: #fafbfc;
+  background-color: #f1f5f9;
 }
 
-/* First and Last Column Border Radius for Rounded Rows */
+/* Removed card radius styles for standard table */
 .event-table-row td:first-child {
-  border-left: 1px solid rgba(226, 232, 240, 0.7);
-  border-top-left-radius: 12px;
-  border-bottom-left-radius: 12px;
+  border-left: 1px solid #e2e8f0;
 }
 
 .event-table-row td:last-child {
-  border-right: 1px solid rgba(226, 232, 240, 0.7);
-  border-top-right-radius: 12px;
-  border-bottom-right-radius: 12px;
+  border-right: 1px solid #e2e8f0;
 }
 
 /* Cells formatting */
@@ -1117,4 +1108,211 @@
   color: #475569;
   line-height: 1.5;
   margin: 0;
+}
+/* ===== Premium View Event Modal ===== */
+.view-modal-premium {
+  padding: 0;
+  overflow: hidden;
+  background-color: #f8fafc;
+}
+
+.premium-header {
+  background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+  padding: 1.5rem 2rem;
+  margin: 0;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+}
+
+.view-icon-box {
+  background: linear-gradient(135deg, #14AE5C 0%, #0d9a4e 100%);
+  color: white;
+  box-shadow: 0 4px 10px rgba(20,174,92,0.2);
+}
+
+.premium-content {
+  padding: 2rem;
+  max-height: calc(90vh - 100px);
+  overflow-y: auto;
+}
+
+.event-detail-image-premium {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+  background-color: #f1f5f9;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 0;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.event-detail-image-premium img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.capacity-link {
+  color: #14AE5C;
+  text-decoration: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 4px 10px;
+  background-color: #ecfdf5;
+  border-radius: 6px;
+  display: inline-block;
+}
+.capacity-link:hover {
+  background-color: #d1fae5;
+  color: #059669;
+}
+
+.image-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 2;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  border-radius: 30px;
+}
+
+.event-detail-grid-premium {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.detail-item-premium {
+  background: white;
+  padding: 1.25rem;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  border: 1px solid #f1f5f9;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.detail-item-premium:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+}
+
+.detail-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background-color: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.detail-text-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.detail-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.detail-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+/* Icon Colors */
+.text-purple { color: #8b5cf6; background: #ede9fe; }
+.detail-item-premium:hover .text-purple { background: #8b5cf6; color: white; transition: 0.3s; }
+
+.text-blue { color: #3b82f6; background: #eff6ff; }
+.detail-item-premium:hover .text-blue { background: #3b82f6; color: white; transition: 0.3s; }
+
+.text-orange { color: #f97316; background: #fff7ed; }
+.detail-item-premium:hover .text-orange { background: #f97316; color: white; transition: 0.3s; }
+
+.text-green { color: #10b981; background: #ecfdf5; }
+.detail-item-premium:hover .text-green { background: #10b981; color: white; transition: 0.3s; }
+
+.text-yellow { color: #eab308; background: #fefce8; }
+.detail-item-premium:hover .text-yellow { background: #eab308; color: white; transition: 0.3s; }
+
+.text-cyan { color: #06b6d4; background: #ecfeff; }
+.detail-item-premium:hover .text-cyan { background: #06b6d4; color: white; transition: 0.3s; }
+
+/* Description Box */
+.event-detail-description-premium {
+  margin-top: 1rem;
+}
+
+.event-detail-description-premium h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.event-detail-description-premium h3 i {
+  color: #14AE5C;
+}
+
+.desc-content-box {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  border: 1px solid #f1f5f9;
+}
+
+.desc-content-box p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.8;
+  font-size: 0.95rem;
+}
+
+/* ===== New Event View Layout (Two Columns) ===== */
+.event-view-top-section {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  align-items: stretch; /* Make left and right sides equal height */
+}
+
+.event-view-left {
+  flex: 0 0 38%;
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+}
+
+.event-view-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.event-view-right.full-width {
+  flex: 0 0 100%;
 }
