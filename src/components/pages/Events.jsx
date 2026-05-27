@@ -44,6 +44,8 @@ const Events = ({ addToast }) => {
     require_additional_info: false,
     status: 'draft',
     image: null,
+    price: 0,
+    fees_and_taxes: 0,
   });
 
   const fetchEvents = useCallback(async () => {
@@ -133,6 +135,8 @@ const Events = ({ addToast }) => {
       require_additional_info: false,
       status: 'draft',
       image: null,
+      price: 0,
+      fees_and_taxes: 0,
     });
     setShowModal(true);
   };
