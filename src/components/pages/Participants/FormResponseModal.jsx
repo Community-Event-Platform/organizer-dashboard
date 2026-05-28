@@ -71,8 +71,8 @@ const FormResponseModal = ({ participant, onClose, onApprove, onReject }) => {
           )}
         </div>
 
-        {/* Footer actions — only show if still Pending */}
-        {status === 'Pending' && (
+        {/* Footer actions — show if participant not yet approved/rejected/cancelled */}
+        {status !== 'Approved' && status !== 'Rejected' && status !== 'Cancelled' && (
           <div className="form-response-modal-footer">
             <button className="modal-btn-reject" onClick={() => onReject(participant.id)}>
               Reject
