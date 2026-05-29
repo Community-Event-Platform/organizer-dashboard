@@ -71,6 +71,10 @@ export const updateEvent = (id, eventData) => {
   return api.put(`/events/${id}`, eventData);
 };
 
+export const endEvent = (id) => {
+  return api.patch(`/events/${id}/end`);
+};
+
 export const deleteEvent = (id) => {
   return api.delete(`/events/${id}`);
 };

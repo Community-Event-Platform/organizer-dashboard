@@ -1,4 +1,4 @@
-const ViewEventModal = ({ viewEvent, onClose, resolveImageUrl, formatDateTimeForTable, onNavigateToParticipants }) => {
+const ViewEventModal = ({ viewEvent, onClose, resolveImageUrl, formatDateTimeForTable, onNavigateToParticipants, onEndEvent }) => {
   if (!viewEvent) return null;
 
   return (
@@ -11,9 +11,20 @@ const ViewEventModal = ({ viewEvent, onClose, resolveImageUrl, formatDateTimeFor
               <p style={{ color: '#64748b', margin: '4px 0 0 0' }}>Event Details & Information</p>
             </div>
           </div>
-          <button className="modal-close-x" onClick={onClose}>
-            <i className="bi bi-x-lg"></i>
-          </button>
+          <div className="header-action-group">
+            {viewEvent.status?.toLowerCase() === 'published' && onEndEvent && (
+              <button
+                className="btn-end-event"
+                onClick={() => onEndEvent(viewEvent.id)}
+                style={{ marginRight: '0.75rem' }}
+              >
+                <i className="bi bi-flag"></i> End Event
+              </button>
+            )}
+            <button className="modal-close-x" onClick={onClose}>
+              <i className="bi bi-x-lg"></i>
+            </button>
+          </div>
         </div>
         
         <div className="event-view-content premium-content">
@@ -66,7 +77,7 @@ const ViewEventModal = ({ viewEvent, onClose, resolveImageUrl, formatDateTimeFor
                           }
                         }}
                       >
-                        {viewEvent.participants_count || 0} / {viewEvent.capacity}
+                        {(viewEvent.participants_count ?? viewEvent.registrations_count ?? 0)} / {viewEvent.capacity}
                       </span>
                     </span>
                   </div>

@@ -72,6 +72,7 @@ const Participants = ({ addToast, initialEventId = 'all' }) => {
   // ─── Computed stats ────────────────────────────────────────
   const stats = useMemo(() => ({
     total: participants.length,
+    pending: participants.filter(p => p.status === 'Pending').length,
     approved: participants.filter(p => p.status === 'Approved').length,
     waitlisted: participants.filter(p => p.status === 'Waitlisted').length,
     cancelled: participants.filter(p => p.status === 'Cancelled').length,
@@ -173,6 +174,11 @@ const Participants = ({ addToast, initialEventId = 'all' }) => {
           <span className="stat-label">Total</span>
           <span className="stat-number">{stats.total}</span>
           <span className="stat-sub">All registrations</span>
+        </div>
+        <div className="stat-card stat-pending">
+          <span className="stat-label">Pending</span>
+          <span className="stat-number">{stats.pending}</span>
+          <span className="stat-sub">Awaiting approval</span>
         </div>
         <div className="stat-card stat-approved">
           <span className="stat-label">Approved</span>

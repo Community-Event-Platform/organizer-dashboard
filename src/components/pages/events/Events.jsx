@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getCategories, getOrganizerEvents, createEvent, updateEvent, deleteEvent } from '../../../services/api';
+import { getCategories, getOrganizerEvents, createEvent, updateEvent, deleteEvent, endEvent } from '../../../services/api';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import EventModal from './EventModal';
 import ReviewModal from './ReviewModal';
@@ -215,6 +215,18 @@ const Events = ({ addToast, onNavigateToParticipants }) => {
 
   const handleCloseViewModal = () => {
     setViewEvent(null);
+  };
+
+  const handleEndEvent = async (eventId) => {
+    try {
+      await endEvent(eventId);
+      if (addToast) addToast('Sự kiện đã được kết thúc thành công.', 'success');
+      await fetchEvents();
+      handleCloseViewModal();
+    } catch (error) {
+      console.error('Error ending event:', error);
+      if (addToast) addToast(error.response?.data?.message || 'Unable to end event.', 'error');
+    }
   };
 
   const handleConfirmDelete = async () => {
@@ -565,6 +577,7 @@ const Events = ({ addToast, onNavigateToParticipants }) => {
           handleCloseViewModal();
           if (onNavigateToParticipants) onNavigateToParticipants(viewEvent.id);
         }}
+        onEndEvent={handleEndEvent}
       />
 
       <DeleteConfirmModal
