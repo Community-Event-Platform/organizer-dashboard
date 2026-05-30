@@ -35,7 +35,11 @@ const Participants = ({ addToast, initialEventId = 'all' }) => {
       });
       const json = await res.json();
       if (res.ok) {
-        setParticipants(json.data || []);
+        const normalized = (json.data || []).map((item) => ({
+          ...item,
+          form_responses: item.form_responses || item.formResponses || [],
+        }));
+        setParticipants(normalized);
       } else {
         addToast(json.message || 'Failed to load participants', 'error');
       }
