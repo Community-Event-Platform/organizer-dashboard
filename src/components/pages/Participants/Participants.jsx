@@ -104,7 +104,8 @@ const Participants = ({ addToast, initialEventId = 'all' }) => {
         setSelectedParticipant(null);
         fetchParticipants();
       } else {
-        addToast('Failed to approve participant', 'error');
+        const json = await res.json().catch(() => null);
+        addToast(json?.message || 'Failed to approve participant', 'error');
       }
     } catch {
       addToast('Network error', 'error');
@@ -122,7 +123,8 @@ const Participants = ({ addToast, initialEventId = 'all' }) => {
         setSelectedParticipant(null);
         fetchParticipants();
       } else {
-        addToast('Failed to reject participant', 'error');
+        const json = await res.json().catch(() => null);
+        addToast(json?.message || 'Failed to reject participant', 'error');
       }
     } catch {
       addToast('Network error', 'error');
@@ -302,7 +304,7 @@ const Participants = ({ addToast, initialEventId = 'all' }) => {
 
                   {/* Form Responses */}
                   <td>
-                    {p.has_form_responses ? (
+                    {(p.form_responses && p.form_responses.length > 0) ? (
                       <span
                         className="form-response-link"
                         onClick={() => setSelectedParticipant(p)}

@@ -259,7 +259,7 @@ const Events = ({ addToast, onNavigateToParticipants }) => {
       formPayload.append('event_type', formData.event_type);
       formPayload.append('require_additional_info', formData.require_additional_info ? 1 : 0);
 
-      if (customFields.length > 0) {
+      if (formData.require_additional_info && customFields.length > 0) {
         formPayload.append('custom_form_spec', JSON.stringify(customFields));
       }
 

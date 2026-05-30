@@ -165,9 +165,12 @@ const EventModal = ({
                 key={editingEvent ? `event-${editingEvent.id}` : 'event-new'}
                 initialFields={customFields}
                 requireAdditionalInfo={formData.require_additional_info}
-                onRequireAdditionalInfoChange={(value) =>
-                  handleChange({ target: { name: 'require_additional_info', type: 'checkbox', checked: value } })
-                }
+                onRequireAdditionalInfoChange={(value) => {
+                  handleChange({ target: { name: 'require_additional_info', type: 'checkbox', checked: value } });
+                  if (!value) {
+                    setCustomFields([]);
+                  }
+                }}
                 onFieldsChange={setCustomFields}
               />
             )}
