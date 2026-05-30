@@ -3,7 +3,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import FormResponseModal from './FormResponseModal';
 import '../../css/Participants.css';
 
-const API_BASE = 'http://localhost:8000/api';
+const API_BASE = import.meta.env.VITE_API_URL?.replace(/\/+$/, '') || 'http://localhost:8000/api';
 
 /**
  * CEP-84: Participants page — displays all participants across organizer's events.

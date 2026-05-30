@@ -35,7 +35,7 @@ const ReviewModal = ({ viewReviewsEvent, reviewsPage, setReviewsPage, onClose })
                   .map((review, idx) => (
                     <div key={idx} className="review-card">
                       <div className="review-header">
-                        <span className="reviewer-name">{review.user_name || 'Anonymous'}</span>
+                        <span className="reviewer-name">{review.user_name || review.reviewer_name || review.attendee?.name || 'Anonymous'}</span>
                         <span className="review-rating">
                           {Array.from({ length: 5 }).map((_, i) => (
                             <i key={i} className={`bi bi-star${i < review.rating ? '-fill text-warning' : ''}`}></i>
