@@ -174,6 +174,26 @@ const EventModal = ({
                 onFieldsChange={setCustomFields}
               />
             )}
+            {formData.event_type === 'Paid' && (
+              <div className="modal-form-group full-width">
+                <label htmlFor="price">Ticket Price <span className="req">*</span></label>
+                <div className="input-with-icon">
+                  <i className="bi bi-currency-dollar icon-prefix"></i>
+                  <input
+                    type="number"
+                    id="price"
+                    name="price"
+                    min="0"
+                    step="0.01"
+                    value={formData.price || ''}
+                    onChange={handleChange}
+                    placeholder="0.00"
+                    required
+                  />
+                </div>
+                <p className="helper-text">Paid events display a ticket price to attendees. Custom form requirements are disabled for paid events.</p>
+              </div>
+            )}
           </div>
 
           <div className="modal-form-row">

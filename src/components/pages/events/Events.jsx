@@ -259,6 +259,10 @@ const Events = ({ addToast, onNavigateToParticipants }) => {
       formPayload.append('event_type', formData.event_type);
       formPayload.append('require_additional_info', formData.require_additional_info ? 1 : 0);
 
+      if (formData.event_type === 'Paid') {
+        formPayload.append('price', formData.price || 0);
+      }
+
       if (formData.require_additional_info && customFields.length > 0) {
         formPayload.append('custom_form_spec', JSON.stringify(customFields));
       }
@@ -272,7 +276,13 @@ const Events = ({ addToast, onNavigateToParticipants }) => {
         if (addToast) addToast('Event updated successfully!', 'success');
       } else {
         await createEvent(formPayload);
-        if (addToast) addToast('Draft event created successfully!', 'success');
+        if (addToast) {
+          if (String(formData.status) === 'published') {
+            addToast('Event published successfully!', 'success');
+          } else {
+            addToast('Draft event created successfully!', 'success');
+          }
+        }
       }
       setShowModal(false);
       fetchEvents();
