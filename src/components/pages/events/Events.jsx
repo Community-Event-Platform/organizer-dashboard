@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getCategories, getOrganizerEvents, createEvent, updateEvent, deleteEvent } from '../../../services/api';
+import { getCategories, getOrganizerEvents, createEvent, updateEvent, deleteEvent, endEvent } from '../../../services/api';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import EventModal from './EventModal';
 import ReviewModal from './ReviewModal';
@@ -215,6 +215,18 @@ const Events = ({ addToast, onNavigateToParticipants }) => {
 
   const handleCloseViewModal = () => {
     setViewEvent(null);
+  };
+
+  const handleEndEvent = async (eventId) => {
+    try {
+      await endEvent(eventId);
+      if (addToast) addToast('Sự kiện đã được kết thúc thành công.', 'success');
+      await fetchEvents();
+      handleCloseViewModal();
+    } catch (error) {
+      console.error('Error ending event:', error);
+      if (addToast) addToast(error.response?.data?.message || 'Unable to end event.', 'error');
+    }
   };
 
   const handleConfirmDelete = async () => {
@@ -470,9 +482,20 @@ const Events = ({ addToast, onNavigateToParticipants }) => {
                     </td>
                     <td className="cell-actions text-center">
                       {event.status?.toLowerCase() === 'published' ? (
-                        <button className="btn-view" onClick={() => handleOpenViewModal(event)} title="View details">
-                          <i className="bi bi-eye"></i>
-                        </button>
+                        <>
+                          <button className="btn-view" onClick={() => handleOpenViewModal(event)} title="View details">
+                            <i className="bi bi-eye"></i>
+                          </button>
+                          {event.status?.toLowerCase() !== 'ended' && (
+                            <button 
+                              className="btn-end-event-table" 
+                              onClick={() => handleEndEvent(event.id)} 
+                              title="End event"
+                            >
+                              <i className="bi bi-flag-fill"></i>
+                            </button>
+                          )}
+                        </>
                       ) : (
                         <>
                           <button className="btn-edit" onClick={() => handleOpenEditModal(event)} title="Edit">
@@ -575,6 +598,7 @@ const Events = ({ addToast, onNavigateToParticipants }) => {
           handleCloseViewModal();
           if (onNavigateToParticipants) onNavigateToParticipants(viewEvent.id);
         }}
+        onEndEvent={handleEndEvent}
       />
 
       <DeleteConfirmModal
