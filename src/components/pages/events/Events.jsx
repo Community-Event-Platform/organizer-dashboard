@@ -472,9 +472,20 @@ const Events = ({ addToast, onNavigateToParticipants }) => {
                     </td>
                     <td className="cell-actions text-center">
                       {event.status?.toLowerCase() === 'published' ? (
-                        <button className="btn-view" onClick={() => handleOpenViewModal(event)} title="View details">
-                          <i className="bi bi-eye"></i>
-                        </button>
+                        <>
+                          <button className="btn-view" onClick={() => handleOpenViewModal(event)} title="View details">
+                            <i className="bi bi-eye"></i>
+                          </button>
+                          {event.status?.toLowerCase() !== 'ended' && (
+                            <button 
+                              className="btn-end-event-table" 
+                              onClick={() => handleEndEvent(event.id)} 
+                              title="End event"
+                            >
+                              <i className="bi bi-flag-fill"></i>
+                            </button>
+                          )}
+                        </>
                       ) : (
                         <>
                           <button className="btn-edit" onClick={() => handleOpenEditModal(event)} title="Edit">
