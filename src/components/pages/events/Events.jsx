@@ -247,17 +247,17 @@ const Events = ({ addToast, onNavigateToParticipants }) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const eventDate = new Date(formData.date_time);
-    const currentDate = new Date();
-    currentDate.setHours(0, 0, 0, 0);
+    // const eventDate = new Date(formData.date_time);
+    // const currentDate = new Date();
+    // currentDate.setHours(0, 0, 0, 0);
     
-    const diffTime = eventDate.getTime() - currentDate.getTime();
-    const diffDays = diffTime / (1000 * 3600 * 24);
-    if (diffDays < 3) {
-      if (addToast) addToast('Event start date must be at least 3 days from today.', 'error');
-      setIsSubmitting(false);
-      return;
-    }
+    // const diffTime = eventDate.getTime() - currentDate.getTime();
+    // const diffDays = diffTime / (1000 * 3600 * 24);
+    // if (diffDays < 3) {
+    //   if (addToast) addToast('Event start date must be at least 3 days from today.', 'error');
+    //   setIsSubmitting(false);
+    //   return;
+    // }
 
     try {
       const formPayload = new FormData();
@@ -319,11 +319,13 @@ const Events = ({ addToast, onNavigateToParticipants }) => {
     return matchesSearch && matchesCategory;
   });
 
-  const now = new Date();
-  now.setHours(0, 0, 0, 0);
+const upcomingFilteredEvents = filteredEvents.filter(
+  event => event.status?.toLowerCase() !== 'ended'
+);
 
-  const upcomingFilteredEvents = filteredEvents.filter(event => new Date(event.date_time) >= now);
-  const pastFilteredEvents = filteredEvents.filter(event => new Date(event.date_time) < now);
+const pastFilteredEvents = filteredEvents.filter(
+  event => event.status?.toLowerCase() === 'ended'
+);
 
   const upcomingTotalPages = Math.ceil(upcomingFilteredEvents.length / eventsPerPage) || 1;
   const paginatedUpcomingEvents = upcomingFilteredEvents.slice(
