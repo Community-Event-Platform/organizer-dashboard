@@ -57,18 +57,29 @@ const CategoryTable = ({ categories, loading, onEdit, onDelete, getCategoryIcon 
               </td>
               <td className="td-count">{cat.eventsCount || cat.events_count || 0}</td>
               <td className="td-actions">
-                <button
-                  className="btn-action btn-edit"
-                  onClick={() => onEdit(cat)}
-                >
-                  <i className="bi bi-pencil-square"></i> Edit
-                </button>
-                <button
-                  className="btn-action btn-delete"
-                  onClick={() => onDelete(cat)}
-                >
-                  <i className="bi bi-trash"></i> Delete
-                </button>
+                {(() => {
+                  const hasEvents = (cat.eventsCount || cat.events_count || 0) > 0;
+                  return (
+                    <>
+                      <button
+                        className="btn-action btn-action-edit"
+                        onClick={() => !hasEvents && onEdit(cat)}
+                        disabled={hasEvents}
+                        title={hasEvents ? 'This category has events and cannot be edited.' : 'Edit'}
+                      >
+                        <i className="bi bi-pencil-square"></i> Edit
+                      </button>
+                      <button
+                        className="btn-action btn-action-delete"
+                        onClick={() => !hasEvents && onDelete(cat)}
+                        disabled={hasEvents}
+                        title={hasEvents ? 'This category has events and cannot be deleted.' : 'Delete'}
+                      >
+                        <i className="bi bi-trash"></i> Delete
+                      </button>
+                    </>
+                  );
+                })()}
               </td>
             </tr>
           );
