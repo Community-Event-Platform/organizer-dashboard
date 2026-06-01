@@ -34,6 +34,7 @@ const Participants = ({ addToast, initialEventId = 'all' }) => {
         headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
       });
       const json = await res.json();
+      
       if (res.ok) {
         const normalized = (json.data || []).map((item) => ({
           ...item,
@@ -327,7 +328,7 @@ const Participants = ({ addToast, initialEventId = 'all' }) => {
                   </td>
 
                   {/* Registered At */}
-                  <td>{p.registered_at}</td>
+                  <td>{p.registered_at || '-'}</td>
 
                   {/* Actions */}
                   <td>

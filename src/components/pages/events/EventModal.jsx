@@ -176,18 +176,18 @@ const EventModal = ({
             )}
             {formData.event_type === 'Paid' && (
               <div className="modal-form-group full-width">
-                <label htmlFor="price">Ticket Price <span className="req">*</span></label>
+                <label htmlFor="price">Ticket Price (VND) <span className="req">*</span></label>
                 <div className="input-with-icon">
-                  <i className="bi bi-currency-dollar icon-prefix"></i>
+                  <span className="currency-prefix">₫</span>
                   <input
                     type="number"
                     id="price"
                     name="price"
                     min="0"
-                    step="0.01"
+                    step="1"
                     value={formData.price || ''}
                     onChange={handleChange}
-                    placeholder="0.00"
+                    placeholder="0"
                     required
                   />
                 </div>

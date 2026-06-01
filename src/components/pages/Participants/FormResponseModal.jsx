@@ -15,7 +15,8 @@ const FormResponseModal = ({ participant, onClose, onApprove, onReject }) => {
 
   if (!participant) return null;
 
-  const { attendee, event, form_responses, status } = participant;
+  const { attendee, event, status } = participant;
+  const form_responses = participant.form_responses || participant.formResponses || [];
 
 
   return (
@@ -58,7 +59,7 @@ const FormResponseModal = ({ participant, onClose, onApprove, onReject }) => {
               <div className="form-questions">
                 {form_responses.map((fr, idx) => (
                   <div className="form-question-item" key={idx}>
-                    <span className="q-label">{idx + 1}. {fr.field_name}</span>
+                    <span className="q-label">{idx + 1}. {fr.field_name || 'Question'}</span>
                     <div className="q-answer">{fr.response_value || '(No answer)'}</div>
                   </div>
                 ))}
