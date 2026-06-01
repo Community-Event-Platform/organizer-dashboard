@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getCategories, getOrganizerEvents, createEvent, updateEvent, deleteEvent } from '../../../services/api';
+import { getCategories, getOrganizerEvents, createEvent, updateEvent, deleteEvent, endEvent } from '../../../services/api';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import EventModal from './EventModal';
 import ReviewModal from './ReviewModal';
@@ -9,7 +9,7 @@ import '../../css/Events.css';
 /**
  * Events Component - Displays a table of all events and a modal for creation/edition
  */
-const Events = ({ addToast }) => {
+const Events = ({ addToast, onNavigateToParticipants }) => {
   const [events, setEvents] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
@@ -217,6 +217,18 @@ const Events = ({ addToast }) => {
     setViewEvent(null);
   };
 
+  const handleEndEvent = async (eventId) => {
+    try {
+      await endEvent(eventId);
+      if (addToast) addToast('Sự kiện đã được kết thúc thành công.', 'success');
+      await fetchEvents();
+      handleCloseViewModal();
+    } catch (error) {
+      console.error('Error ending event:', error);
+      if (addToast) addToast(error.response?.data?.message || 'Unable to end event.', 'error');
+    }
+  };
+
   const handleConfirmDelete = async () => {
     if (!deleteConfirm) return;
     try {
@@ -235,17 +247,17 @@ const Events = ({ addToast }) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const eventDate = new Date(formData.date_time);
-    const currentDate = new Date();
-    currentDate.setHours(0, 0, 0, 0);
+    // const eventDate = new Date(formData.date_time);
+    // const currentDate = new Date();
+    // currentDate.setHours(0, 0, 0, 0);
     
-    const diffTime = eventDate.getTime() - currentDate.getTime();
-    const diffDays = diffTime / (1000 * 3600 * 24);
-    if (diffDays < 3) {
-      if (addToast) addToast('Event start date must be at least 3 days from today.', 'error');
-      setIsSubmitting(false);
-      return;
-    }
+    // const diffTime = eventDate.getTime() - currentDate.getTime();
+    // const diffDays = diffTime / (1000 * 3600 * 24);
+    // if (diffDays < 3) {
+    //   if (addToast) addToast('Event start date must be at least 3 days from today.', 'error');
+    //   setIsSubmitting(false);
+    //   return;
+    // }
 
     try {
       const formPayload = new FormData();
@@ -259,7 +271,11 @@ const Events = ({ addToast }) => {
       formPayload.append('event_type', formData.event_type);
       formPayload.append('require_additional_info', formData.require_additional_info ? 1 : 0);
 
-      if (customFields.length > 0) {
+      if (formData.event_type === 'Paid') {
+        formPayload.append('price', formData.price || 0);
+      }
+
+      if (formData.require_additional_info && customFields.length > 0) {
         formPayload.append('custom_form_spec', JSON.stringify(customFields));
       }
 
@@ -272,7 +288,13 @@ const Events = ({ addToast }) => {
         if (addToast) addToast('Event updated successfully!', 'success');
       } else {
         await createEvent(formPayload);
-        if (addToast) addToast('Draft event created successfully!', 'success');
+        if (addToast) {
+          if (String(formData.status) === 'published') {
+            addToast('Event published successfully!', 'success');
+          } else {
+            addToast('Draft event created successfully!', 'success');
+          }
+        }
       }
       setShowModal(false);
       fetchEvents();
@@ -297,11 +319,13 @@ const Events = ({ addToast }) => {
     return matchesSearch && matchesCategory;
   });
 
-  const now = new Date();
-  now.setHours(0, 0, 0, 0);
+const upcomingFilteredEvents = filteredEvents.filter(
+  event => event.status?.toLowerCase() !== 'ended'
+);
 
-  const upcomingFilteredEvents = filteredEvents.filter(event => new Date(event.date_time) >= now);
-  const pastFilteredEvents = filteredEvents.filter(event => new Date(event.date_time) < now);
+const pastFilteredEvents = filteredEvents.filter(
+  event => event.status?.toLowerCase() === 'ended'
+);
 
   const upcomingTotalPages = Math.ceil(upcomingFilteredEvents.length / eventsPerPage) || 1;
   const paginatedUpcomingEvents = upcomingFilteredEvents.slice(
@@ -460,9 +484,20 @@ const Events = ({ addToast }) => {
                     </td>
                     <td className="cell-actions text-center">
                       {event.status?.toLowerCase() === 'published' ? (
-                        <button className="btn-view" onClick={() => handleOpenViewModal(event)} title="View details">
-                          <i className="bi bi-eye"></i>
-                        </button>
+                        <>
+                          <button className="btn-view" onClick={() => handleOpenViewModal(event)} title="View details">
+                            <i className="bi bi-eye"></i>
+                          </button>
+                          {event.status?.toLowerCase() !== 'ended' && (
+                            <button 
+                              className="btn-end-event-table" 
+                              onClick={() => handleEndEvent(event.id)} 
+                              title="End event"
+                            >
+                              <i className="bi bi-flag-fill"></i>
+                            </button>
+                          )}
+                        </>
                       ) : (
                         <>
                           <button className="btn-edit" onClick={() => handleOpenEditModal(event)} title="Edit">
@@ -561,6 +596,11 @@ const Events = ({ addToast }) => {
         onClose={handleCloseViewModal}
         resolveImageUrl={resolveImageUrl}
         formatDateTimeForTable={formatDateTimeForTable}
+        onNavigateToParticipants={() => {
+          handleCloseViewModal();
+          if (onNavigateToParticipants) onNavigateToParticipants(viewEvent.id);
+        }}
+        onEndEvent={handleEndEvent}
       />
 
       <DeleteConfirmModal

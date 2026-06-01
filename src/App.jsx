@@ -7,6 +7,7 @@ import Footer from './components/layout/Footer'
 import AuthModal from './components/AuthModal'
 import { ToastContainer, useToast } from './components/Toast'
 import Events from './components/pages/events/Events'
+import Participants from './components/pages/Participants/Participants'
 import './components/css/App.css'
 
 /**
@@ -27,8 +28,21 @@ function App() {
     return null;
   });
   const [activeTab, setActiveTab] = useState('home');
+  const [participantEventId, setParticipantEventId] = useState('all');
   const [authModal, setAuthModal] = useState({ isOpen: false, mode: 'login' });
   const { toasts, addToast, removeToast } = useToast();
+
+  const handleTabChange = (tab) => {
+    if (tab === 'participants') {
+      setParticipantEventId('all');
+    }
+    setActiveTab(tab);
+  };
+
+  const navigateToParticipants = (eventId) => {
+    setParticipantEventId(eventId);
+    setActiveTab('participants');
+  };
 
   const openAuthModal = (mode) => {
     setAuthModal({ isOpen: true, mode });
@@ -57,7 +71,10 @@ function App() {
       return <About />;
     }
     if (activeTab === 'events') {
-      return <Events addToast={addToast} />;
+      return <Events addToast={addToast} onNavigateToParticipants={navigateToParticipants} />;
+    }
+    if (activeTab === 'participants') {
+      return <Participants addToast={addToast} initialEventId={participantEventId} />;
     }
     if (!user) {
       return <Hero />;
@@ -78,7 +95,7 @@ function App() {
       <Navbar
         user={user}
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onTabChange={handleTabChange}
         onLoginClick={() => openAuthModal('login')}
         onRegisterClick={() => openAuthModal('register')}
         onLogout={handleLogout}

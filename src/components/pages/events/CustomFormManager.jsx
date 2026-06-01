@@ -9,6 +9,8 @@ const CustomFormManager = ({
   const [fields, setFields] = useState(Array.isArray(initialFields) ? initialFields : []);
   const [newFieldName, setNewFieldName] = useState('');
   const [newFieldType, setNewFieldType] = useState('text');
+  const [newFieldOptions, setNewFieldOptions] = useState([]);
+  const [newOptionText, setNewOptionText] = useState('');
 
   useEffect(() => {
     if (typeof onFieldsChange === 'function') {
@@ -20,12 +22,19 @@ const CustomFormManager = ({
     const trimmedName = newFieldName.trim();
     if (!trimmedName) return;
 
+    const field = { name: trimmedName, type: newFieldType };
+    if (newFieldType === 'checkbox') {
+      field.options = Array.isArray(newFieldOptions) ? newFieldOptions.filter(o => o && String(o).trim()) : [];
+    }
+
     setFields((prevFields) => [
       ...prevFields,
-      { name: trimmedName, type: newFieldType },
+      field,
     ]);
     setNewFieldName('');
     setNewFieldType('text');
+    setNewFieldOptions([]);
+    setNewOptionText('');
   };
 
   const handleRemoveCustomField = (index) => {
@@ -82,6 +91,37 @@ const CustomFormManager = ({
             </button>
           </div>
 
+          {newFieldType === 'checkbox' && (
+            <div className="builder-options-row">
+              <div className="options-input">
+                <input
+                  type="text"
+                  placeholder="Option text (e.g. Vegetarian)"
+                  value={newOptionText}
+                  onChange={(e) => setNewOptionText(e.target.value)}
+                />
+                <button type="button" className="btn-add-option" onClick={() => {
+                  const t = newOptionText.trim();
+                  if (!t) return;
+                  setNewFieldOptions(prev => [...prev, t]);
+                  setNewOptionText('');
+                }}>Add option</button>
+              </div>
+
+              {newFieldOptions.length > 0 && (
+                <div className="options-preview">
+                  {newFieldOptions.map((opt, idx) => (
+                    <div key={idx} className="option-item">
+                      <span>{opt}</span>
+                      <button type="button" className="btn-remove-option" onClick={() => setNewFieldOptions(prev => prev.filter((_, i) => i !== idx))}>
+                        <i className="bi bi-x"></i>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
           {fields.length > 0 && (
             <div className="added-fields-list">
               {fields.map((field, idx) => (
@@ -89,6 +129,14 @@ const CustomFormManager = ({
                   <span className="field-name-type">
                     <strong>{field.name}</strong> ({field.type})
                   </span>
+                  {field.options && field.options.length > 0 && (
+                    <div className="field-options-preview">
+                      {field.options.map((o, i) => (
+                        <span key={i} className="field-option-pill">{o}</span>
+                      ))}
+                    </div>
+                  )}
+
                   <button
                     type="button"
                     className="btn-remove-field"

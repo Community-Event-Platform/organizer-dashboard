@@ -165,11 +165,34 @@ const EventModal = ({
                 key={editingEvent ? `event-${editingEvent.id}` : 'event-new'}
                 initialFields={customFields}
                 requireAdditionalInfo={formData.require_additional_info}
-                onRequireAdditionalInfoChange={(value) =>
-                  handleChange({ target: { name: 'require_additional_info', type: 'checkbox', checked: value } })
-                }
+                onRequireAdditionalInfoChange={(value) => {
+                  handleChange({ target: { name: 'require_additional_info', type: 'checkbox', checked: value } });
+                  if (!value) {
+                    setCustomFields([]);
+                  }
+                }}
                 onFieldsChange={setCustomFields}
               />
+            )}
+            {formData.event_type === 'Paid' && (
+              <div className="modal-form-group full-width">
+                <label htmlFor="price">Ticket Price (VND) <span className="req">*</span></label>
+                <div className="input-with-icon">
+                  <span className="currency-prefix">₫</span>
+                  <input
+                    type="number"
+                    id="price"
+                    name="price"
+                    min="0"
+                    step="1"
+                    value={formData.price || ''}
+                    onChange={handleChange}
+                    placeholder="0"
+                    required
+                  />
+                </div>
+                <p className="helper-text">Paid events display a ticket price to attendees. Custom form requirements are disabled for paid events.</p>
+              </div>
             )}
           </div>
 

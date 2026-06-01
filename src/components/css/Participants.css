@@ -1,0 +1,614 @@
+/* ============================================================
+   Participants.css — Styling for the Participants management page
+   CEP-84: Display waitlist position
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ─── Page Container ──────────────────────────────────────── */
+.participants-page {
+  min-height: calc(100vh - 70px);
+  background: #f0f4f8;
+  padding: 2rem;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ─── Header ──────────────────────────────────────────────── */
+.participants-header {
+  margin-bottom: 2rem;
+}
+
+.participants-header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 0.25rem 0;
+}
+
+.participants-header p {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin: 0;
+}
+
+/* ─── Stats Row ───────────────────────────────────────────── */
+.participants-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  border: 1px solid #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.stat-card .stat-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #94a3b8;
+}
+
+.stat-card .stat-number {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1;
+}
+
+.stat-card .stat-sub {
+  font-size: 0.78rem;
+  color: #94a3b8;
+}
+
+.stat-card.stat-total .stat-number { color: #3b82f6; }
+.stat-card.stat-approved .stat-number { color: #10b981; }
+.stat-card.stat-waitlisted .stat-number { color: #f59e0b; }
+.stat-card.stat-cancelled .stat-number { color: #ef4444; }
+
+/* ─── Toolbar (Search + Filters) ─────────────────────────── */
+.participants-toolbar {
+  background: white;
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  border: 1px solid #f1f5f9;
+}
+
+.participants-search {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.55rem 1rem;
+  flex: 1;
+  min-width: 200px;
+  transition: border-color 0.2s;
+}
+
+.participants-search:focus-within {
+  border-color: #14AE5C;
+}
+
+.participants-search input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 0.9rem;
+  color: #334155;
+  width: 100%;
+}
+
+.participants-search input::placeholder {
+  color: #94a3b8;
+}
+
+.participants-search .search-icon {
+  color: #94a3b8;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.participants-filter select {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.55rem 2rem 0.55rem 1rem;
+  font-size: 0.875rem;
+  color: #334155;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  transition: border-color 0.2s;
+}
+
+.participants-filter select:focus {
+  border-color: #14AE5C;
+}
+
+/* ─── Table Card ──────────────────────────────────────────── */
+.participants-table-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border: 1px solid #f1f5f9;
+}
+
+.participants-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* ─── Table Header ────────────────────────────────────────── */
+.participants-table thead tr {
+  background: #f8fafc;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.participants-table th {
+  padding: 0.9rem 1.25rem;
+  text-align: left;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+/* ─── Table Rows ──────────────────────────────────────────── */
+.participants-table tbody tr {
+  border-bottom: 1px solid #f1f5f9;
+  transition: background-color 0.15s ease;
+}
+
+.participants-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.participants-table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.participants-table td {
+  padding: 1rem 1.25rem;
+  font-size: 0.9rem;
+  color: #334155;
+  vertical-align: middle;
+}
+
+/* ─── Attendee Cell ───────────────────────────────────────── */
+.attendee-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.attendee-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.attendee-avatar-placeholder {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+}
+
+.attendee-info .attendee-name {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 0.9rem;
+}
+
+.attendee-info .attendee-email {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  margin-top: 2px;
+}
+
+/* ─── Event Cell ──────────────────────────────────────────── */
+.event-cell .event-name {
+  font-weight: 500;
+  color: #1e293b;
+  font-size: 0.9rem;
+}
+
+.event-cell .event-date {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  margin-top: 2px;
+}
+
+/* ─── Status Badges ───────────────────────────────────────── */
+.p-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 30px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.p-badge-approved {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.p-badge-waitlisted {
+  background: #fef9c3;
+  color: #b45309;
+}
+
+.p-badge-pending {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.p-badge-rejected {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.p-badge-cancelled {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.p-badge-checkedin {
+  background: #ede9fe;
+  color: #7c3aed;
+}
+
+/* ─── Waitlist Position Cell ──────────────────────────────── */
+.waitlist-position {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: #fef9c3;
+  color: #b45309;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.waitlist-dash {
+  color: #cbd5e1;
+  font-size: 1.1rem;
+}
+
+/* ─── Form Response Link ──────────────────────────────────── */
+.form-response-link {
+  color: #14AE5C;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.form-response-link:hover {
+  color: #059669;
+  text-decoration: underline;
+}
+
+.no-form-text {
+  color: #cbd5e1;
+  font-size: 0.85rem;
+}
+
+/* ─── Action Buttons ──────────────────────────────────────── */
+.p-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s ease;
+}
+
+.p-btn-view {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.p-btn-view:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.p-btn-block {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.p-btn-block:hover {
+  background: #fecaca;
+  color: #b91c1c;
+}
+
+.action-group {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* ─── Pagination ──────────────────────────────────────────── */
+.participants-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 1.5rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.page-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1.5px solid #e2e8f0;
+  background: white;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.page-btn:hover:not(:disabled) {
+  border-color: #14AE5C;
+  color: #14AE5C;
+}
+
+.page-btn.active {
+  background: #14AE5C;
+  border-color: #14AE5C;
+  color: white;
+}
+
+.page-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ─── Empty State ─────────────────────────────────────────── */
+.participants-empty {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #94a3b8;
+}
+
+.participants-empty i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: block;
+  color: #cbd5e1;
+}
+
+.participants-empty p {
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* ─── Loading ─────────────────────────────────────────────── */
+.participants-loading {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #94a3b8;
+}
+
+/* ─── Form Response Modal ─────────────────────────────────── */
+.form-response-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.form-response-modal {
+  background: white;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+
+.form-response-modal-header {
+  padding: 1.5rem 1.75rem 1rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.form-response-modal-header h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 4px 0;
+}
+
+.form-response-modal-header p {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.form-response-modal-header .modal-close {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.form-response-modal-header .modal-close:hover {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.form-response-modal-header {
+  position: relative;
+}
+
+.form-response-modal-body {
+  padding: 1.25rem 1.75rem;
+}
+
+.form-section-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #14AE5C;
+  margin: 0 0 0.75rem 0;
+}
+
+.form-basic-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-basic-info .info-row {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.form-basic-info .info-label {
+  color: #94a3b8;
+  width: 130px;
+  flex-shrink: 0;
+}
+
+.form-basic-info .info-value {
+  color: #334155;
+  font-weight: 500;
+}
+
+.form-basic-info .info-value.event-link {
+  color: #14AE5C;
+  font-weight: 600;
+}
+
+.form-questions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-question-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-question-item .q-label {
+  font-size: 0.875rem;
+  color: #334155;
+}
+
+.form-question-item .q-answer {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.form-response-modal-footer {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem 1.75rem 1.5rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.modal-btn-reject {
+  flex: 1;
+  padding: 0.75rem;
+  border: 2px solid #ef4444;
+  background: white;
+  color: #ef4444;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.modal-btn-reject:hover {
+  background: #fee2e2;
+}
+
+.modal-btn-approve {
+  flex: 2;
+  padding: 0.75rem;
+  border: none;
+  background: #14AE5C;
+  color: white;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.modal-btn-approve:hover {
+  background: #059669;
+}

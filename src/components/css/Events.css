@@ -632,6 +632,16 @@
   font-size: 1rem;
 }
 
+.input-with-icon .currency-prefix {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #10b981;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
 /* Ticket & Registration Type Area */
 .registration-type-section {
   display: flex;
@@ -1315,4 +1325,30 @@
 
 .event-view-right.full-width {
   flex: 0 0 100%;
+}
+
+/* End Event Button in Table */
+.btn-end-event-table {
+  border: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #dc2626;
+  background-color: #fee2e2;
+  transition: all 0.2s ease;
+  margin-left: 4px;
+}
+
+.btn-end-event-table:hover {
+  background-color: #fecaca;
+  color: #b91c1c;
+}
+
+.btn-end-event-table:active {
+  transform: scale(0.95);
 }
