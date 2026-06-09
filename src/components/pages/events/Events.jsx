@@ -44,6 +44,7 @@ const Events = ({ addToast, onNavigateToParticipants }) => {
     require_additional_info: false,
     status: 'draft',
     image: null,
+    price: '',
   });
 
   const fetchEvents = useCallback(async () => {
@@ -89,15 +90,19 @@ const Events = ({ addToast, onNavigateToParticipants }) => {
 
   const handleChange = (e) => {
     const { name, value, type, checked, files } = e.target;
-    const fieldValue = type === 'checkbox'
-      ? checked
-      : type === 'file'
-      ? files && files[0]
-      : value;
+    let fieldValue;
+    
+    if (type === 'checkbox') {
+      fieldValue = checked;
+    } else if (type === 'file') {
+      fieldValue = files && files.length > 0 ? files[0] : null;
+    } else {
+      fieldValue = value;
+    }
 
     setFormData((prev) => ({
       ...prev,
-      [name]: fieldValue || null,
+      [name]: fieldValue,
     }));
   };
 
@@ -123,6 +128,7 @@ const Events = ({ addToast, onNavigateToParticipants }) => {
       require_additional_info: false,
       status: 'draft',
       image: null,
+      price: '',
     });
     setShowModal(true);
   };
@@ -201,6 +207,7 @@ const Events = ({ addToast, onNavigateToParticipants }) => {
       require_additional_info: event.require_additional_info === 1 || event.require_additional_info === true,
       status: event.status || 'draft',
       image: null,
+      price: event.price || '',
     });
     setShowModal(true);
   };
@@ -260,19 +267,45 @@ const Events = ({ addToast, onNavigateToParticipants }) => {
     // }
 
     try {
+      // Validate required fields
+      if (!formData.name || !formData.category_id || !formData.location || !formData.date_time || !formData.capacity) {
+        if (addToast) addToast('Please fill in all required fields.', 'error');
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Convert datetime-local format (YYYY-MM-DDTHH:mm) to Laravel date format (YYYY-MM-DD HH:mm:ss)
+      let dateTimeFormatted = formData.date_time;
+      if (formData.date_time && formData.date_time.includes('T')) {
+        const [date, time] = formData.date_time.split('T');
+        dateTimeFormatted = `${date} ${time}:00`;
+      }
+
       const formPayload = new FormData();
       formPayload.append('name', formData.name);
       formPayload.append('description', formData.description || '');
       formPayload.append('category_id', formData.category_id);
       formPayload.append('location', formData.location);
-      formPayload.append('date_time', formData.date_time);
-      formPayload.append('capacity', formData.capacity);
+      formPayload.append('date_time', dateTimeFormatted);
+      
+      // Convert capacity to number
+      if (formData.capacity) {
+        formPayload.append('capacity', parseInt(formData.capacity, 10));
+      }
+      
       formPayload.append('status', formData.status);
       formPayload.append('event_type', formData.event_type);
       formPayload.append('require_additional_info', formData.require_additional_info ? 1 : 0);
 
+      // Log the payload for debugging
+      console.log('Form payload being sent:');
+      for (let [key, value] of formPayload) {
+        console.log(`  ${key}: ${value}`);
+      }
+
       if (formData.event_type === 'Paid') {
-        formPayload.append('price', formData.price || 0);
+        const price = formData.price ? parseFloat(formData.price) : 0;
+        formPayload.append('price', price);
       }
 
       if (formData.require_additional_info && customFields.length > 0) {
@@ -300,8 +333,35 @@ const Events = ({ addToast, onNavigateToParticipants }) => {
       fetchEvents();
     } catch (error) {
       console.error('Error saving event:', error);
-      const msg = error.response?.data?.message || error.message || 'Unable to save event.';
-      if (addToast) addToast(msg, 'error');
+      console.error('Response data:', error.response?.data);
+      
+      // Handle validation errors from backend
+      if (error.response?.status === 422 && error.response?.data) {
+        const validationErrors = error.response.data;
+        console.error('Validation errors object:', JSON.stringify(validationErrors, null, 2));
+        
+        let errorMessages = [];
+        if (validationErrors.message) {
+          errorMessages.push(validationErrors.message);
+        }
+        
+        // Handle Laravel validation errors
+        Object.entries(validationErrors).forEach(([field, messages]) => {
+          if (field !== 'message') {
+            const msg = Array.isArray(messages) ? messages[0] : messages;
+            if (msg) {
+              errorMessages.push(`${field}: ${msg}`);
+            }
+          }
+        });
+        
+        const errorText = errorMessages.length > 0 ? errorMessages.join('\n') : 'Validation failed. Please check your input.';
+        console.log('Final error message:', errorText);
+        if (addToast) addToast(errorText, 'error');
+      } else {
+        const msg = error.response?.data?.message || error.message || 'Unable to save event.';
+        if (addToast) addToast(msg, 'error');
+      }
     } finally {
       setIsSubmitting(false);
     }
